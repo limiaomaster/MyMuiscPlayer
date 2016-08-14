@@ -25,8 +25,6 @@ import cn.edu.cdut.lm.mymuiscplayer.module.MusicAbout;
 
 public class MusicFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-
-
     private List<MusicAbout> musicAboutList = new ArrayList<>(4);
 
     private int [] imageIDs = {R.mipmap.topmenu_icn_free,R.mipmap.topmenu_icn_member,
@@ -35,11 +33,6 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
     private String [] titles = {"本地音乐", "最近播放","下载管理","我的歌手"};
 
     private String [] numbers = {"(1369)","(100)","(5)","(3)"};
-
-
-    public MusicFragment() {
-
-    }
 
 
     @Nullable
@@ -69,12 +62,9 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
         Log.v("onItemClick","您点击了第 "+position+" 行！");
         switch (position){
             case 0:
-
                 Log.v("onItemClick","开始处理第0行数据！");
                 LocalMusicFragment localMusicFragment = new LocalMusicFragment();
                 FragmentManager fragmentManager = getFragmentManager();
-
-                //Fragment fragment =fragmentManager.findFragmentById(R.id.view_pager);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.hide(this);
