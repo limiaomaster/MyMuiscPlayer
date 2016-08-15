@@ -35,9 +35,11 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
     private String [] numbers = {"(1369)","(100)","(5)","(3)"};
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.v("MusicFrag_CreateView","我正在创建视图，，，");
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         ListView musicAboutListView = (ListView) view.findViewById(R.id.listview);
 
@@ -62,14 +64,16 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
         Log.v("onItemClick","您点击了第 "+position+" 行！");
         switch (position){
             case 0:
-                Log.v("onItemClick","开始处理第0行数据！");
-                LocalMusicFragment localMusicFragment = new LocalMusicFragment();
-                FragmentManager fragmentManager = getFragmentManager();
+                Log.v("onItemClick","准备进入“本地音乐”，，，");
 
+                LocalMusicFragment localMusicFragment = new LocalMusicFragment();
+                Log.v("onItemClick","1.new出来一个LocalMusicFragment");
+                FragmentManager fragmentManager = getFragmentManager();
+                //FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.hide(this);
                 //  注意，必须加载localMusicFragment到一个布局文件的根节点的id上。
-                fragmentTransaction.add(R.id.fullscreen,localMusicFragment, "localmusic");
+                fragmentTransaction.add(R.id.fullscreen,localMusicFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 break;

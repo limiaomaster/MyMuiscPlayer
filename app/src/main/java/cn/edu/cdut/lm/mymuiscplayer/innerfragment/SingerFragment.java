@@ -14,10 +14,15 @@ import cn.edu.cdut.lm.mymuiscplayer.R;
  */
 
 public class SingerFragment extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.inner_fragment_singer, container , false);
+
+
         return view;
     }
+
+
 }
