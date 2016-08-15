@@ -43,7 +43,7 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         ListView musicAboutListView = (ListView) view.findViewById(R.id.listview);
 
-        for(int i = 0; i < 80; i++){
+        for(int i = 0; i < 4; i++){
             MusicAbout musicAbout = new MusicAbout();
             musicAbout.setImageId(imageIDs[i%4]);
             musicAbout.setTitle(titles[i%4]);
