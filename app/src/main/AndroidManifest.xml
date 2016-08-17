@@ -34,7 +34,9 @@
             android:name=".layout.BottomControlBar$UpdateBarReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST"/>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST" />
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_PLAY_PAUSE" />
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_BOTTO_MBAR"/>
             </intent-filter>
         </receiver>
     </application>

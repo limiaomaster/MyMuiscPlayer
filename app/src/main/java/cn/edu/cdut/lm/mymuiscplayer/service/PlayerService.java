@@ -32,6 +32,11 @@ public class PlayerService extends Service {
 
     public static final String MUSIC_DURATION = "cn.edu.cdut.lm.mymusicplayer.MUSIC_DURATION";//新音乐长度更新动作
     public static final String UPDATE_TITLE_ARTIST = "cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST";    //  设置曲名和艺术家
+    public static final String UPDATE_PLAY_PAUSE = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PLAY_PAUSE";    //  设置播放和暂停按钮的图片
+    public static final String UPDATE_BOTTO_MBAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_BOTTO_MBAR";    //  设置播放和暂停按钮的图片
+
+
+
 
 
 
@@ -59,13 +64,35 @@ public class PlayerService extends Service {
         artist = intent.getStringExtra("artist");
 
         if( position == lastPosition ){         //首先判断这次点击和上次点击的列表中的项目是不是一个
-            if( mediaPlayer.isPlaying()){       // 如果是一个，表示想要暂停该文件，
+            if( mediaPlayer.isPlaying()){       // 如果是同一个，表示想要暂停该文件，
                 this.pause();
+                Log.e("onStartCommand()","已经把音乐暂停！！！");
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(UPDATE_BOTTO_MBAR);
+                sendIntent.putExtra("title",title);
+                sendIntent.putExtra("artist",artist);
+                sendIntent.putExtra("playOrpause","play");
+                sendBroadcast(sendIntent);
+                Log.e("onStartCommand()","已经发送intent，请更新播放按钮！！");
             } else {
-                mediaPlayer.start();                // 继续播放用系统的方法start()，
+                mediaPlayer.start();                // 继续播放,用系统的方法start()
+                Log.e("onStartCommand()","已经把音乐继续！！！");
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(UPDATE_BOTTO_MBAR);
+                sendIntent.putExtra("title",title);
+                sendIntent.putExtra("artist",artist);
+                sendIntent.putExtra("playOrpause","pause");
+                sendBroadcast(sendIntent);
+                Log.e("onStartCommand()","已经发送intent，请更新播放按钮！！");
             }
         } else {                                            //  如果不是一个，那肯定是要播放新的文件了。
             this.playAnotherMusic(0);
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(UPDATE_BOTTO_MBAR);
+            sendIntent.putExtra("title",title);
+            sendIntent.putExtra("artist",artist);
+            sendIntent.putExtra("playOrpause","pause");
+            sendBroadcast(sendIntent);
 
         }
 
@@ -131,11 +158,7 @@ public class PlayerService extends Service {
             intent.putExtra("duration",duration);
             sendBroadcast(intent);*/
 
-            Intent intent = new Intent();
-            intent.setAction(UPDATE_TITLE_ARTIST);
-            intent.putExtra("title",title);
-            intent.putExtra("artist",artist);
-            sendBroadcast(intent);
+
         }
     }
 
