@@ -1,4 +1,4 @@
-package cn.edu.cdut.lm.mymuiscplayer.Fragments;
+package cn.edu.cdut.lm.mymuiscplayer.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

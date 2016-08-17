@@ -15,14 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.edu.cdut.lm.mymuiscplayer.Fragments.DiscoFragment;
-import cn.edu.cdut.lm.mymuiscplayer.Fragments.FriendFragment;
-import cn.edu.cdut.lm.mymuiscplayer.Fragments.MusicFragment;
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.fragments.DiscoFragment;
+import cn.edu.cdut.lm.mymuiscplayer.fragments.FriendFragment;
+import cn.edu.cdut.lm.mymuiscplayer.fragments.MusicFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,6 +32,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView iv_music;
     private ImageView iv_friend;
     private ViewPager view_pager;
+    private ImageView iv_play_pause;
+    private TextView tv_title_of_music;
+    private TextView tv_artist_of_music;
+
+    /*private HomeReceiver homeReceiver;*/
+
+    private boolean isPlaying = false;
+
+    private int duration; // 时长
+
+    public static final String MUSIC_DURATION = "cn.edu.cdut.lm.mymusicplayer.MUSIC_DURATION";//新音乐长度更新动作
+    public static final String UPDATE_TITLE_ARTIST = "cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST";    //  设置曲名和艺术家
+
+
+
+
+
+
+
 
 
     @Override
@@ -60,6 +80,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iv_disco = (ImageView) findViewById(R.id.bar_disco);
         iv_music = (ImageView) findViewById(R.id.bar_music);
         iv_friend = (ImageView) findViewById(R.id.bar_friends);
+
+        iv_play_pause = (ImageView) findViewById(R.id.play_btn);
+
+        tv_title_of_music = (TextView) findViewById(R.id.title_of_music);
+        tv_artist_of_music = (TextView) findViewById(R.id.artist_of_music);
+
 
         iv_music.setSelected(true);
 
@@ -109,7 +135,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iv_music.setOnClickListener(myOnClickListener);
         iv_friend.setOnClickListener(myOnClickListener);
 
+        iv_play_pause.setOnClickListener(myOnClickListener);
+
+
+
+
+        /*registerMyReceiver();*/
+
+
     }
+
+    /*private void registerMyReceiver(){
+        homeReceiver = new HomeReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_TITLE_ARTIST);
+        registerReceiver(homeReceiver,intentFilter);
+    }*/
+
+
+
+
+
+
+
+
+
+
 
     MyOnClickListener myOnClickListener = new MyOnClickListener();
 
@@ -136,6 +187,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     iv_friend.setSelected(true);
                     view_pager.setCurrentItem(2);
                     break;
+
+                /*case R.id.play_btn:
+                    if(isPlaying){
+                        Intent intent = new Intent();
+                        intent.putExtra("url",mp3Info.getUrl());
+                        intent.putExtra("position", position);
+                        intent.setClass(getContext(), PlayerService.class);
+                        getActivity().startService(intent);
+
+                    }*/
+
             }
         }
     }
@@ -224,4 +286,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
+    /*public class HomeReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("onReceive()","收到Service发来的广播！");
+
+            String action = intent.getAction();
+            if (action.equals(UPDATE_TITLE_ARTIST)){
+                Log.e("onReceive()","是更新曲目和艺术家的Action");
+                String title = intent.getStringExtra("title");
+                String artist = intent.getStringExtra("artist");
+                Log.e("onReceive()","准备更新，曲目是："+title+"艺术家是："+artist);
+                tv_title_of_music.setText(title);
+                tv_artist_of_music.setText(artist);
+                Log.e("onReceive()","更新完成，，，，，，，");
+            }
+        }
+    }*/
+
+
+
+
+
+
+
+
+
+
+
+
 }

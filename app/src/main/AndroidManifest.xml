@@ -19,6 +19,24 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".service.PlayerService">
+        </service>
+
+        <!--<receiver
+            android:name=".broadcastreceiver.UpdateBarReceiver">
+            <intent-filter>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST"/>
+            </intent-filter>
+        </receiver>-->
+
+        <receiver
+            android:name=".layout.BottomControlBar$UpdateBarReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

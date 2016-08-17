@@ -1,91 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="cn.edu.cdut.lm.mymuiscplayer.activity.MainActivity"
     android:id="@+id/fullscreen"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="cn.edu.cdut.lm.mymuiscplayer.activity.MainActivity">
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/themeColor"
+        app:theme="@style/ToolbarStyle"
+        app:contentInsetStart="0.0dp"
+        android:layout_alignParentTop="true">
 
-        
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/tool_bar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/red"
-                app:theme="@style/ToolbarStyle"
-                app:contentInsetStart="0.0dp"
-                app:layout_scrollFlags="enterAlways|scroll">
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="end">
-
-                    <ImageView
-                        android:id="@+id/bar_disco"
-                        android:layout_width="55dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/actionbar_disco"
-                        android:clickable="true"
-                        android:layout_toStartOf="@+id/bar_music" />
-
-                    <ImageView
-                        android:id="@+id/bar_music"
-                        android:layout_width="55dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/actionbar_music"
-                        android:clickable="true"
-                        android:layout_toStartOf="@+id/bar_friends" />
-
-                    <ImageView
-                        android:id="@+id/bar_friends"
-                        android:layout_width="55dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/actionbar_friends"
-                        android:clickable="true"
-                        android:layout_toStartOf="@+id/margin" />
-
-                    <TextView
-                        android:id="@+id/margin"
-                        android:layout_width="55dp"
-                        android:layout_height="match_parent"
-                        android:layout_toStartOf="@+id/bar_search"
-                        android:text="lalala"
-                        android:visibility="invisible"/>
-
-                    <ImageView
-                        android:id="@+id/bar_search"
-                        android:layout_width="25dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/actionbar_search"
-
-                        android:layout_marginEnd="15dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true" />
-                </RelativeLayout>
-
-            </android.support.v7.widget.Toolbar>
-
-
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff" />
+            android:gravity="end">
+             <ImageView
+                 android:id="@+id/bar_disco"
+                 android:layout_width="55dp"
+                 android:layout_height="match_parent"
+                 android:background="@drawable/actionbar_disco"
+                 android:clickable="true"
+                 android:layout_toStartOf="@+id/bar_music" />
+             <ImageView
+                 android:id="@+id/bar_music"
+                 android:layout_width="55dp"
+                 android:layout_height="match_parent"
+                 android:background="@drawable/actionbar_music"
+                 android:clickable="true"
+                 android:layout_toStartOf="@+id/bar_friends" />
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/bar_friends"
+                android:layout_width="55dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/actionbar_friends"
+                android:clickable="true"
+                android:layout_toStartOf="@+id/margin" />
+             <TextView
+                 android:id="@+id/margin"
+                 android:layout_width="55dp"
+                 android:layout_height="match_parent"
+                 android:layout_toStartOf="@+id/bar_search"
+                 android:text="lalala"
+                 android:visibility="invisible"/>
+
+            <ImageView
+                android:id="@+id/bar_search"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/actionbar_search"
+                android:layout_marginEnd="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_below="@id/tool_bar">
+    </android.support.v4.view.ViewPager>
+
+
+    <cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBar
+        android:id="@+id/bottomControlBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+    </cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBar>
 
 
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
+

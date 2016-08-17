@@ -1,4 +1,4 @@
-package cn.edu.cdut.lm.mymuiscplayer.Fragments;
+package cn.edu.cdut.lm.mymuiscplayer.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,12 +6,15 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,7 @@ import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragment;
  * Created by LimiaoMaster on 2016/8/13 0013.
  */
 
-public class LocalMusicFragment extends Fragment implements View.OnClickListener {
+public class LocalMusicFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener{
 
     private TabLayout tablayout ;
     private ViewPager viewPager;
@@ -41,19 +44,20 @@ public class LocalMusicFragment extends Fragment implements View.OnClickListener
 
     private ImageView back ;
 
-    private MusicFragment musicFragment;
 
+    private TextView tv_title_of_music;
+    private TextView tv_artist_of_music;
 
-    public static LocalMusicFragment newInstance(Bundle agrs){
+    /*private HomeReceiver homeReceiver;*/
 
-        LocalMusicFragment localMusicFragment = new LocalMusicFragment();
-        localMusicFragment.setArguments(agrs);
-        return localMusicFragment;
-    }
+    public static final String UPDATE_TITLE_ARTIST = "cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST";    //  设置曲名和艺术家
+
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        /*registerMyReceiver();*/
         super.onCreate(savedInstanceState);
 
     }
@@ -90,6 +94,9 @@ public class LocalMusicFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_local_music,container,false);
 
+        tv_title_of_music = (TextView) view.findViewById(R.id.title_of_music);
+        tv_artist_of_music = (TextView) view.findViewById(R.id.artist_of_music);
+
         addView();
 
         tablayout = (TabLayout) view.findViewById(R.id.tab_localmusic);
@@ -107,6 +114,7 @@ public class LocalMusicFragment extends Fragment implements View.OnClickListener
         tablayout.setupWithViewPager(viewPager);
 
 
+
         return view;
     }
 
@@ -116,7 +124,21 @@ public class LocalMusicFragment extends Fragment implements View.OnClickListener
         //getActivity().onBackPressed();
 
         FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.remove(this);
+
         fragmentManager.popBackStack();
+
+
+        fragmentTransaction.commit();
+
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 
 
@@ -159,4 +181,34 @@ public class LocalMusicFragment extends Fragment implements View.OnClickListener
             return fragmentList.get(position);
         }
     }
+
+    /*private void registerMyReceiver(){
+        homeReceiver = new HomeReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_TITLE_ARTIST);
+        getActivity().registerReceiver(homeReceiver,intentFilter);
+    }*/
+
+
+
+
+
+    /*public class HomeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("onReceive()","收到Service发来的广播！");
+
+            String action = intent.getAction();
+            if (action.equals(UPDATE_TITLE_ARTIST)){
+                Log.e("onReceive()","是更新曲目和艺术家的Action");
+                String title = intent.getStringExtra("title");
+                String artist = intent.getStringExtra("artist");
+                Log.e("onReceive()","准备更新，曲目是："+title+"艺术家是："+artist);
+                tv_title_of_music.setText(title);
+                tv_artist_of_music.setText(artist);
+                Log.e("onReceive()","更新完成，，，，，，，");
+            }
+        }
+    }*/
 }

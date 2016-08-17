@@ -7,10 +7,44 @@ package cn.edu.cdut.lm.mymuiscplayer.module;
 public class Mp3Info {
     private long id;
     private String title;
+    private String displayName;
     private String artist;
     private long duration;
     private long size;
     private String url;
+    private String album;
+    private long albumId;
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Override
+    public String toString() {
+        return "Mp3Info{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", artist='" + artist + '\'' +
+                ", duration=" + duration +
+                ", size=" + size +
+                ", url='" + url + '\'' +
+                ", album='" + album + '\'' +
+                ", albumId=" + albumId +
+                '}';
+    }
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
+    }
 
     public String getAlbum() {
         return album;
@@ -20,7 +54,7 @@ public class Mp3Info {
         this.album = album;
     }
 
-    private String album;
+
 
     public long getId() {
         return id;

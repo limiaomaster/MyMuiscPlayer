@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -63,17 +63,26 @@
         android:id="@+id/tab_localmusic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabSelectedTextColor="@color/themeColor"
-        app:tabTextColor="#555555">
+        android:layout_below="@+id/toolbar_localmusic">
 
     </android.support.design.widget.TabLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager_localmusic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#eeeeee">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tab_localmusic">
 
     </android.support.v4.view.ViewPager>
 
-</LinearLayout>
+
+    <cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBar
+        android:id="@+id/bottomControlBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+    </cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBar>
+
+
+
+</RelativeLayout>
