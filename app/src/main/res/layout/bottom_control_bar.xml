@@ -83,6 +83,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/next_song"
                 android:layout_width="45dp"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"

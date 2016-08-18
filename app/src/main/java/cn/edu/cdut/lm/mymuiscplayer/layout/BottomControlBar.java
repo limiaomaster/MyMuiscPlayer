@@ -11,8 +11,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
+import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 /**
  * Created by LimiaoMaster on 2016/8/17 9:22
@@ -20,16 +24,22 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 
 public class BottomControlBar extends RelativeLayout implements View.OnClickListener{
 
+
+    private List<Mp3Info> mp3InfoList;
+    private static int listSize;
+
     private static TextView tv_title_of_music;
     private static TextView tv_artist_of_music;
-    private static ImageView iv_play_pause;
 
+    private static ImageView iv_play_pause;
+    private static ImageView iv_next_song;
 
     private static String path;
     private static String title;
     private static String artist;
     private static String playOrPause;
     private static int listPosition;
+    private static int  nextPosition;
 
 
     private static boolean isPlaying;
@@ -51,18 +61,23 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         tv_title_of_music = (TextView) view.findViewById(R.id.title_of_music);
         tv_artist_of_music = (TextView) view.findViewById(R.id.artist_of_music);
         iv_play_pause = (ImageView) view.findViewById(R.id.play_btn);
+        iv_next_song = (ImageView) view.findViewById(R.id.next_song);
         //updateBarReceiver = new UpdateBarReceiver(tv_title_of_music,tv_artist_of_music);
         //updateBarReceiver = new UpdateBarReceiver(view);
 
         updateBarReceiver = new UpdateBarReceiver();
         iv_play_pause.setOnClickListener(this);
+        iv_next_song.setOnClickListener(this);
+
+        mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
+        listSize = mp3InfoList.size();
+        Log.e("BottomControlBar()","您的手机上一共有"+listSize+"首歌曲！！！");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.play_btn:
-
                     Intent intent = new Intent();
 
                     intent.putExtra("url", path);
@@ -73,6 +88,20 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     intent.setClass(getContext(), PlayerService.class);
                     getContext().startService(intent);  //  注意是调用getContext()，不是SingleSongFragment中的getActivity()
                     break;
+
+            case R.id.next_song:
+                Mp3Info mp3Info = mp3InfoList.get(nextPosition);
+                Intent intent1 = new Intent();
+
+                intent1.putExtra("url",mp3Info.getUrl());
+                intent1.putExtra("position", nextPosition);
+                intent1.putExtra("title",mp3Info.getTitle());
+                intent1.putExtra("artist",mp3Info.getArtist());
+
+                intent1.setClass(getContext(), PlayerService.class);
+                getContext().startService(intent1);
+                Log.e("onItemClick","启动了播放服务！");
+
         }
     }
 
@@ -95,6 +124,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 artist = intent.getStringExtra("artist");
                 playOrPause = intent.getStringExtra("playOrPause");
 
+                nextPosition = (listPosition+1)%listSize;
 
                 Log.e("onReceive()", "准备更新控制条，，，曲目是：" + title +
                         "   艺术家是：" + artist +"   要把按钮设置为："+ playOrPause +"的状态");

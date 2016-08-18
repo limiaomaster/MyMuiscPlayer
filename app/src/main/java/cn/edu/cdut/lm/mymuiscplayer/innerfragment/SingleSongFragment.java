@@ -34,7 +34,7 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
         View view = inflater.inflate(R.layout.inner_fragment_single_music, container , false);
         ListView listView = (ListView) view.findViewById(R.id.listview_localmusic);
 
-        mp3InfoList = MediaUtil.getMp3Infos(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
+        mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
 
         LocalMusicAdapter localMusicAdapter = new LocalMusicAdapter(getContext(), mp3InfoList);
         listView.setAdapter(localMusicAdapter);

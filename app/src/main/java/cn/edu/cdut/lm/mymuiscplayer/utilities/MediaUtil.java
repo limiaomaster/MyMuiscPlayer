@@ -32,7 +32,7 @@ public class MediaUtil {
      *
      * @return
      */
-    public static List<Mp3Info> getMp3Infos(Context context) {
+    public static List<Mp3Info> getMp3List(Context context) {
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);

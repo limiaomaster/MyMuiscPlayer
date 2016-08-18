@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import static cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBar.UPDATE_BOTTO_MBAR;
+
 
 /**
  * Created by LimiaoMaster on 2016/8/15 22:47
