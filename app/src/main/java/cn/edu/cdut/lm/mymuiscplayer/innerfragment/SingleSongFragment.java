@@ -49,6 +49,7 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
         Log.e("onItemClick","您点击了第："+position+"行！");
         Log.e("onItemClick",""+mp3Info);
         Intent intent = new Intent();
+
         intent.putExtra("url",mp3Info.getUrl());
         intent.putExtra("position", position);
         intent.putExtra("title",mp3Info.getTitle());

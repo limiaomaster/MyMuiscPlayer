@@ -8,6 +8,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import static cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBar.UPDATE_BOTTO_MBAR;
+
 /**
  * Created by LimiaoMaster on 2016/8/15 22:47
  */
@@ -22,8 +24,8 @@ public class PlayerService extends Service {
 
 
 
-    private int lastPosition = -1;  //  这首曲目之前的曲目位置
-    private int position ;  // 从列表传来的新的曲目位置
+    private int listLastPosition = -1;  //  这首曲目之前的曲目位置
+    private int listPosition ;  // 从列表传来的新的曲目位置
 
     private int duration;	//播放长度
 
@@ -33,7 +35,7 @@ public class PlayerService extends Service {
     public static final String MUSIC_DURATION = "cn.edu.cdut.lm.mymusicplayer.MUSIC_DURATION";//新音乐长度更新动作
     public static final String UPDATE_TITLE_ARTIST = "cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST";    //  设置曲名和艺术家
     public static final String UPDATE_PLAY_PAUSE = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PLAY_PAUSE";    //  设置播放和暂停按钮的图片
-    public static final String UPDATE_BOTTO_MBAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_BOTTO_MBAR";    //  设置播放和暂停按钮的图片
+    public static final String UPDATE_BOTTOM_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_BOTTOM_BAR";    //  设置播放和暂停按钮的图片
 
 
 
@@ -59,44 +61,53 @@ public class PlayerService extends Service {
         Log.e("onStartCommand()","-----------执行onStartCommand()方法----------");
 
         path = intent.getStringExtra("url");
-        position = intent.getIntExtra("position",0);
+        listPosition = intent.getIntExtra("position",0);
         title = intent.getStringExtra("title");
         artist = intent.getStringExtra("artist");
 
-        if( position == lastPosition ){         //首先判断这次点击和上次点击的列表中的项目是不是一个
+        if( listPosition == listLastPosition ){         //首先判断这次点击和上次点击的列表中的项目是不是一个
             if( mediaPlayer.isPlaying()){       // 如果是同一个，表示想要暂停该文件，
                 this.pause();
                 Log.e("onStartCommand()","已经把音乐暂停！！！");
                 Intent sendIntent = new Intent();
-                sendIntent.setAction(UPDATE_BOTTO_MBAR);
+                sendIntent.setAction(UPDATE_BOTTOM_BAR);
+
+                sendIntent.putExtra("url",path);
                 sendIntent.putExtra("title",title);
                 sendIntent.putExtra("artist",artist);
-                sendIntent.putExtra("playOrpause","play");
+                sendIntent.putExtra("playOrPause","play");
+                sendIntent.putExtra("listPosition",listPosition);
+
                 sendBroadcast(sendIntent);
                 Log.e("onStartCommand()","已经发送intent，请更新播放按钮！！");
             } else {
                 mediaPlayer.start();                // 继续播放,用系统的方法start()
                 Log.e("onStartCommand()","已经把音乐继续！！！");
                 Intent sendIntent = new Intent();
-                sendIntent.setAction(UPDATE_BOTTO_MBAR);
+                sendIntent.setAction(UPDATE_BOTTOM_BAR);
+
+                sendIntent.putExtra("url",path);
                 sendIntent.putExtra("title",title);
                 sendIntent.putExtra("artist",artist);
-                sendIntent.putExtra("playOrpause","pause");
+                sendIntent.putExtra("playOrPause","pause");
+                sendIntent.putExtra("listPosition",listPosition);
                 sendBroadcast(sendIntent);
                 Log.e("onStartCommand()","已经发送intent，请更新播放按钮！！");
             }
         } else {                                            //  如果不是一个，那肯定是要播放新的文件了。
             this.playAnotherMusic(0);
             Intent sendIntent = new Intent();
-            sendIntent.setAction(UPDATE_BOTTO_MBAR);
+            sendIntent.setAction(UPDATE_BOTTOM_BAR);
+
+            sendIntent.putExtra("url",path);
             sendIntent.putExtra("title",title);
             sendIntent.putExtra("artist",artist);
-            sendIntent.putExtra("playOrpause","pause");
+            sendIntent.putExtra("playOrPause","pause");
+            sendIntent.putExtra("listPosition",listPosition);
             sendBroadcast(sendIntent);
-
         }
 
-        lastPosition = position;
+        listLastPosition = listPosition;
         return super.onStartCommand(intent, flags, startId);
     }
 
