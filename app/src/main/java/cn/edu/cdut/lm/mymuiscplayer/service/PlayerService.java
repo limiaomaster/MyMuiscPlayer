@@ -8,6 +8,10 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.List;
+
+import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
+import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 
 /**
@@ -17,15 +21,17 @@ import android.util.Log;
 public class PlayerService extends Service {
 
     private MediaPlayer mediaPlayer;
-
+    private List<Mp3Info> mp3InfoList;
     private String path;
     private String title;
     private String artist;
 
-
+    private long musicId;
+    private long albumId;
 
     private int listLastPosition = -1;  //  这首曲目之前的曲目位置
     private int listPosition ;  // 从列表传来的新的曲目位置
+    private int recycleListPosition;
 
     private int duration;	//播放长度
 
@@ -51,9 +57,40 @@ public class PlayerService extends Service {
     @Override
     public void onCreate() {
         Log.e("onCreate()","-----------执行onCreate()方法----------");
+        super.onCreate();
 
         mediaPlayer = new MediaPlayer();
-        super.onCreate();
+        mp3InfoList = MediaUtil.getMp3List(this);
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                path = mp3InfoList.get(recycleListPosition).getUrl();
+                title = mp3InfoList.get(recycleListPosition).getTitle();
+                artist = mp3InfoList.get(recycleListPosition).getArtist();
+                musicId =mp3InfoList.get(recycleListPosition).getId();
+                albumId = mp3InfoList.get(recycleListPosition).getAlbumId();
+
+                playAnotherMusic(0);
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(UPDATE_BOTTOM_BAR);
+
+                sendIntent.putExtra("title",title);
+                sendIntent.putExtra("artist",artist);
+                sendIntent.putExtra("playOrPause","pause");
+                sendIntent.putExtra("listPosition",recycleListPosition);
+
+                sendIntent.putExtra("musicId",musicId);
+                sendIntent.putExtra("albumId",albumId);
+
+                sendBroadcast(sendIntent);
+                listPosition = recycleListPosition;
+                listLastPosition = recycleListPosition;
+                recycleListPosition = (recycleListPosition+1)%mp3InfoList.size();
+            }
+        });
+
     }
 
     @Override
@@ -65,6 +102,10 @@ public class PlayerService extends Service {
         title = intent.getStringExtra("title");
         artist = intent.getStringExtra("artist");
 
+        musicId = intent.getLongExtra("musicId",0);
+        albumId = intent.getLongExtra("albumId",0);
+
+
         if( listPosition == listLastPosition ){         //首先判断这次点击和上次点击的列表中的项目是不是一个
             if( mediaPlayer.isPlaying()){       // 如果是同一个，表示想要暂停该文件，
                 this.pause();
@@ -72,11 +113,15 @@ public class PlayerService extends Service {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(UPDATE_BOTTOM_BAR);
 
-                sendIntent.putExtra("url",path);
                 sendIntent.putExtra("title",title);
                 sendIntent.putExtra("artist",artist);
                 sendIntent.putExtra("playOrPause","play");
                 sendIntent.putExtra("listPosition",listPosition);
+
+                sendIntent.putExtra("musicId",musicId);
+                sendIntent.putExtra("albumId",albumId);
+
+
 
                 sendBroadcast(sendIntent);
                 Log.e("onStartCommand()","已经发送intent，请更新播放按钮！！");
@@ -86,11 +131,14 @@ public class PlayerService extends Service {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(UPDATE_BOTTOM_BAR);
 
-                sendIntent.putExtra("url",path);
                 sendIntent.putExtra("title",title);
                 sendIntent.putExtra("artist",artist);
                 sendIntent.putExtra("playOrPause","pause");
                 sendIntent.putExtra("listPosition",listPosition);
+
+                sendIntent.putExtra("musicId",musicId);
+                sendIntent.putExtra("albumId",albumId);
+
                 sendBroadcast(sendIntent);
                 Log.e("onStartCommand()","已经发送intent，请更新播放按钮！！");
             }
@@ -99,15 +147,19 @@ public class PlayerService extends Service {
             Intent sendIntent = new Intent();
             sendIntent.setAction(UPDATE_BOTTOM_BAR);
 
-            sendIntent.putExtra("url",path);
             sendIntent.putExtra("title",title);
             sendIntent.putExtra("artist",artist);
             sendIntent.putExtra("playOrPause","pause");
             sendIntent.putExtra("listPosition",listPosition);
+
+            sendIntent.putExtra("musicId",musicId);
+            sendIntent.putExtra("albumId",albumId);
+
             sendBroadcast(sendIntent);
         }
 
         listLastPosition = listPosition;
+        recycleListPosition = (listPosition+1)%mp3InfoList.size();
         return super.onStartCommand(intent, flags, startId);
     }
 

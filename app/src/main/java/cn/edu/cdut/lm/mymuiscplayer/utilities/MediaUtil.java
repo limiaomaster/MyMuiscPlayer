@@ -1,5 +1,6 @@
 package cn.edu.cdut.lm.mymuiscplayer.utilities;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,11 +12,14 @@ import android.provider.MediaStore;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 
 /**
@@ -30,7 +34,7 @@ public class MediaUtil {
     /**
      * 用于从数据库中查询歌曲的信息，保存在List当中
      *
-     * @return
+     * @return  List<Mp3Info>
      */
     public static List<Mp3Info> getMp3List(Context context) {
         Cursor cursor = context.getContentResolver().query(
@@ -72,8 +76,7 @@ public class MediaUtil {
      * @param mp3Infos
      * @return
      */
-    public static List<HashMap<String, String>> getMusicMaps(
-            List<Mp3Info> mp3Infos) {
+    public static List<HashMap<String, String>> getMusicMaps(List<Mp3Info> mp3Infos) {
         List<HashMap<String, String>> mp3list = new ArrayList<HashMap<String, String>>();
         for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext();) {
             Mp3Info mp3Info = (Mp3Info) iterator.next();
@@ -122,14 +125,14 @@ public class MediaUtil {
      * @param context
      * @return
      */
-    /*public static Bitmap getDefaultArtwork(Context context, boolean small) {
+    public static Bitmap getDefaultArtwork(Context context, boolean small) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         if(small){	//返回小图片
-            return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.music5), null, opts);
+            return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.logo), null, opts);
         }
-        return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.defaultalbum), null, opts);
-    }*/
+        return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.wohenmang), null, opts);
+    }
 
 
     /**
@@ -148,8 +151,7 @@ public class MediaUtil {
             BitmapFactory.Options options = new BitmapFactory.Options();
             FileDescriptor fd = null;
             if(albumid < 0){
-                Uri uri = Uri.parse("content://media/external/audio/media/"
-                        + songid + "/albumart");
+                Uri uri = Uri.parse("content://media/external/audio/media/" + songid + "/albumart");
                 ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
                 if(pfd != null) {
                     fd = pfd.getFileDescriptor();
@@ -180,7 +182,7 @@ public class MediaUtil {
             e.printStackTrace();
         }
         return bm;
-    }}
+    }
 
     /**
      * 获取专辑封面位图对象
@@ -190,7 +192,7 @@ public class MediaUtil {
      * @param allowdefalut
      * @return
      */
-    /*public static Bitmap getArtwork(Context context, long song_id, long album_id, boolean allowdefalut, boolean small){
+    public static Bitmap getArtwork(Context context, long song_id, long album_id, boolean allowdefalut, boolean small){
         if(album_id < 0) {
             if(song_id < 0) {
                 Bitmap bm = getArtworkFromFile(context, song_id, -1);
@@ -216,8 +218,8 @@ public class MediaUtil {
                 options.inJustDecodeBounds = true;
                 //调用此方法得到options得到图片的大小
                 BitmapFactory.decodeStream(in, null, options);
-                *//** 我们的目标是在你N pixel的画面上显示。 所以需要调用computeSampleSize得到图片缩放的比例 **//*
-                *//** 这里的target为800是根据默认专辑图片大小决定的，800只是测试数字但是试验后发现完美的结合 **//*
+                // 我们的目标是在你N pixel的画面上显示。 所以需要调用computeSampleSize得到图片缩放的比例 *
+                // 这里的target为800是根据默认专辑图片大小决定的，800只是测试数字但是试验后发现完美的结合 *
                 if(small){
                     options.inSampleSize = computeSampleSize(options, 40);
                 } else{
@@ -253,7 +255,7 @@ public class MediaUtil {
             }
         }
         return null;
-    }*/
+    }
 
     /**
      * 对图片进行合适的缩放
@@ -261,7 +263,7 @@ public class MediaUtil {
      * @param target
      * @return
      */
-    /*public static int computeSampleSize(Options options, int target) {
+    public static int computeSampleSize(BitmapFactory.Options options, int target) {
         int w = options.outWidth;
         int h = options.outHeight;
         int candidateW = w / target;
@@ -282,4 +284,4 @@ public class MediaUtil {
         }
         return candidate;
     }
-}*/
+}

@@ -3,6 +3,7 @@ package cn.edu.cdut.lm.mymuiscplayer.layout;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 public class BottomControlBar extends RelativeLayout implements View.OnClickListener{
 
+    private Context context;
 
     private List<Mp3Info> mp3InfoList;
     private static int listSize;
@@ -33,11 +35,16 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
     private static ImageView iv_play_pause;
     private static ImageView iv_next_song;
+    private static ImageView iv_art_work;
 
     private static String path;
     private static String title;
     private static String artist;
     private static String playOrPause;
+
+    private static long musicId;
+    private static long albumId;
+
     private static int listPosition;
     private static int  nextPosition;
 
@@ -55,13 +62,19 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
 
     public BottomControlBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
+
+        super(context, attrs);  //  必须放在第一行
+
+        this.context = context;
+
         View view = LayoutInflater.from(context).inflate(R.layout.bottom_control_bar,this);
 
         tv_title_of_music = (TextView) view.findViewById(R.id.title_of_music);
         tv_artist_of_music = (TextView) view.findViewById(R.id.artist_of_music);
         iv_play_pause = (ImageView) view.findViewById(R.id.play_btn);
         iv_next_song = (ImageView) view.findViewById(R.id.next_song);
+        iv_art_work = (ImageView) view.findViewById(R.id.art_work);
+
         //updateBarReceiver = new UpdateBarReceiver(tv_title_of_music,tv_artist_of_music);
         //updateBarReceiver = new UpdateBarReceiver(view);
 
@@ -118,16 +131,19 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
             if (action.equals(UPDATE_BOTTOM_BAR)) {
                 Log.e("onReceive()", "收到广播，这是更新控制条文字和图片的Action");
 
-                path = intent.getStringExtra("url");
                 listPosition = intent.getIntExtra("listPosition",0);
                 title = intent.getStringExtra("title");
                 artist = intent.getStringExtra("artist");
                 playOrPause = intent.getStringExtra("playOrPause");
 
+                musicId = intent.getLongExtra("musicId",0);
+                albumId = intent.getLongExtra("albumId",0);
+
                 nextPosition = (listPosition+1)%listSize;
 
                 Log.e("onReceive()", "准备更新控制条，，，曲目是：" + title +
                         "   艺术家是：" + artist +"   要把按钮设置为："+ playOrPause +"的状态");
+
                 tv_title_of_music.setText(title);
                 tv_artist_of_music.setText(artist);
 
@@ -138,6 +154,10 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
                     isPlaying = false;
                 }
+
+                Bitmap bitmap = MediaUtil.getArtwork(context,musicId,albumId,true,true);
+                iv_art_work.setImageBitmap(bitmap);
+
                 Log.e("onReceive()", "更新已经全部完成！！！");
             }
 

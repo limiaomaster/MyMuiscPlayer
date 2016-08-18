@@ -55,6 +55,9 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
         intent.putExtra("title",mp3Info.getTitle());
         intent.putExtra("artist",mp3Info.getArtist());
 
+        intent.putExtra("musicId",mp3Info.getId());
+        intent.putExtra("albumId",mp3Info.getAlbumId());
+
         intent.setClass(getContext(), PlayerService.class);
         getActivity().startService(intent);
         Log.e("onItemClick","启动了播放服务！");
