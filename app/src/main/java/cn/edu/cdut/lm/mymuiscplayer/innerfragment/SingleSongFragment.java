@@ -25,6 +25,8 @@ import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 public class SingleSongFragment extends Fragment implements AdapterView.OnItemClickListener{
 
+    public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
+
     private List<Mp3Info> mp3InfoList;
 
 
@@ -48,19 +50,17 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
         Mp3Info mp3Info = mp3InfoList.get(position);
         Log.e("onItemClick","您点击了第："+position+"行！");
         Log.e("onItemClick",""+mp3Info);
+
         Intent intent = new Intent();
-
-        intent.putExtra("url",mp3Info.getUrl());
         intent.putExtra("position", position);
-        intent.putExtra("title",mp3Info.getTitle());
-        intent.putExtra("artist",mp3Info.getArtist());
-
-        intent.putExtra("musicId",mp3Info.getId());
-        intent.putExtra("albumId",mp3Info.getAlbumId());
-
         intent.setClass(getContext(), PlayerService.class);
         getActivity().startService(intent);
-        Log.e("onItemClick","启动了播放服务！");
+        Log.e("onItemClick","启动了PlayerService播放服务！");
 
+        Intent broadCastIntent = new Intent();
+        broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
+        broadCastIntent.putExtra("position",position);
+        getActivity().sendBroadcast(broadCastIntent);
+        Log.e("onItemClick","发送了UPDATE_UI的广播！");
     }
 }

@@ -129,9 +129,9 @@ public class MediaUtil {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         if(small){	//返回小图片
-            return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.logo), null, opts);
+            return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.logo), null, opts);
         }
-        return BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.wohenmang), null, opts);
+        return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.wohenmang), null, opts);
     }
 
 

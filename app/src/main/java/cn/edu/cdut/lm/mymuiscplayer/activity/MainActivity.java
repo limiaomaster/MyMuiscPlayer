@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iv_music = (ImageView) findViewById(R.id.bar_music);
         iv_friend = (ImageView) findViewById(R.id.bar_friends);
 
-        iv_play_pause = (ImageView) findViewById(R.id.play_btn);
+        iv_play_pause = (ImageView) findViewById(R.id.play_pause_btn);
 
         tv_title_of_music = (TextView) findViewById(R.id.title_of_music);
         tv_artist_of_music = (TextView) findViewById(R.id.artist_of_music);

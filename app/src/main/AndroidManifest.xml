@@ -37,6 +37,10 @@
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST" />
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_PLAY_PAUSE" />
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_BOTTOM_BAR"/>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR"/>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK"/>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION"/>
+
             </intent-filter>
         </receiver>
     </application>
