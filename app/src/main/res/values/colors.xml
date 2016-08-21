@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#303f9f</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ff4081</color>
     <color name="red">#FFce3d3a</color>
 
     <color name="toolbarTextColor">#ffffff</color>
@@ -11,4 +11,11 @@
 
     <color name="bantouming">#DDFFFFFF</color>
     <color name="actionbarTabUnselected">#EEEEEE</color>
+
+    <color name="statusBarTranslucent">#00ffffff</color>
+    <color name="menu_item_white">#FFFFFF</color>
+    <color name="primary_text_material_dark">#bb8888</color>
+    <color name="secondary_text_material_light">#8aa0ec3d</color>
+    <color name="tab_text_gray">#656565</color>
+    <color name="tou_ming">#00ffffff</color>
 </resources>

@@ -41,12 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:text="Lv.7"
-            android:textStyle="italic|bold"
-            />
-
+            android:textStyle="italic|bold" />
     </LinearLayout>
-
-
-
-
 </LinearLayout>

@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,37 +31,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView iv_music;
     private ImageView iv_friend;
     private ViewPager view_pager;
-    private ImageView iv_play_pause;
-    private TextView tv_title_of_music;
-    private TextView tv_artist_of_music;
-
-    /*private HomeReceiver homeReceiver;*/
-
-    private boolean isPlaying = false;
-
-    private int duration; // 时长
-
-    public static final String MUSIC_DURATION = "cn.edu.cdut.lm.mymusicplayer.MUSIC_DURATION";//新音乐长度更新动作
-    public static final String UPDATE_TITLE_ARTIST = "cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST";    //  设置曲名和艺术家
-
-
-
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         //  设置不显示title
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,8 +53,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
 
         fragmentList.add(new DiscoFragment());
         fragmentList.add(new MusicFragment());
@@ -81,14 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iv_music = (ImageView) findViewById(R.id.bar_music);
         iv_friend = (ImageView) findViewById(R.id.bar_friends);
 
-        iv_play_pause = (ImageView) findViewById(R.id.play_pause_btn);
-
-        tv_title_of_music = (TextView) findViewById(R.id.title_of_music);
-        tv_artist_of_music = (TextView) findViewById(R.id.artist_of_music);
-
-
         iv_music.setSelected(true);
-
 
         view_pager = (ViewPager) findViewById(R.id.view_pager);
 
@@ -128,38 +108,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        //  设置初始选中viewpager的第二页，但要注意写在 view_pager.setCurrentItem(1)；之后才能生效
+        //  设置初始选中viewpager的第二页，
+        // 但要注意写在 view_pager.setAdapter(myFragmentPagerAdapter);之后才能生效
         view_pager.setCurrentItem(1);
 
         iv_disco.setOnClickListener(myOnClickListener);
         iv_music.setOnClickListener(myOnClickListener);
         iv_friend.setOnClickListener(myOnClickListener);
-
-        iv_play_pause.setOnClickListener(myOnClickListener);
-
-
-
-
-        /*registerMyReceiver();*/
-
-
     }
-
-    /*private void registerMyReceiver(){
-        homeReceiver = new HomeReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UPDATE_TITLE_ARTIST);
-        registerReceiver(homeReceiver,intentFilter);
-    }*/
-
-
-
-
-
-
-
-
-
 
 
     MyOnClickListener myOnClickListener = new MyOnClickListener();
@@ -197,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         getActivity().startService(intent);
 
                     }*/
-
             }
         }
     }
@@ -219,14 +174,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return fragmentList.size();
         }
     }
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -270,15 +217,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_1) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_2) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_3) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_4) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_5) {
 
         }
 
@@ -286,38 +233,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
-
-    /*public class HomeReceiver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.e("onReceive()","收到Service发来的广播！");
-
-            String action = intent.getAction();
-            if (action.equals(UPDATE_TITLE_ARTIST)){
-                Log.e("onReceive()","是更新曲目和艺术家的Action");
-                String title = intent.getStringExtra("title");
-                String artist = intent.getStringExtra("artist");
-                Log.e("onReceive()","准备更新，曲目是："+title+"艺术家是："+artist);
-                tv_title_of_music.setText(title);
-                tv_artist_of_music.setText(artist);
-                Log.e("onReceive()","更新完成，，，，，，，");
-            }
-        }
-    }*/
-
-
-
-
-
-
-
-
-
-
-
-
 }

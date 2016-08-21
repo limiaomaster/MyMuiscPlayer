@@ -4,59 +4,76 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="35dp">
+    android:minHeight="50dp">
 
-    <TextView
-        android:id="@+id/title_localmusic"
+    <ImageView
+        android:id="@+id/speaker"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/song_play_icon"
+        android:visibility="gone"/>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="半兽人"
-        android:maxLines="1"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="6dp"/>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title_localmusic"
-        android:orientation="horizontal"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="4dp"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/topmenu_icn_identify"
-            android:layout_marginEnd="1dp" />
-
+        android:layout_height="50dp"
+        android:layout_toEndOf="@+id/speaker"
+        android:layout_marginStart="10dp">
 
         <TextView
-            android:id="@+id/artist_localmusic"
+            android:id="@+id/title_localmusic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="周杰伦"
-            android:textSize="11sp"
-            android:layout_marginEnd="1dp" />
-        <TextView
+            android:text="半兽人"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:layout_marginTop="6dp"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="1dp"
-            android:text="-"/>
+            android:layout_below="@+id/title_localmusic"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/album_localmusic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="八度空间"
-            android:textSize="11sp"
-            android:layout_marginEnd="5dp" />
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/list_icn_dld_ok"
+                android:layout_marginEnd="4dp" />
 
 
+            <TextView
+                android:id="@+id/artist_localmusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="周杰伦"
+                android:textSize="11sp"
+                android:layout_marginEnd="1dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="1dp"
+                android:text="-"/>
 
-
+            <TextView
+                android:id="@+id/album_localmusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="八度空间"
+                android:textSize="11sp"
+                android:layout_marginEnd="5dp" />
     </LinearLayout>
+
+
+
+
+
+    </RelativeLayout>
 </RelativeLayout>

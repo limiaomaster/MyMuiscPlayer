@@ -8,15 +8,19 @@
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+       >
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/ImageTranslucentTheme">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.LocalMusicActivity"
+            android:theme="@style/AppTheme">
         </activity>
 
         <service
@@ -34,9 +38,6 @@
             android:name=".layout.BottomControlBar$UpdateBarReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST" />
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_PLAY_PAUSE" />
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_BOTTOM_BAR"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION"/>

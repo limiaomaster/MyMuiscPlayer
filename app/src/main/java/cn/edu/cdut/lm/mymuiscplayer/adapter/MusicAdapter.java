@@ -11,19 +11,19 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.module.MusicAbout;
+import cn.edu.cdut.lm.mymuiscplayer.module.ItemOfMusicFragment;
 
 /**
- * Created by Administrator on 2016/8/12 0012.
+ * Created by Administrator on 2016/8/12 0012 21:56
  */
 
 public class MusicAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
-    private List<MusicAbout> list;
+    private List<ItemOfMusicFragment> list;
     private Context context;
 
-    public MusicAdapter(Context context, List<MusicAbout> list) {
+    public MusicAdapter(Context context, List<ItemOfMusicFragment> list) {
         this.context = context;
         this.list = list;
     }
@@ -57,7 +57,7 @@ public class MusicAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        MusicAbout musicAbout = list.get(position);
+        ItemOfMusicFragment musicAbout = list.get(position);
 
         int imageId = musicAbout.getImageId();
         String title = musicAbout.getTitle();

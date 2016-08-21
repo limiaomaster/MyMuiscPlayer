@@ -1,37 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <group
         android:checkableBehavior="single">
-
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="正在播放" />
+            android:id="@+id/nav_1"
+            android:icon="@drawable/topmenu_icn_msg"
+            android:title="我的消息" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="我的歌单" />
-
+            android:id="@+id/nav_2"
+            android:icon="@drawable/topmenu_icn_store"
+            android:title="积分商城" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="工具" />
+            android:id="@+id/nav_3"
+            android:icon="@drawable/topmenu_icn_member"
+            android:title="会员中心" />
+        <item
+            android:id="@+id/nav_4"
+            android:icon="@drawable/topmenu_icn_free"
+            android:title="在线听歌免流量" />
+        <item
+            android:id="@+id/nav_5"
+            android:icon="@drawable/topmenu_icn_identify"
+            android:title="听歌识曲" />
+        <item
+            android:id="@+id/nav_6"
+            android:icon="@drawable/topmenu_icn_skin"
+            android:title="主题换肤" />
+        <item
+            android:id="@+id/nav_7"
+            android:icon="@drawable/topmenu_icn_night"
+            android:title="夜间模式" />
+        <item
+            android:id="@+id/nav_8"
+            android:icon="@drawable/topmenu_icn_time"
+            android:title="停时停止播放" />
+        <item
+            android:id="@+id/nav_9"
+            android:icon="@drawable/topmenu_icn_clock"
+            android:title="音乐闹钟" />
+        <item
+            android:id="@+id/nav_10"
+            android:icon="@drawable/topmenu_icn_vehicle"
+            android:title="驾驶模式" />
+        <item
+            android:id="@+id/nav_11"
+            android:icon="@drawable/topmenu_icn_cloud"
+            android:title="我的音乐云盘" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
-
 </menu>

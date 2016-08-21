@@ -29,7 +29,7 @@ public class LocalMusicAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mp3InfoList.size();
+        return mp3InfoList.size()+1;
     }
 
     @Override
@@ -57,16 +57,22 @@ public class LocalMusicAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Mp3Info mp3Info = mp3InfoList.get(position);
+        if (position < mp3InfoList.size()){
+            Mp3Info mp3Info = mp3InfoList.get(position);
 
-        String title = mp3Info.getTitle();
-        String artist = mp3Info.getArtist();
-        String album = mp3Info.getAlbum();
+            String title = mp3Info.getTitle();
+            String artist = mp3Info.getArtist();
+            String album = mp3Info.getAlbum();
 
+            viewHolder.title.setText(title);
+            viewHolder.artist.setText(artist);
+            viewHolder.album.setText(album);
+        } else {
+            viewHolder.title.setText("");
+            viewHolder.artist.setText("");
+            viewHolder.album.setText("");
+        }
 
-        viewHolder.title.setText(title);
-        viewHolder.artist.setText(artist);
-        viewHolder.album.setText(album);
 
         return convertView;
     }

@@ -4,7 +4,7 @@ package cn.edu.cdut.lm.mymuiscplayer.module;
  * Created by Administrator on 2016/8/12 0012.
  */
 
-public class MusicAbout {
+public class ItemOfMusicFragment {
     private int imageId;
     private String title;
     private String number;

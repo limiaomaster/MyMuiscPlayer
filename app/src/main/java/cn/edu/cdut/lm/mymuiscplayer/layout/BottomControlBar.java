@@ -136,6 +136,9 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 bitmap_art_work = MediaUtil.getArtwork(context,musicId,albumId,true,true);
                 iv_art_work.setImageBitmap(bitmap_art_work);
 
+                iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
+                isPlaying = true;
+
                 listPosition = nextPosition;                           //   也要注意更新当前位置listPosition
                 lastPosition = nextPosition;                          //   也要注意更新上一个位置lastPosition
                 nextPosition = (nextPosition+1)%listSize;   //  注意更新nextPosition，，，
