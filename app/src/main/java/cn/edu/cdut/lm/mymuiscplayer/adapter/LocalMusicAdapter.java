@@ -72,8 +72,6 @@ public class LocalMusicAdapter extends BaseAdapter {
             viewHolder.artist.setText("");
             viewHolder.album.setText("");
         }
-
-
         return convertView;
     }
 

@@ -58,8 +58,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
     private static boolean isPlaying;
 
-
-
     private UpdateBarReceiver updateBarReceiver;
 
     public static final String UPDATE_TITLE_ARTIST = "cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST";    //  设置曲名和艺术家
@@ -68,9 +66,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
-
-
-
 
     public BottomControlBar(Context context, AttributeSet attrs) {
 
@@ -200,15 +195,13 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 iv_art_work.setImageBitmap(bitmap_art_work);
 
             }   else if (action.equals(UPDATE_PROGRESS_BAR)){
-                Log.i("onReceive()", "收到广播，这是更新progressbar的Action");
+
                 currentPisition = intent.getIntExtra("currentPosition", 0);
                 duration = intent.getLongExtra("duration",0);
-
                 Log.i("onReceive()", "收到广播，歌曲总长为："+Integer.parseInt(String.valueOf(duration)));
                 Log.i("onReceive()", "收到广播，当前播放时间为："+currentPisition);
                 progressBar.setMax(Integer.parseInt(String.valueOf(duration)));
                 progressBar.setProgress(currentPisition);
-                Log.i("onReceive()", "更新已经全部完成！！！");
             }
 
 

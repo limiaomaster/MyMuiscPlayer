@@ -62,8 +62,13 @@ public class PlayerService extends Service {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+
+                handler.removeMessages(1);
+
                 path = mp3InfoList.get(recycleListPosition).getUrl();
                 playAnotherMusic(0);
+
+                handler.sendEmptyMessage(1);
 
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(UPDATE_UI_ON_COMPLETION);
@@ -72,6 +77,7 @@ public class PlayerService extends Service {
                 listPosition = recycleListPosition;
                 listLastPosition = recycleListPosition;
                 recycleListPosition = (recycleListPosition+1)%mp3InfoList.size();
+
             }
         });
 
@@ -88,12 +94,18 @@ public class PlayerService extends Service {
         if( listPosition == listLastPosition ){ //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
             if( mediaPlayer.isPlaying()){          //   如果此时为正在播放，表示要暂停。
                 this.pause();
+
+                handler.removeMessages(1);
+
             } else {                                            //  如果此时为暂停，表示要继续播放。
                 mediaPlayer.start();                  //   继续播放,用系统的方法start()
-                Log.e("onStartCommand()","已经把音乐继续！！！");
+
+                handler.sendEmptyMessage(1);
+
             }
         } else {                                               //  如果不是一个，那肯定是要播放新的文件了。
             this.playAnotherMusic(0);
+            handler.removeMessages(1);
         }
 
         listLastPosition = listPosition;
@@ -117,6 +129,26 @@ public class PlayerService extends Service {
         }
     }
 
+    private final class PreparedListener implements MediaPlayer.OnPreparedListener {
+        private int currentTime;
+
+        public PreparedListener(int currentTime) {
+            this.currentTime = currentTime;
+        }
+
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+
+            if(currentTime > 0) {    //如果音乐不是从头播放
+                mediaPlayer.seekTo(currentTime);
+            } else {
+                mediaPlayer.start();    //开始播放
+                Log.e("onPrepared","已经开始播放！！！！！！！！");
+                handler.sendEmptyMessage(1);
+                Log.e("onPrepared","sendEmptyMessage(1)");
+            }
+        }
+    }
     private void pause() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
@@ -138,32 +170,7 @@ public class PlayerService extends Service {
     }
 
 
-    private final class PreparedListener implements MediaPlayer.OnPreparedListener {
-        private int currentTime;
 
-        public PreparedListener(int currentTime) {
-            this.currentTime = currentTime;
-        }
-
-        @Override
-        public void onPrepared(MediaPlayer mp) {
-            Log.e("onPrepared","播放器已经就绪，可以开始播放！");
-
-            if(currentTime > 0) {    //如果音乐不是从头播放
-                mediaPlayer.seekTo(currentTime);
-            } else {
-                mediaPlayer.start();    //开始播放
-                Log.e("onPrepared","已经开始播放！！！！！！！！");
-                handler.sendEmptyMessage(1);
-                Log.e("onPrepared","sendEmptyMessage(1)");
-            }
-
-
-
-
-
-        }
-    }
 
     private Handler handler = new Handler(){
         @Override
@@ -174,8 +181,8 @@ public class PlayerService extends Service {
                     currentPosition = mediaPlayer.getCurrentPosition();
                     duration = mp3InfoList.get(listPosition).getDuration();
 
-                    Log.i("handleMessage()","当前歌曲长度为："+duration);
-                    Log.i("handleMessage()","当前播放进度为："+currentPosition);
+                    /*Log.i("handleMessage()","当前歌曲长度为："+duration);
+                    Log.i("handleMessage()","当前播放进度为："+currentPosition);*/
 
                     Intent intent = new Intent();
                     intent.setAction(UPDATE_PROGRESS_BAR);

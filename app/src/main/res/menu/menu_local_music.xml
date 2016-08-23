@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.LocalMusicActivity">
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/actionbar_more"
+        android:orderInCategory="100"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/action_scan"
+                android:title="扫描歌曲"
+                android:orderInCategory="20"
+                android:icon="@drawable/actionbar_menu_icn_scan_l"
+                app:showAsAction="never" />
+
+            <item android:id="@+id/action_order"
+                android:title="选择排序方式"
+                android:orderInCategory="30"
+                android:icon="@drawable/actionbar_menu_icn_order_default_l"
+                app:showAsAction="never" />
+
+            <item android:id="@+id/action_get_lrc"
+                android:title="一键获取封面歌词"
+                android:orderInCategory="40"
+                android:icon="@drawable/actionbar_menu_icn_lrc_l"
+                app:showAsAction="never"/>
+
+            <item android:id="@+id/action_music_update"
+                android:title="音质升级"
+                android:orderInCategory="50"
+                android:icon="@drawable/actionbar_menu_icn_upquality_l"
+                app:showAsAction="never"/>
+        </menu>
+    </item>
+</menu>

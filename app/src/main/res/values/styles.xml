@@ -1,19 +1,26 @@
 <resources xmlns:android="http://schemas.android.com/tools">
 
+    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
         <item  name="android:actionOverflowButtonStyle">@style/MyOverflowStyle</item>
+        <!-- Customize your theme here. -->
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
-        <item name="android:windowBackground">@color/themeColor</item>                    <!--设置背景-->
-        <item name="android:windowAnimationStyle">@style/NoAnimation</item>     <!--设置动画-->
+        <item name="android:windowBackground">@color/themeColor</item>
+        <item name="android:windowAnimationStyle">@style/NoAnimation</item>
         <item name="colorAccent">@color/themeColor</item>
-        <item name="colorPrimaryDark">@color/themeColor</item>
         <item name="colorPrimary">@color/themeColor</item>
-        <item name="android:colorBackground">@color/secondary_text_material_light</item>
-        <item name="android:colorForeground">@color/themeColor</item>
-        <item name="android:textColorPrimary">@color/tab_text_gray</item>
-        <item name="android:textColorPrimaryInverse">@color/secondary_text_material_light</item>
-        <item name="android:textColorSecondary">@color/tab_text_gray</item>
-        <item name="android:textColorSecondaryInverse">@android:color/holo_green_dark</item>
+        <item name="colorPrimaryDark">@color/themeColor</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorPrimaryInverse">@android:color/black</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="actionMenuTextColor">#FF0000ff</item>
+        <!--导航栏的颜色-->
+
+
+        <!--状态栏的颜色-->
+
     </style>
 
     <style name="MyOverflowStyle" parent="@android:style/Widget.ActionButton.Overflow">
@@ -21,14 +28,20 @@
     </style>
 
     <style name="LoadTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/themeColor</item>
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@null</item>
+        <!--导航栏的颜色-->
+
+        <!--状态栏的颜色-->
+
     </style>
 
     <style name="cccc" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable" >@drawable/progressbar</item>
-    </style>
 
+    </style>
     <style name="NoAnimation">
+
         <item name="android:activityOpenEnterAnimation">@null</item>
         <item name="android:activityOpenExitAnimation">@null</item>
         <item name="android:activityCloseEnterAnimation">@null</item>
@@ -41,6 +54,7 @@
         <item name="android:taskToFrontExitAnimation">@null</item>
         <item name="android:taskToBackEnterAnimation">@null</item>
         <item name="android:taskToBackExitAnimation">@null</item>
+
     </style>
 
     <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert"></style>

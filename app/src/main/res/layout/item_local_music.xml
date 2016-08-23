@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="50dp">
+    android:layout_height="50dp"
+    android:minHeight="50dp"
+    android:background="@drawable/item_local_music_bg"
+    >
 
     <ImageView
         android:id="@+id/speaker"
@@ -26,6 +27,7 @@
             android:id="@+id/title_localmusic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="60dp"
             android:text="半兽人"
             android:maxLines="1"
             android:textSize="16sp"
@@ -39,6 +41,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="2dp"
+            android:layout_marginEnd="60dp"
             android:gravity="center_vertical">
 
             <ImageView
@@ -53,6 +56,7 @@
                 android:id="@+id/artist_localmusic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="周杰伦"
                 android:textSize="11sp"
                 android:layout_marginEnd="1dp" />
@@ -67,13 +71,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="八度空间"
+                android:maxLines="1"
                 android:textSize="11sp"
                 android:layout_marginEnd="5dp" />
+         </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:clickable="true">
+        <ImageView
+            android:id="@+id/more_localmusic"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center_vertical"
+
+            android:src="@drawable/list_icn_more"/>
     </LinearLayout>
 
 
 
-
-
-    </RelativeLayout>
 </RelativeLayout>

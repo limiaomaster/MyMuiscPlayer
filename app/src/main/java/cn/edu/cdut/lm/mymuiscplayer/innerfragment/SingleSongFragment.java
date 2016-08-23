@@ -32,6 +32,9 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
 
 
     private int listPosition ;
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
