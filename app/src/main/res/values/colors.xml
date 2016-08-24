@@ -13,7 +13,7 @@
     <color name="itemLocalMusicNormal">#FFEFF3F2</color>
     <color name="itemLocalMusicSelected">#FFCCCCCC</color>
 
-
+    <color name="text_color">#FF000000</color>
 
     <color name="bantouming">#DDFFFFFF</color>
     <color name="actionbarTabUnselected">#EEEEEE</color>

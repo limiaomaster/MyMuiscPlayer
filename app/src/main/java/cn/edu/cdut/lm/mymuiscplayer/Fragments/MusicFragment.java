@@ -77,23 +77,6 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
         switch (position){
             case 0:
                 Log.i("onItemClick","准备进入“本地音乐”，，，");
-                /*if (localMusicFragment == null){
-                    localMusicFragment = new LocalMusicFragment();
-                }
-                Log.v("onItemClick","1.new出来一个LocalMusicFragment");
-                FragmentManager fragmentManager = getFragmentManager();
-                //FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                //fragmentTransaction.detach(this); //  detach不行，返回到该fragment时，会多出好多item，，，
-                //fragmentTransaction.remove(this);//  remove不行，返回到该fragment时，会多出好多item，，，
-                fragmentTransaction.hide(this);
-                //  注意，必须加载localMusicFragment到一个布局文件的根节点的id上。
-                fragmentTransaction.replace(R.id.fullscreen, localMusicFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                break;*/
-
-
                 Intent intent = new Intent(getActivity(), LocalMusicActivity.class);
                 startActivity(intent);
         }

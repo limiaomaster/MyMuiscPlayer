@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -52,14 +54,13 @@ public class LocalMusicAdapter extends BaseAdapter {
             viewHolder.title = (TextView) convertView.findViewById(R.id.title_localmusic);
             viewHolder.artist = (TextView) convertView.findViewById(R.id.artist_localmusic);
             viewHolder.album = (TextView) convertView.findViewById(R.id.album_localmusic);
+            viewHolder.more = (LinearLayout) convertView.findViewById(R.id.ll_more_localmusic);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
+        Mp3Info mp3Info = mp3InfoList.get(position);
         if (position < mp3InfoList.size()){
-            Mp3Info mp3Info = mp3InfoList.get(position);
-
             String title = mp3Info.getTitle();
             String artist = mp3Info.getArtist();
             String album = mp3Info.getAlbum();
@@ -72,14 +73,27 @@ public class LocalMusicAdapter extends BaseAdapter {
             viewHolder.artist.setText("");
             viewHolder.album.setText("");
         }
+        addButtomClickAction(viewHolder.more,mp3Info,position);
         return convertView;
     }
 
+
+    private void addButtomClickAction(View view, final Mp3Info mp3Info, final int position) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = mp3Info.getTitle();
+
+                Toast.makeText(context,"您点击的歌曲名叫 "+title,Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
     private static class ViewHolder {
         TextView title;
         TextView artist;
         TextView album;
+        LinearLayout more;
     }
 }

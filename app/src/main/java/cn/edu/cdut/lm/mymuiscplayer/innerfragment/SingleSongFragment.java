@@ -28,7 +28,6 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
 
     private List<Mp3Info> mp3InfoList;
-    private ListView listView;
 
 
     private int listPosition ;
@@ -39,7 +38,7 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.inner_fragment_single_music, container , false);
-        listView = (ListView) view.findViewById(R.id.listview_localmusic);
+        ListView listView = (ListView) view.findViewById(R.id.listview_localmusic);
 
         mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
 

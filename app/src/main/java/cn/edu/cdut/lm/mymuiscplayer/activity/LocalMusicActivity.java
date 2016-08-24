@@ -25,7 +25,7 @@ import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.AlbumFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.FolderFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingerFragment;
-import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragment;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragmentOnRV;
 
 
 /**
@@ -37,7 +37,7 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    private SingleSongFragment singleSongFragment;
+    private SingleSongFragmentOnRV singleSongFragment;
     private SingerFragment singerFragment;
     private AlbumFragment albumFragment;
     private FolderFragment folderFragment;
@@ -183,7 +183,7 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         tabNameList.add("专辑");
         tabNameList.add("文件夹");
         if (singleSongFragment == null) {
-            singleSongFragment = new SingleSongFragment();
+            singleSongFragment = new SingleSongFragmentOnRV();
             fragmentList.add(singleSongFragment);
         }
         if (singerFragment == null) {
