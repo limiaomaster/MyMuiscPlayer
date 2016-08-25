@@ -4,7 +4,7 @@ package cn.edu.cdut.lm.mymuiscplayer.module;
  * Created by LimiaoMaster on 2016/8/15 0015 上午 11:15
  */
 
-public class Mp3Info {
+public class Mp3Info  {
     private long id;
     private String title;
     private String displayName;
@@ -22,7 +22,6 @@ public class Mp3Info {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
-
     @Override
     public String toString() {
         return "Mp3Info{" +
@@ -53,8 +52,6 @@ public class Mp3Info {
     public void setAlbum(String album) {
         this.album = album;
     }
-
-
 
     public long getId() {
         return id;

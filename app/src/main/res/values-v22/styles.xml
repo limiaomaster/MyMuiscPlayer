@@ -19,6 +19,9 @@
         <item name="android:navigationBarColor">@color/secondary_text_material_light</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">#FF0000ff</item>
+
+        <!--<item name="android:listDivider">@drawable/divider_bg</item>-->
+
     </style>
 
     <style name="MyOverflowStyle" parent="@android:style/Widget.ActionButton.Overflow">

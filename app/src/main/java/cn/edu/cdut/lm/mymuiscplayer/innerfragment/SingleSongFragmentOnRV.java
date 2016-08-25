@@ -15,6 +15,7 @@ import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongRVAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
+import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
 /**
  * Created by LimiaoMaster on 2016/8/24 18:26
@@ -38,7 +39,8 @@ public class SingleSongFragmentOnRV extends Fragment {
         SingleSongRVAdapter singleSongRVAdapter = new SingleSongRVAdapter(getContext(),list);
         recyclerView.setAdapter(singleSongRVAdapter);
         //3
-
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+        recyclerView.addItemDecoration(dividerItemDecoration);
         return view;
     }
 }

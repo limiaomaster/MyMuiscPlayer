@@ -55,7 +55,6 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Mp3Info mp3Info = mp3InfoList.get(position);
         Log.e("onItemClick","您点击了第："+position+"行！");
-        Log.e("onItemClick",""+mp3Info);
 
         Intent intent = new Intent();
         intent.putExtra("position", position);
@@ -68,6 +67,8 @@ public class SingleSongFragment extends Fragment implements AdapterView.OnItemCl
         broadCastIntent.putExtra("position",position);
         getActivity().sendBroadcast(broadCastIntent);
         Log.e("onItemClick","发送了UPDATE_UI的广播！");
+
+
 
         /*ImageView thisSpeaker = (ImageView) listView.getChildAt(position).findViewById(speaker);
         ImageView lastSpeaker = (ImageView) listView.getChildAt(listPosition).findViewById(speaker);

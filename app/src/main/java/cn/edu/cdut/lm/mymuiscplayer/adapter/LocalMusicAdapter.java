@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +54,7 @@ public class LocalMusicAdapter extends BaseAdapter {
             viewHolder.title = (TextView) convertView.findViewById(R.id.title_localmusic);
             viewHolder.artist = (TextView) convertView.findViewById(R.id.artist_localmusic);
             viewHolder.album = (TextView) convertView.findViewById(R.id.album_localmusic);
-            viewHolder.more = (LinearLayout) convertView.findViewById(R.id.ll_more_localmusic);
+            viewHolder.more = (ImageView) convertView.findViewById(R.id.iv_more_localmusic);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -94,6 +94,6 @@ public class LocalMusicAdapter extends BaseAdapter {
         TextView title;
         TextView artist;
         TextView album;
-        LinearLayout more;
+        ImageView more;
     }
 }

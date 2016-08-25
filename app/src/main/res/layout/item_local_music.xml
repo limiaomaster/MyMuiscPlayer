@@ -78,22 +78,18 @@
          </LinearLayout>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_more_localmusic"
+    <ImageView
+        android:id="@+id/iv_more_localmusic"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_marginEnd="1dp"
         android:layout_centerVertical="true"
-        android:clickable="true">
-        <ImageView
-            android:id="@+id/iv_more_localmusic"
-            android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center_vertical"
-
-            android:src="@drawable/list_icn_more"/>
-    </LinearLayout>
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:focusable="false"
+        android:paddingTop="17dp"
+        android:paddingBottom="17dp"
+        android:src="@drawable/list_icn_more" />
 
 
 
