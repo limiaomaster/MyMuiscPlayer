@@ -73,7 +73,6 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
-
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

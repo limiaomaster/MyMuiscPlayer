@@ -2,6 +2,7 @@ package cn.edu.cdut.lm.mymuiscplayer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInformationFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 
@@ -24,8 +26,9 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
 
-    private final Context context;
-    private final List<Mp3Info> list;
+    private  FragmentActivity fragmentActivity;
+    private  Context context;
+    private  List<Mp3Info> list;
     final static int FIRST_ITEM = 0;
     final static int ITEM = 1;
 
@@ -34,12 +37,17 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.list = list;
     }
 
+    public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
+        this.context = context;
+        this.list = list;
+        fragmentActivity = activity;
+    }
+
     @Override
     public int getItemViewType(int position) {
         Log.d("SingleSongRVAdapter()","getItemViewType()方法得到执行！ " +
                 "position为"+position+"  返回值为："+(position == FIRST_ITEM ? FIRST_ITEM : ITEM));
         return position == FIRST_ITEM ? FIRST_ITEM : ITEM;
-
     }
 
     @Override
@@ -62,6 +70,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((LastLinesViewHolder) holder).title.setText(mp3Info.getTitle());
             ((LastLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
             ((LastLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
+
             ((LastLinesViewHolder) holder).view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -77,9 +86,10 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     broadCastIntent.putExtra("position",position-1);
                     context.sendBroadcast(broadCastIntent);
                     Log.e("onItemClick","发送了UPDATE_UI的广播！");
+
+                    /*((LastLinesViewHolder) holder).speaker.setVisibility(View.VISIBLE);*/
                 }
             });
-            /*holder.itemView.setOnClickListener();*/
 
         } else if (position > list.size()){
             ((LastLinesViewHolder) holder).title.setText("");
@@ -114,6 +124,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView artist;
         TextView album;
         ImageView more;
+        ImageView speaker;
         View view;
         public LastLinesViewHolder(View viewOfLast) {
             super(viewOfLast);
@@ -122,6 +133,16 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             artist = (TextView) viewOfLast.findViewById(R.id.artist_localmusic);
             album = (TextView) viewOfLast.findViewById(R.id.album_localmusic);
             more = (ImageView) viewOfLast.findViewById(R.id.iv_more_localmusic);
+            speaker = (ImageView) viewOfLast.findViewById(R.id.speaker);
+
+            more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MoreInformationFragment moreInformationFragment = MoreInformationFragment.newInstance(list.get(getAdapterPosition()-1),0);
+                    Log.i("LastLinesViewHolder()",list.get(getAdapterPosition()-1)+"");
+                    moreInformationFragment.show(fragmentActivity.getSupportFragmentManager(),"music");
+                }
+            });
         }
     }
 }

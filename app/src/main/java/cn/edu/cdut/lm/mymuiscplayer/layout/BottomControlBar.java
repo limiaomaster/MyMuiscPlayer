@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -182,6 +183,11 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 title = mp3InfoList.get(listPosition).getTitle();
                 artist = mp3InfoList.get(listPosition).getArtist();
                 tv_title_of_music.setText(title);
+                //设置跑马灯，滚动显示歌名。
+                tv_title_of_music.setSingleLine(true);
+                tv_title_of_music.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                tv_title_of_music.setSelected(true);
+                tv_title_of_music.setMarqueeRepeatLimit(-1);
                 tv_artist_of_music.setText(artist);
 
 

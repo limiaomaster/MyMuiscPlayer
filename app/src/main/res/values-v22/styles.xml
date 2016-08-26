@@ -101,6 +101,8 @@
         <item name="android:windowAnimationStyle">@style/dialog_fragment_animation</item>
         <item name="android:windowEnterAnimation">@anim/dialog_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/dialog_out_bottom</item>
+
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
     <style name="DownLoadingDialog" parent="@style/AppTheme">

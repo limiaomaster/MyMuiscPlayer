@@ -4,18 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/title_more_information"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:text="歌曲："
-        android:textSize="13.5sp" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/pop_list"
+        android:id="@+id/recyclerView_localMusic_moreInformation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fadeScrollbars="true"/>

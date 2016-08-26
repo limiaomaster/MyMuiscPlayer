@@ -36,7 +36,7 @@ public class SingleSongFragmentOnRV extends Fragment {
         //1
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //2
-        SingleSongRVAdapter singleSongRVAdapter = new SingleSongRVAdapter(getContext(),list);
+        SingleSongRVAdapter singleSongRVAdapter = new SingleSongRVAdapter(getActivity(),getContext(),list);
         recyclerView.setAdapter(singleSongRVAdapter);
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);

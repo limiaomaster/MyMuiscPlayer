@@ -1,10 +1,13 @@
 package cn.edu.cdut.lm.mymuiscplayer.module;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by LimiaoMaster on 2016/8/15 0015 上午 11:15
  */
 
-public class Mp3Info  {
+public class Mp3Info implements Parcelable {
     private long id;
     private String title;
     private String displayName;
@@ -14,6 +17,34 @@ public class Mp3Info  {
     private String url;
     private String album;
     private long albumId;
+
+    public Mp3Info(){
+
+    }
+
+    protected Mp3Info(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        displayName = in.readString();
+        artist = in.readString();
+        duration = in.readLong();
+        size = in.readLong();
+        url = in.readString();
+        album = in.readString();
+        albumId = in.readLong();
+    }
+
+    public static final Creator<Mp3Info> CREATOR = new Creator<Mp3Info>() {
+        @Override
+        public Mp3Info createFromParcel(Parcel in) {
+            return new Mp3Info(in);
+        }
+
+        @Override
+        public Mp3Info[] newArray(int size) {
+            return new Mp3Info[size];
+        }
+    };
 
     public String getDisplayName() {
         return displayName;
@@ -99,5 +130,23 @@ public class Mp3Info  {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(displayName);
+        dest.writeString(artist);
+        dest.writeLong(duration);
+        dest.writeLong(size);
+        dest.writeString(url);
+        dest.writeString(album);
+        dest.writeLong(albumId);
     }
 }

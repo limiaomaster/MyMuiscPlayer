@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.List;
 
@@ -53,7 +52,6 @@ public class PlayerService extends Service {
 
     @Override
     public void onCreate() {
-        Log.e("onCreate()","-----------执行onCreate()方法----------");
         super.onCreate();
 
         mediaPlayer = new MediaPlayer();
@@ -85,8 +83,6 @@ public class PlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("onStartCommand()","-----------执行onStartCommand()方法----------");
-
 
         listPosition = intent.getIntExtra("position",0);
         path = mp3InfoList.get(listPosition).getUrl();
@@ -143,9 +139,7 @@ public class PlayerService extends Service {
                 mediaPlayer.seekTo(currentTime);
             } else {
                 mediaPlayer.start();    //开始播放
-                Log.e("onPrepared","已经开始播放！！！！！！！！");
                 handler.sendEmptyMessage(1);
-                Log.e("onPrepared","sendEmptyMessage(1)");
             }
         }
     }
@@ -175,21 +169,15 @@ public class PlayerService extends Service {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            Log.i("handleMessage()","进入handleMessage()方法。。。。。");
             if (msg.what == 1){
                 if (mediaPlayer != null){
                     currentPosition = mediaPlayer.getCurrentPosition();
                     duration = mp3InfoList.get(listPosition).getDuration();
-
-                    /*Log.i("handleMessage()","当前歌曲长度为："+duration);
-                    Log.i("handleMessage()","当前播放进度为："+currentPosition);*/
-
                     Intent intent = new Intent();
                     intent.setAction(UPDATE_PROGRESS_BAR);
                     intent.putExtra("duration",duration);
                     intent.putExtra("currentPosition",currentPosition);
                     sendBroadcast(intent);
-                    Log.i("handleMessage()","这是发送更新progressbar的intent");
                     handler.sendEmptyMessageDelayed(1,1000);
                 }
             }
