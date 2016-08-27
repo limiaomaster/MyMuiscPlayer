@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:text="不是兄弟"
         android:textSize="13sp"
-
+        android:maxLines="1"
+        android:ellipsize="end"
         android:layout_gravity="center_vertical"
         android:textColor="#999999"/>
 </LinearLayout>

@@ -117,5 +117,5 @@
         android:layout_marginTop="2dp"
         android:layout_alignParentBottom="true"
         style="@style/MyProgressBarStyle"
-        android:progress="35" />
+        android:progress="0" />
 </RelativeLayout>

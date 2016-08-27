@@ -75,7 +75,6 @@ public class PlayerService extends Service {
                 listPosition = recycleListPosition;
                 listLastPosition = recycleListPosition;
                 recycleListPosition = (recycleListPosition+1)%mp3InfoList.size();
-
             }
         });
 

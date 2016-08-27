@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-    }
+    }*/
 
 
     //  以下两个方法是创建标题栏右边的菜单键，注释掉的话就没有菜单键，
@@ -238,7 +238,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if ((System.currentTimeMillis() - time > 1000)) {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            } else if ((System.currentTimeMillis() - time > 1000)) {
                 Toast.makeText(this, "再按一次返回桌面", Toast.LENGTH_SHORT).show();
                 time = System.currentTimeMillis();
             } else {
