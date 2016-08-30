@@ -53,9 +53,9 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("SingleSongRVAdapter()","onCreateViewHolder()方法得到执行!  ");
-        View viewOfFist = LayoutInflater.from(context).inflate(R.layout.item_first_line_local_music,parent,false);
+        View viewOfFirst = LayoutInflater.from(context).inflate(R.layout.item_first_line_local_music,parent,false);
         View viewOfLast = LayoutInflater.from(context).inflate(R.layout.item_local_music,parent,false);
-        if(viewType == FIRST_ITEM) return new FirstLineViewHolder(viewOfFist);
+        if(viewType == FIRST_ITEM) return new FirstLineViewHolder(viewOfFirst);
         else return new LastLinesViewHolder(viewOfLast);
     }
 
@@ -138,8 +138,9 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MoreInformationFragment moreInformationFragment = MoreInformationFragment.newInstance(list.get(getAdapterPosition()-1),0);
                     Log.i("LastLinesViewHolder()",list.get(getAdapterPosition()-1)+"");
+                    MoreInformationFragment moreInformationFragment = MoreInformationFragment.newInstance(list.get(getAdapterPosition()-1),0);
+
                     moreInformationFragment.show(fragmentActivity.getSupportFragmentManager(),"music");
                 }
             });
