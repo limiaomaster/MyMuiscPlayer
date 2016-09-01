@@ -24,20 +24,18 @@ import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
 public class ArtistFragmentRV extends Fragment {
 
-    private RecyclerView recyclerView;
-    private List<ArtistInfo> artistInfoList;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.inner_fragment_artist, container , false);
 
-        artistInfoList = ArtistUtil.getArtistList(getContext());
-        Log.e("ArtistFragmentRV","歌手列表长度为："+artistInfoList.size());
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_artistFragment);
+        List<ArtistInfo> artistInfoList = ArtistUtil.getArtistList(getContext());
+        Log.e("ArtistFragmentRV","歌手列表长度为："+ artistInfoList.size());
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_artistFragment);
         //1
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //2
-        ArtistRVAdapter artistRVAdapter = new ArtistRVAdapter(getActivity(), getContext(),artistInfoList);
+        ArtistRVAdapter artistRVAdapter = new ArtistRVAdapter(getActivity(), getContext(), artistInfoList);
         recyclerView.setAdapter(artistRVAdapter);
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);

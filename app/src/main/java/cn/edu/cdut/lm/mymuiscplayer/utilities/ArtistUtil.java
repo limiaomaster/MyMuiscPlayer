@@ -21,6 +21,7 @@ public class ArtistUtil {
             Audio.Artists.NUMBER_OF_TRACKS,
             Audio.Artists._ID
     };
+
     private static String defaultSortOrder = Audio.Artists.DEFAULT_SORT_ORDER;
 
     public static List<ArtistInfo> getArtistList(Context context) {
