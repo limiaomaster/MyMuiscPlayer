@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+    <ImageView
+        android:id="@+id/iv_artist_artistFragment"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/banshouren" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/iv_artist_artistFragment"
+        android:layout_toStartOf="@+id/iv_moreinfo_singer">
+        <TextView
+            android:id="@+id/tv_artist_name_artistFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text="阿雅"
+            android:gravity="bottom"
+            android:textSize="12dp"
+            android:textColor="@color/itemMain"
+            />
+        <TextView
+            android:id="@+id/tv_number_of_track_artistFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text="1首"
+            android:paddingTop="3dp"
+            android:gravity="top"
+            android:textSize="10dp"
+            android:textColor="@color/itemSubMain"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_moreinfo_singer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/list_icn_more"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:layout_marginEnd="1dp"
+
+        />
+
+</RelativeLayout>

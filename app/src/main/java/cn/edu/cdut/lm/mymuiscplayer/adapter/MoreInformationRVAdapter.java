@@ -35,7 +35,7 @@ public class MoreInformationRVAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View firstView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_more_info_first_line_local_music,parent,false);
+        View firstView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_more_info_first_line_single_music,parent,false);
         View generalView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_more_info_local_music,parent,false);
         if(viewType == 0) return new FirstViewHolder(firstView);
         return new GeneralViewHolder(generalView);
@@ -67,7 +67,7 @@ public class MoreInformationRVAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemCount() {
-        return 14;
+        return list.size()+1;
     }
 
 
@@ -76,7 +76,7 @@ public class MoreInformationRVAdapter extends RecyclerView.Adapter<RecyclerView.
         TextView textView ;
         public FirstViewHolder(View firstView) {
             super(firstView);
-            textView = (TextView) firstView.findViewById(R.id.tv_first_line_more_infor);
+            textView = (TextView) firstView.findViewById(R.id.tv_first_line_more_info_single);
         }
     }
 

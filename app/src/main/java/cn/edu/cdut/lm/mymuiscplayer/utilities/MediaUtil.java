@@ -27,7 +27,7 @@ import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
  */
 
 public class MediaUtil {
-
+    private static Uri uri = Media.EXTERNAL_CONTENT_URI;
     private static String[] projectionOfMusic = new String[] {
             Media._ID,  Media.TITLE,    Media.ARTIST,
             Media.ALBUM, Media.DISPLAY_NAME, Media.DATA,
@@ -36,16 +36,17 @@ public class MediaUtil {
 
     private static String selectionOfMusic= "is_music=1 AND title != ''";
 
-
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
 
-
     public static List<Mp3Info> getMp3List(Context context) {
         Cursor cursor = context.getContentResolver().query(
-                Media.EXTERNAL_CONTENT_URI,
-                projectionOfMusic, selectionOfMusic, null,
-                Media.TITLE+" COLLATE LOCALIZED ASC");
+                uri,
+                projectionOfMusic,
+                selectionOfMusic,
+                null,
+                Media.TITLE+" COLLATE LOCALIZED ASC"
+        );
 
         List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
         while (cursor.moveToNext()){

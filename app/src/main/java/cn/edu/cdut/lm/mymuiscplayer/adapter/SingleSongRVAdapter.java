@@ -15,7 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInformationFragment;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoSingleSongFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 
@@ -31,11 +31,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private  List<Mp3Info> list;
     final static int FIRST_ITEM = 0;
     final static int ITEM = 1;
-
-    public SingleSongRVAdapter(Context context, List<Mp3Info> list) {
-        this.context = context;
-        this.list = list;
-    }
 
     public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
         this.context = context;
@@ -54,7 +49,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("SingleSongRVAdapter()","onCreateViewHolder()方法得到执行!  ");
         View viewOfFirst = LayoutInflater.from(context).inflate(R.layout.item_first_line_local_music,parent,false);
-        View viewOfLast = LayoutInflater.from(context).inflate(R.layout.item_local_music,parent,false);
+        View viewOfLast = LayoutInflater.from(context).inflate(R.layout.item_single_song_local_music,parent,false);
         if(viewType == FIRST_ITEM) return new FirstLineViewHolder(viewOfFirst);
         else return new LastLinesViewHolder(viewOfLast);
     }
@@ -139,7 +134,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     Log.i("LastLinesViewHolder()",list.get(getAdapterPosition()-1)+"");
-                    MoreInformationFragment moreInformationFragment = MoreInformationFragment.newInstance(list.get(getAdapterPosition()-1),0);
+                    MoreInfoSingleSongFragment moreInformationFragment = MoreInfoSingleSongFragment.newInstance(list.get(getAdapterPosition()-1),0);
 
                     moreInformationFragment.show(fragmentActivity.getSupportFragmentManager(),"music");
                 }

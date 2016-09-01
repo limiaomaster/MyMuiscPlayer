@@ -11,9 +11,9 @@ import cn.edu.cdut.lm.mymuiscplayer.R;
  * Created by LimiaoMaster on 2016/8/26 12:29
  */
 
-public class MusicMoreInformationUtil {
+public class MoreInfoUtil {
 
-    static int[] image = new int[]{
+    static int[] imageInSingleMusic = new int[]{
             R.drawable.lay_icn_next, R.drawable.lay_icn_fav, R.drawable.lay_icn_cmt,
             R.drawable.lay_icn_share, R.drawable.lay_icn_upload, R.drawable.lay_icn_delete,
             R.drawable.lay_icn_artist, R.drawable.lay_icn_alb, R.drawable.lay_icn_quality,
@@ -21,7 +21,7 @@ public class MusicMoreInformationUtil {
             R.drawable.lay_icn_color_ring
     };
 
-    static String[] text = new String[]{
+    static String[] textInSingleMusic = new String[]{
             "下一首播放", "收藏到歌单", "评论",
             "分享", "上传到云盘", "删除",
             "歌手：", "专辑：", "音质升级",
@@ -29,12 +29,31 @@ public class MusicMoreInformationUtil {
             "彩铃"
     };
 
-    public static List<Map<String, Object>> getMoreInformation() {
+    private static int[] imageInArtist = new int[]{
+            R.drawable.lay_icn_next, R.drawable.lay_icn_fav, R.drawable.lay_icn_upload,
+            R.drawable.lay_icn_delete
+    };
+    private static String[] textInArtist = new String[]{
+            "播放", "收藏到歌单", "上传到云盘", "删除"
+    };
+
+    public static List<Map<String, Object>> getMoreInfoOnSingleMusic() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         for(int i = 0; i<13 ;i++){
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("image",image[i]);
-            map.put("text",text[i]);
+            map.put("image",imageInSingleMusic[i]);
+            map.put("text",textInSingleMusic[i]);
+            list.add(map);
+        }
+        return list;
+    }
+
+    public static List<Map<String,Object>> getMoreInfoOnArtist(){
+        List<Map<String,Object>> list = new ArrayList<>();
+        for (int i = 0 ; i<4 ; i++){
+            Map<String , Object> map = new HashMap<>();
+            map.put("image",imageInArtist[i]);
+            map.put("text",textInArtist[i]);
             list.add(map);
         }
         return list;

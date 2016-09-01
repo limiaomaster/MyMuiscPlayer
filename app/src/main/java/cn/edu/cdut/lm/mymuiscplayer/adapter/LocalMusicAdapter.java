@@ -48,7 +48,7 @@ public class LocalMusicAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder ;
         if (convertView == null) {
-            convertView =  LayoutInflater.from(context).inflate(R.layout.item_local_music,null);
+            convertView =  LayoutInflater.from(context).inflate(R.layout.item_single_song_local_music,null);
             viewHolder = new ViewHolder();
 
             viewHolder.title = (TextView) convertView.findViewById(R.id.title_localmusic);

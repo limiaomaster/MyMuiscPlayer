@@ -16,33 +16,34 @@ import java.util.List;
 import java.util.Map;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.adapter.MoreInformationRVAdapter;
-import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
-import cn.edu.cdut.lm.mymuiscplayer.utilities.MusicMoreInformationUtil;
+import cn.edu.cdut.lm.mymuiscplayer.adapter.MoreInfoArtistAdapter;
+import cn.edu.cdut.lm.mymuiscplayer.module.ArtistInfo;
+import cn.edu.cdut.lm.mymuiscplayer.utilities.MoreInfoUtil;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
 /**
- * Created by LimiaoMaster on 2016/8/23 19:26
+ * Created by LimiaoMaster on 2016/9/1 9:45
  */
+public class MoreInfoArtistFragment extends DialogFragment{
 
-public class MoreInformationFragment extends DialogFragment {
-
-    private List<Map<String, Object>> list;
-    private LinearLayoutManager linearLayoutManager;
+    private double heightPercent = 0.37;
+    private List<Map<String,Object>> list;
     private RecyclerView recyclerView;
-    private double heightPercent = 0.62;
-    private String artist;
-    private String title;
-    private String album;
-    private Mp3Info mp3Info;
+    private LinearLayoutManager linearLayoutManager;
+    private ArtistInfo artistInfo;
 
-    public static MoreInformationFragment newInstance(Mp3Info mp3Info, int startFrom) {
-        MoreInformationFragment moreInformationFragment = new MoreInformationFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("Mp3Info", mp3Info);
-        bundle.putInt("type",startFrom);
-        moreInformationFragment.setArguments(bundle);
-        return moreInformationFragment;
+
+
+
+
+
+
+    public static MoreInfoArtistFragment newInstance(ArtistInfo artistInfo) {
+        MoreInfoArtistFragment fragment = new MoreInfoArtistFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("ArtistInfo",artistInfo);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -59,10 +60,11 @@ public class MoreInformationFragment extends DialogFragment {
         getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, dialogHeight);
         getDialog().setCanceledOnTouchOutside(true);
     }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
@@ -70,27 +72,26 @@ public class MoreInformationFragment extends DialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setAttributes(params);
 
-        getMp3InfoListFromParcel();
+        getArtistInfoFromParcel();
 
         View view = inflater.inflate(R.layout.layout_more_info_local_music,container);
-        list = MusicMoreInformationUtil.getMoreInformation();
+        list = MoreInfoUtil.getMoreInfoOnArtist();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_localMusic_moreInformation);
         //1
         linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         //2
-        MoreInformationRVAdapter moreInformationRVAdapter = new MoreInformationRVAdapter(mp3Info,list);
-        recyclerView.setAdapter(moreInformationRVAdapter);
+        MoreInfoArtistAdapter moreInfoArtistAdapter = new MoreInfoArtistAdapter(artistInfo,list);
+        recyclerView.setAdapter(moreInfoArtistAdapter);
         //3
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(itemDecoration);
 
-
         return view;
     }
 
-    private void getMp3InfoListFromParcel() {
-        mp3Info = getArguments().getParcelable("Mp3Info");
+    private void getArtistInfoFromParcel() {
+        artistInfo = getArguments().getParcelable("ArtistInfo");
     }
 }

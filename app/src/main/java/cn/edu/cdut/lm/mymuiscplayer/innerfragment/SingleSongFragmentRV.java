@@ -21,7 +21,7 @@ import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
  * Created by LimiaoMaster on 2016/8/24 18:26
  */
 
-public class SingleSongFragmentOnRV extends Fragment {
+public class SingleSongFragmentRV extends Fragment {
     private RecyclerView recyclerView;
     private List<Mp3Info> list ;
 
@@ -32,7 +32,7 @@ public class SingleSongFragmentOnRV extends Fragment {
         View view = inflater.inflate(R.layout.inner_fragment_single_music_recycler_view,container,false);
 
         list = MediaUtil.getMp3List(getContext());
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_localMusic);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_singleMusic);
         //1
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //2
