@@ -29,8 +29,9 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private  FragmentActivity fragmentActivity;
     private  Context context;
     private  List<Mp3Info> list;
-    final static int FIRST_ITEM = 0;
-    final static int ITEM = 1;
+    private final static int FIRST_LINE = 0;
+    private final static int GENERAL_LINES=1;
+    private final static int LAST_LINE = 2;
 
     public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
         this.context = context;
@@ -38,22 +39,41 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         fragmentActivity = activity;
     }
 
+    /**
+     * 根据要渲染行的position 产生类型。
+     * @param position
+     * @return
+     */
     @Override
     public int getItemViewType(int position) {
-        Log.d("SingleSongRVAdapter()","getItemViewType()方法得到执行！ " +
-                "position为"+position+"  返回值为："+(position == FIRST_ITEM ? FIRST_ITEM : ITEM));
-        return position == FIRST_ITEM ? FIRST_ITEM : ITEM;
+        if(position == 0 ) return FIRST_LINE;
+        else if (position == list.size()+1) return LAST_LINE;
+        else return GENERAL_LINES;
     }
 
+    /**
+     * 根据行的类型，产生ViewHolder。
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("SingleSongRVAdapter()","onCreateViewHolder()方法得到执行!  ");
-        View viewOfFirst = LayoutInflater.from(context).inflate(R.layout.item_first_line_local_music,parent,false);
-        View viewOfLast = LayoutInflater.from(context).inflate(R.layout.item_single_song_local_music,parent,false);
-        if(viewType == FIRST_ITEM) return new FirstLineViewHolder(viewOfFirst);
-        else return new LastLinesViewHolder(viewOfLast);
+        View viewOfFirstLine = LayoutInflater.from(context).inflate(R.layout.item_localmusic_singlesong_firstline,parent,false);
+        View viewOfGeneralLines = LayoutInflater.from(context).inflate(R.layout.item_localmusic_singlesong_generallines,parent,false);
+        View viewOfLastLine = LayoutInflater.from(context).inflate(R.layout.item_localmusic_lastline_empty,parent,false);
+        if(viewType == FIRST_LINE) return new FirstLineViewHolder(viewOfFirstLine);
+        else if (viewType == GENERAL_LINES) return new GeneralLinesViewHolder(viewOfGeneralLines);
+        else if (viewType == LAST_LINE) return new LastLinesViewHolder(viewOfLastLine);
+        else return null;
     }
 
+    /**
+     * 用ViewHolder配置要显示的内容。
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Mp3Info mp3Info = null;
@@ -62,11 +82,11 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         if (position >= 1 && position <= list.size()) {
             mp3Info = list.get(position - 1);
-            ((LastLinesViewHolder) holder).title.setText(mp3Info.getTitle());
-            ((LastLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
-            ((LastLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
+            ((GeneralLinesViewHolder) holder).title.setText(mp3Info.getTitle());
+            ((GeneralLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
+            ((GeneralLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
 
-            ((LastLinesViewHolder) holder).view.setOnClickListener(new View.OnClickListener() {
+            ((GeneralLinesViewHolder) holder).view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText( context,"您点击了第："+(position-1)+"行",Toast.LENGTH_SHORT).show();
@@ -85,17 +105,13 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     /*((LastLinesViewHolder) holder).speaker.setVisibility(View.VISIBLE);*/
                 }
             });
-
-        } else if (position > list.size()){
-            ((LastLinesViewHolder) holder).title.setText("");
-            ((LastLinesViewHolder) holder).artist.setText("");
-            ((LastLinesViewHolder) holder).album.setText("");
         }
     }
 
     @Override
     public int getItemCount() {
-        return list.size()+2;
+        if (list.size() == 0 ) return 1;
+        else return list.size()+2;
     }
 
     private class FirstLineViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -114,21 +130,21 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private class LastLinesViewHolder extends RecyclerView.ViewHolder {
+    private class GeneralLinesViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView artist;
         TextView album;
         ImageView more;
         ImageView speaker;
         View view;
-        public LastLinesViewHolder(View viewOfLast) {
-            super(viewOfLast);
-            view = viewOfLast;
-            title = (TextView) viewOfLast.findViewById(R.id.title_localmusic);
-            artist = (TextView) viewOfLast.findViewById(R.id.artist_localmusic);
-            album = (TextView) viewOfLast.findViewById(R.id.album_localmusic);
-            more = (ImageView) viewOfLast.findViewById(R.id.iv_more_localmusic);
-            speaker = (ImageView) viewOfLast.findViewById(R.id.speaker);
+        public GeneralLinesViewHolder(View viewOfGeneralLines) {
+            super(viewOfGeneralLines);
+            view = viewOfGeneralLines;
+            title = (TextView) viewOfGeneralLines.findViewById(R.id.title_localmusic);
+            artist = (TextView) viewOfGeneralLines.findViewById(R.id.artist_localmusic);
+            album = (TextView) viewOfGeneralLines.findViewById(R.id.album_localmusic);
+            more = (ImageView) viewOfGeneralLines.findViewById(R.id.iv_more_localmusic);
+            speaker = (ImageView) viewOfGeneralLines.findViewById(R.id.speaker);
 
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -139,6 +155,12 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     moreInformationFragment.show(fragmentActivity.getSupportFragmentManager(),"music");
                 }
             });
+        }
+    }
+
+    private class LastLinesViewHolder extends RecyclerView.ViewHolder {
+        public LastLinesViewHolder(View viewOfGeneralLines) {
+            super(viewOfGeneralLines);
         }
     }
 }

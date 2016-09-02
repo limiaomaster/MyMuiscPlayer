@@ -25,38 +25,55 @@ public class ArtistRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<ArtistInfo> artistInfoList;
     private FragmentActivity fragmentActivity;
 
+    private final static int GENERAL_LINES=1;
+    private final static int LAST_LINE = 2;
+
     public ArtistRVAdapter(FragmentActivity activity, Context context, List<ArtistInfo> artistInfoList) {
         this.context = context;
         this.artistInfoList = artistInfoList;
         fragmentActivity = activity;
     }
 
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == artistInfoList.size()) return LAST_LINE;
+        else return GENERAL_LINES;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_artist_local_music, parent , false);
-
-        return new MyViewHolder(view);
+        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_artist_local_music, parent , false);
+        View LastLineView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_lastline_empty,parent,false);
+        if (viewType == GENERAL_LINES) return new ArtistRVAdapter.GeneralLinesViewHolder(GeneralLinesView);
+        else if (viewType == LAST_LINE) return new ArtistRVAdapter.LastLinesViewHolder(LastLineView);
+        else return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         //((MyViewHolder)holder).imageView.setImageResource(R.drawable.banshouren);
-        ((MyViewHolder)holder).artistName.setText(artistInfoList.get(position).getArtistName());
-        ((MyViewHolder)holder).numberOfTrack.setText(artistInfoList.get(position).getNumberOfTracks()+"首");
+        if(position>= artistInfoList.size()){
+
+        } else {
+            ((GeneralLinesViewHolder)holder).artistName.setText(artistInfoList.get(position).getArtistName());
+            ((GeneralLinesViewHolder)holder).numberOfTrack.setText(artistInfoList.get(position).getNumberOfTracks()+"首");
+        }
     }
 
     @Override
     public int getItemCount() {
-        return artistInfoList.size();
+        return artistInfoList.size()+1;
     }
 
-    private class MyViewHolder extends RecyclerView.ViewHolder{
+    private class GeneralLinesViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
         TextView artistName;
         TextView numberOfTrack;
         ImageView more;
         View view;
-        public MyViewHolder(View itemView) {
+        public GeneralLinesViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             imageView = (ImageView) itemView.findViewById(R.id.iv_artist_artistFragment);
@@ -72,6 +89,11 @@ public class ArtistRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
         }
+    }
 
+    private class LastLinesViewHolder extends RecyclerView.ViewHolder {
+        public LastLinesViewHolder(View viewOfGeneralLines) {
+            super(viewOfGeneralLines);
+        }
     }
 }

@@ -12,11 +12,11 @@
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="8dp"
         android:paddingEnd="11dp"
         android:background="@drawable/list_cover_alb"
-        android:src="@drawable/banshouren"/>
+        android:src="@drawable/placeholder_disk_380"/>
 
     <LinearLayout
         android:id="@+id/ll_text"
@@ -24,7 +24,8 @@
         android:layout_height="50dp"
         android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/iv_artist_albumFragment">
+        android:layout_toEndOf="@+id/iv_artist_albumFragment"
+        android:layout_toStartOf="@+id/iv_more_albumFragment">
         <TextView
             android:id="@+id/tv_albumName_albumFragment"
             android:layout_width="match_parent"
