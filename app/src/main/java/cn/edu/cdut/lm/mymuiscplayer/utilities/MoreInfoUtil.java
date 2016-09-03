@@ -15,7 +15,7 @@ public class MoreInfoUtil {
 
     static int[] imageInSingleMusic = new int[]{
             R.drawable.lay_icn_next, R.drawable.lay_icn_fav, R.drawable.lay_icn_cmt,
-            R.drawable.lay_icn_share, R.drawable.lay_icn_upload, R.drawable.lay_icn_delete,
+            R.drawable.lay_icn_share, R.drawable.list_play_icn_cloud, R.drawable.lay_icn_delete,
             R.drawable.lay_icn_artist, R.drawable.lay_icn_alb, R.drawable.lay_icn_quality,
             R.drawable.lay_icn_ring, R.drawable.lay_icn_document, R.drawable.lay_icn_restore,
             R.drawable.lay_icn_color_ring
@@ -30,7 +30,7 @@ public class MoreInfoUtil {
     };
 
     private static int[] imageInArtist = new int[]{
-            R.drawable.lay_icn_next, R.drawable.lay_icn_fav, R.drawable.lay_icn_upload,
+            R.drawable.lay_icn_next, R.drawable.lay_icn_fav, R.drawable.list_play_icn_cloud,
             R.drawable.lay_icn_delete
     };
     private static String[] textInArtist = new String[]{

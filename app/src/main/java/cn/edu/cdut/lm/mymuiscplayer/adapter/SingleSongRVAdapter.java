@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -86,25 +85,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((GeneralLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
             ((GeneralLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
 
-            ((GeneralLinesViewHolder) holder).view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText( context,"您点击了第："+(position-1)+"行",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    intent.putExtra("position", position-1);
-                    intent.setClass(context, PlayerService.class);
-                    context.startService(intent);
-                    Log.e("onItemClick","启动了PlayerService播放服务！");
 
-                    Intent broadCastIntent = new Intent();
-                    broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
-                    broadCastIntent.putExtra("position",position-1);
-                    context.sendBroadcast(broadCastIntent);
-                    Log.e("onItemClick","发送了UPDATE_UI的广播！");
-
-                    /*((LastLinesViewHolder) holder).speaker.setVisibility(View.VISIBLE);*/
-                }
-            });
         }
     }
 
@@ -117,16 +98,24 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private class FirstLineViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textView ;
         ImageView imageView;
-        public FirstLineViewHolder(View viewOfFist) {
-            super(viewOfFist);
-            textView = (TextView) viewOfFist.findViewById(R.id.number_of_music);
-            imageView = (ImageView) viewOfFist.findViewById(R.id.multi_pick_to_do_someting);
-            viewOfFist.setOnClickListener(this);
+        public FirstLineViewHolder(View viewOfFirst) {
+            super(viewOfFirst);
+            textView = (TextView) viewOfFirst.findViewById(R.id.number_of_music);
+            imageView = (ImageView) viewOfFirst.findViewById(R.id.multi_pick_to_do_someting);
+            viewOfFirst.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            Intent intent = new Intent();
+            intent.putExtra("position", 0);
+            intent.setClass(context, PlayerService.class);
+            context.startService(intent);
 
+            Intent broadCastIntent = new Intent();
+            broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
+            broadCastIntent.putExtra("position",0);
+            context.sendBroadcast(broadCastIntent);
         }
     }
 
@@ -145,6 +134,25 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             album = (TextView) viewOfGeneralLines.findViewById(R.id.album_localmusic);
             more = (ImageView) viewOfGeneralLines.findViewById(R.id.iv_more_localmusic);
             speaker = (ImageView) viewOfGeneralLines.findViewById(R.id.speaker);
+
+            viewOfGeneralLines.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra("position", getAdapterPosition()-1);
+                    intent.setClass(context, PlayerService.class);
+                    context.startService(intent);
+
+                    Intent broadCastIntent = new Intent();
+                    broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
+                    broadCastIntent.putExtra("position",getAdapterPosition()-1);
+                    context.sendBroadcast(broadCastIntent);
+
+                    /*((LastLinesViewHolder) holder).speaker.setVisibility(View.VISIBLE);*/
+                }
+            });
+
+
 
             more.setOnClickListener(new View.OnClickListener() {
                 @Override

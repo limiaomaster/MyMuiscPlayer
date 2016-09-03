@@ -1,10 +1,13 @@
 package cn.edu.cdut.lm.mymuiscplayer.module;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by LimiaoMaster on 2016/9/1 16:22
  */
 
-public class AlbumInfo {
+public class AlbumInfo implements Parcelable {
     //专辑名称
     private String albumName;
     //专辑在数据库中的id
@@ -16,6 +19,30 @@ public class AlbumInfo {
 
     //专辑封面图片路径
     private String artPath;
+
+    public AlbumInfo(){
+
+    }
+
+    protected AlbumInfo(Parcel in) {
+        albumName = in.readString();
+        albumID = in.readInt();
+        numberOfTracks = in.readInt();
+        artist = in.readString();
+        artPath = in.readString();
+    }
+
+    public static final Creator<AlbumInfo> CREATOR = new Creator<AlbumInfo>() {
+        @Override
+        public AlbumInfo createFromParcel(Parcel in) {
+            return new AlbumInfo(in);
+        }
+
+        @Override
+        public AlbumInfo[] newArray(int size) {
+            return new AlbumInfo[size];
+        }
+    };
 
     public String getAlbumName() {
         return albumName;
@@ -55,5 +82,19 @@ public class AlbumInfo {
 
     public void setArtPath(String artPath) {
         this.artPath = artPath;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(albumName);
+        dest.writeInt(albumID);
+        dest.writeInt(numberOfTracks);
+        dest.writeString(artist);
+        dest.writeString(artPath);
     }
 }

@@ -11,20 +11,35 @@ import java.util.List;
 import java.util.Map;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 import cn.edu.cdut.lm.mymuiscplayer.module.ArtistInfo;
 
 /**
  * Created by LimiaoMaster on 2016/9/1 10:24
  */
-public class MoreInfoArtistAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class MoreInfoFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private ArtistInfo artistInfo;
+    private AlbumInfo albumInfo;
     private List<Map<String,Object>> list;
 
-    public MoreInfoArtistAdapter(ArtistInfo artistInfo, List<Map<String,Object>> list) {
+    private String ARTIST_FRAGMENT = "artist_fragment";
+    private String ALBUM_FRAGMENT = "album_fragment";
+
+    private String fragmentType;
+
+    public MoreInfoFragmentAdapter(ArtistInfo artistInfo, List<Map<String, Object>> list, String type) {
         this.artistInfo = artistInfo;
         this.list = list;
+        fragmentType = type;
     }
+
+    public MoreInfoFragmentAdapter(AlbumInfo albumInfo, List<Map<String, Object>> list, String type) {
+        this.albumInfo = albumInfo;
+        this.list = list;
+        fragmentType = type;
+    }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -35,14 +50,18 @@ public class MoreInfoArtistAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View firstView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_more_info_first_line_artist,parent,false);
         View generalView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_more_info_local_music,parent,false);
-        if(viewType == 0) return new MoreInfoArtistAdapter.FirstViewHolder(firstView);
-        return new MoreInfoArtistAdapter.GeneralViewHolder(generalView);
+        if(viewType == 0) return new MoreInfoFragmentAdapter.FirstViewHolder(firstView);
+        return new MoreInfoFragmentAdapter.GeneralViewHolder(generalView);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof FirstViewHolder) {
-            ((FirstViewHolder) holder).textView.setText(artistInfo.getArtistName());
+            if( fragmentType.equals(ARTIST_FRAGMENT)){
+                ((FirstViewHolder) holder).textView.setText("歌手："+artistInfo.getArtistName());
+            }else if (fragmentType.equals(ALBUM_FRAGMENT)){
+                ((FirstViewHolder) holder).textView.setText("专辑："+albumInfo.getAlbumName());
+            }
         } else {
             ((GeneralViewHolder)holder).imageView.setImageResource((int) list.get(position-1).get("image"));
             ((GeneralViewHolder) holder).textView.setText((String)list.get(position-1).get("text"));

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoArtistFragment;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.ArtistInfo;
 
 /**
@@ -27,6 +27,8 @@ public class ArtistRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final static int GENERAL_LINES=1;
     private final static int LAST_LINE = 2;
+
+    private String ARTIST_FRAGMENT = "artist_fragment";
 
     public ArtistRVAdapter(FragmentActivity activity, Context context, List<ArtistInfo> artistInfoList) {
         this.context = context;
@@ -44,7 +46,7 @@ public class ArtistRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_artist_local_music, parent , false);
+        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_artist_generallines, parent , false);
         View LastLineView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_lastline_empty,parent,false);
         if (viewType == GENERAL_LINES) return new ArtistRVAdapter.GeneralLinesViewHolder(GeneralLinesView);
         else if (viewType == LAST_LINE) return new ArtistRVAdapter.LastLinesViewHolder(LastLineView);
@@ -84,7 +86,8 @@ public class ArtistRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MoreInfoArtistFragment moreInfoArtistFragment = MoreInfoArtistFragment.newInstance(artistInfoList.get(getAdapterPosition()));
+                    MoreInfoFragment moreInfoArtistFragment =
+                            MoreInfoFragment.newInstance(artistInfoList.get(getAdapterPosition()),ARTIST_FRAGMENT);
                     moreInfoArtistFragment.show(fragmentActivity.getSupportFragmentManager(),"music");
                 }
             });

@@ -1,17 +1,22 @@
 package cn.edu.cdut.lm.mymuiscplayer.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 
 /**
@@ -25,6 +30,9 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final static int GENERAL_LINES=1;
     private final static int LAST_LINE = 2;
+
+    private String ALBUM_FRAGMENT = "album_fragment";
+
 
     public AlbumRVAdapter(FragmentActivity activity, Context context, List<AlbumInfo> albumInfoList) {
         fragmentActivity = activity;
@@ -40,7 +48,7 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_album_local_music, parent ,false);
+        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_album_generallines, parent ,false);
         View LastLineView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_lastline_empty,parent,false);
         if (viewType == GENERAL_LINES) return new GeneralLinesViewHolder(GeneralLinesView);
         else if (viewType == LAST_LINE) return new LastLinesViewHolder(LastLineView);
@@ -56,6 +64,12 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((GeneralLinesViewHolder) holder).albumName.setText(albumInfoList.get(position).getAlbumName());
             ((GeneralLinesViewHolder) holder).numberOfTracks.setText(albumInfoList.get(position).getNumberOfTracks()+"首");
             ((GeneralLinesViewHolder) holder).artistName.setText(albumInfoList.get(position).getArtist());
+
+            Uri uri = Uri.parse(albumInfoList.get(position).getArtPath()+"");
+            Log.i("onBindViewHolder()",albumInfoList.get(position).getArtPath());
+            Log.i("onBindViewHolder()",uri+"");
+
+            ((GeneralLinesViewHolder) holder).draweeView.setImageURI(uri);
         }
 
     }
@@ -68,17 +82,28 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private class GeneralLinesViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
+        SimpleDraweeView draweeView;
         TextView albumName;
         TextView numberOfTracks;
         TextView artistName;
+        ImageView more;
         View view;
         public GeneralLinesViewHolder(View itemView) {
             super(itemView);
             view = itemView;
-            imageView = (ImageView) itemView.findViewById(R.id.iv_artist_albumFragment);
+            draweeView = (SimpleDraweeView) itemView.findViewById(R.id.iv_albumArt_albumFragment);
             albumName = (TextView) itemView.findViewById(R.id.tv_albumName_albumFragment);
             numberOfTracks = (TextView) itemView.findViewById(R.id.tv_number_of_track_albumFragment);
             artistName = (TextView) itemView.findViewById(R.id.tv_artistName_albumFragment);
+            more = (ImageView) itemView.findViewById(R.id.iv_more_albumFragment);
+            more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MoreInfoFragment moreInfoArtistFragment =
+                            MoreInfoFragment.newInstance(albumInfoList.get(getAdapterPosition()),ALBUM_FRAGMENT);
+                    moreInfoArtistFragment.show(fragmentActivity.getSupportFragmentManager(),"album");
+                }
+            });
         }
     }
 
