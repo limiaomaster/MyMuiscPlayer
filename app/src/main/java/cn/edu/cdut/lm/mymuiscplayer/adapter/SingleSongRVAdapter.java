@@ -60,7 +60,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d("SingleSongRVAdapter()","onCreateViewHolder()方法得到执行!  ");
         View viewOfFirstLine = LayoutInflater.from(context).inflate(R.layout.item_localmusic_singlesong_firstline,parent,false);
-        View viewOfGeneralLines = LayoutInflater.from(context).inflate(R.layout.item_localmusic_singlesong_generallines,parent,false);
+        View viewOfGeneralLines = LayoutInflater.from(context).inflate(R.layout.item_localmusic_singlesong,parent,false);
         View viewOfLastLine = LayoutInflater.from(context).inflate(R.layout.item_localmusic_lastline_empty,parent,false);
         if(viewType == FIRST_LINE) return new FirstLineViewHolder(viewOfFirstLine);
         else if (viewType == GENERAL_LINES) return new GeneralLinesViewHolder(viewOfGeneralLines);

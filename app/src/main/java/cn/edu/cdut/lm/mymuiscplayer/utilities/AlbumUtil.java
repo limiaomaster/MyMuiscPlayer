@@ -55,6 +55,7 @@ public class AlbumUtil {
             albumInfo.setArtist(artist);
             list.add(albumInfo);
         }
+        cursor.close();
         return list;
     }
 

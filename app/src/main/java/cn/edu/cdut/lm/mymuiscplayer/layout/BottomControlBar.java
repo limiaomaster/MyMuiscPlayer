@@ -118,8 +118,14 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         String artist_pref = pref.getString("artist", "");
         tv_title_of_music.setText(title_pref);
         tv_artist_of_music.setText(artist_pref);
+        //设置跑马灯，滚动显示歌名。
+        tv_title_of_music.setSingleLine(true);
+        tv_title_of_music.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        tv_title_of_music.setSelected(true);
+        tv_title_of_music.setMarqueeRepeatLimit(-1);
         title = title_pref;           //    务必注意把从xml文件中获取的内容再赋给当前变量
         artist = artist_pref;       //    否则第二次显示控制条的时候的内容都为空，，，
+
         /**
          * 3
          * 更新专辑封面

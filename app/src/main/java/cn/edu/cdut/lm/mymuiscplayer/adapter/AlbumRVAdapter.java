@@ -48,7 +48,7 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_album_generallines, parent ,false);
+        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_album, parent ,false);
         View LastLineView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_lastline_empty,parent,false);
         if (viewType == GENERAL_LINES) return new GeneralLinesViewHolder(GeneralLinesView);
         else if (viewType == LAST_LINE) return new LastLinesViewHolder(LastLineView);
@@ -65,9 +65,9 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((GeneralLinesViewHolder) holder).numberOfTracks.setText(albumInfoList.get(position).getNumberOfTracks()+"首");
             ((GeneralLinesViewHolder) holder).artistName.setText(albumInfoList.get(position).getArtist());
 
-            Uri uri = Uri.parse(albumInfoList.get(position).getArtPath()+"");
+            Uri uri = Uri.parse(albumInfoList.get(position).getArtPath());
             Log.i("onBindViewHolder()",albumInfoList.get(position).getArtPath());
-            Log.i("onBindViewHolder()",uri+"");
+            Log.i("onBindViewHolder()",albumInfoList.get(position).getAlbumID()+"");
 
             ((GeneralLinesViewHolder) holder).draweeView.setImageURI(uri);
         }

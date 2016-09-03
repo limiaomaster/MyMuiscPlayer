@@ -46,7 +46,7 @@ public class ArtistRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_artist_generallines, parent , false);
+        View GeneralLinesView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_artist, parent , false);
         View LastLineView = LayoutInflater.from(context).inflate(R.layout.item_localmusic_lastline_empty,parent,false);
         if (viewType == GENERAL_LINES) return new ArtistRVAdapter.GeneralLinesViewHolder(GeneralLinesView);
         else if (viewType == LAST_LINE) return new ArtistRVAdapter.LastLinesViewHolder(LastLineView);
