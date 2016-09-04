@@ -99,8 +99,7 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MoreInfoFragment moreInfoArtistFragment =
-                            MoreInfoFragment.newInstance(albumInfoList.get(getAdapterPosition()),ALBUM_FRAGMENT);
+                    MoreInfoFragment moreInfoArtistFragment = MoreInfoFragment.newInstance(albumInfoList.get(getAdapterPosition()),ALBUM_FRAGMENT);
                     moreInfoArtistFragment.show(fragmentActivity.getSupportFragmentManager(),"album");
                 }
             });

@@ -22,6 +22,9 @@ import java.util.List;
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 
+import static android.provider.MediaStore.Audio.AudioColumns.IS_MUSIC;
+import static android.provider.MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+
 /**
  * Created by LimiaoMaster on 2016/8/16 8:27
  */
@@ -34,7 +37,18 @@ public class MediaUtil {
             Media.ALBUM_ID, Media.DURATION, Media.SIZE
     };
 
-    private static String selectionOfMusic= "is_music=1 AND title != ''";
+    private static String selectionOfMusic0= "is_music=1";
+    private static String selectionOfMusic1= "is_music=1 AND title != ''";
+    private static String selectionOfMusic2= IS_MUSIC;
+    private static String selectionOfMusic3= Media.DATA+" like '%.mp3' ";  //1234首。
+    private static String selectionOfMusic4= Media.DATA+" like '%.m4a' ";   //191首，通话录音。
+    private static String selectionOfMusic5= Media.DATA+" like '%.flac' ";  //34首,可播放。
+
+    private static String order = Media.TITLE+" COLLATE LOCALIZED ASC";
+    private static String order1 = Media.TITLE;
+    private static String order2 = DEFAULT_SORT_ORDER;
+
+
 
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
@@ -43,9 +57,9 @@ public class MediaUtil {
         Cursor cursor = context.getContentResolver().query(
                 uri,
                 projectionOfMusic,
-                selectionOfMusic,
+                selectionOfMusic2,
                 null,
-                Media.TITLE+" COLLATE LOCALIZED ASC"
+                order2
         );
 
         List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();

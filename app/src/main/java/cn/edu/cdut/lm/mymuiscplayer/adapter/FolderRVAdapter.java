@@ -8,11 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.FolderInfo;
 
 /**
@@ -27,6 +29,7 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final static int LAST_LINE = 2;
     private final String NETEASE_EXTERNAL_FOLDER = "/storage/extSdCard/netease/cloudmusic/";
     private final String NETEASE_INTERNAL_FOLDER = "/storage/emulated/0/netease/cloudmusic/";
+    private String FOLDER_FRAGMENT = "folder_fragment";
 
 
     public FolderRVAdapter(FragmentActivity activity, Context context, List<FolderInfo> folderInfoList) {
@@ -66,7 +69,6 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             Log.i("onBindViewHolder()",folderInfoList.get(position).getFolderName());
             Log.i("onBindViewHolder()",folderInfoList.get(position).getFolderPath());
-
         }
     }
 
@@ -78,6 +80,7 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private class GeneralLinesViewHolder extends RecyclerView.ViewHolder {
         TextView folderName;
         TextView path;
+        ImageView more;
         View view;
         public GeneralLinesViewHolder(View itemView) {
             super(itemView);
@@ -87,8 +90,16 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             folderName.setSingleLine(true);
             folderName.setEllipsize(TextUtils.TruncateAt.END);
             //folderName.setSelected(true);
-
             path = (TextView) itemView.findViewById(R.id.tv_path_folderFragment);
+            more = (ImageView) itemView.findViewById(R.id.iv_more_folderFragment);
+            more.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    MoreInfoFragment moreInfoArtistFragment = MoreInfoFragment.newInstance(folderInfoList.get(getAdapterPosition()),FOLDER_FRAGMENT);
+                    moreInfoArtistFragment.show(fragmentActivity.getSupportFragmentManager(),"album");
+                }
+            });
         }
     }
 

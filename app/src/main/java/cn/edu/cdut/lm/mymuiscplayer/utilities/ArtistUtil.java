@@ -16,6 +16,7 @@ import cn.edu.cdut.lm.mymuiscplayer.module.ArtistInfo;
 
 public class ArtistUtil {
     private static Uri uri = Audio.Artists.EXTERNAL_CONTENT_URI;
+    //  content://media/external/audio/artists
     private static String[] projectionOfSinger = new String[]{
             Audio.Artists.ARTIST,
             Audio.Artists.NUMBER_OF_TRACKS,
@@ -23,10 +24,21 @@ public class ArtistUtil {
     };
 
     private static String defaultSortOrder = Audio.Artists.DEFAULT_SORT_ORDER;
+    private static String defaultSortOrder1 = "artist_key";
+    private static String defaultSortOrder2 = "artist COLLATE LOCALIZED asc";
+
+    private static String sortOrder1 = "artist_pinyin COLLATE LOCALIZED asc";
+
 
     public static List<ArtistInfo> getArtistList(Context context) {
         List<ArtistInfo> artistInfoList = new ArrayList<>();
-        Cursor cursor = context.getContentResolver().query(uri, projectionOfSinger, null, null, defaultSortOrder);
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                projectionOfSinger,
+                null,
+                null,
+                defaultSortOrder2
+        );
 
         while (cursor.moveToNext()) {
             ArtistInfo artistInfo = new ArtistInfo();       //此行一定要写在while循环里面！！！

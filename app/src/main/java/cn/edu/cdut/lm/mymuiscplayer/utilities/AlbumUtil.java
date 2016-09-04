@@ -18,9 +18,10 @@ import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 public class AlbumUtil {
 
     private static Uri uri  =  Audio.Albums.EXTERNAL_CONTENT_URI;
+    // "content://media/external/audio/albums"
+    private static Uri uri1  =  Audio.Media.EXTERNAL_CONTENT_URI;
+    // "content://media/external/audio/media"
     private static String[] projectionOfAlbum = new String[]{
-
-
             Audio.Albums.ALBUM,
             Audio.Albums._ID,
             Audio.Albums.NUMBER_OF_SONGS,

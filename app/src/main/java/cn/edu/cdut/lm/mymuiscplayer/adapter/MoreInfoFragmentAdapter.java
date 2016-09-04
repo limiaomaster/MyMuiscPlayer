@@ -13,6 +13,7 @@ import java.util.Map;
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 import cn.edu.cdut.lm.mymuiscplayer.module.ArtistInfo;
+import cn.edu.cdut.lm.mymuiscplayer.module.FolderInfo;
 
 /**
  * Created by LimiaoMaster on 2016/9/1 10:24
@@ -21,10 +22,12 @@ public class MoreInfoFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private ArtistInfo artistInfo;
     private AlbumInfo albumInfo;
+    private FolderInfo folderInfo;
     private List<Map<String,Object>> list;
 
     private String ARTIST_FRAGMENT = "artist_fragment";
     private String ALBUM_FRAGMENT = "album_fragment";
+    private String FOLDER_FRAGMENT = "folder_fragment";
 
     private String fragmentType;
 
@@ -36,6 +39,12 @@ public class MoreInfoFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public MoreInfoFragmentAdapter(AlbumInfo albumInfo, List<Map<String, Object>> list, String type) {
         this.albumInfo = albumInfo;
+        this.list = list;
+        fragmentType = type;
+    }
+
+    public MoreInfoFragmentAdapter(FolderInfo folderInfo, List<Map<String, Object>> list, String type) {
+        this.folderInfo = folderInfo;
         this.list = list;
         fragmentType = type;
     }
@@ -61,6 +70,8 @@ public class MoreInfoFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
                 ((FirstViewHolder) holder).textView.setText("歌手："+artistInfo.getArtistName());
             }else if (fragmentType.equals(ALBUM_FRAGMENT)){
                 ((FirstViewHolder) holder).textView.setText("专辑："+albumInfo.getAlbumName());
+            }else if (fragmentType.equals(FOLDER_FRAGMENT)){
+                ((FirstViewHolder) holder).textView.setText("文件夹："+folderInfo.getFolderName());
             }
         } else {
             ((GeneralViewHolder)holder).imageView.setImageResource((int) list.get(position-1).get("image"));

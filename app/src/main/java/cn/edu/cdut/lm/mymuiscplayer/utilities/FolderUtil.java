@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Files.FileColumns;
-import android.provider.MediaStore.Audio.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +26,12 @@ public class FolderUtil {
         String[] projectionOfFolder = new String[]{FileColumns.DATA};
 
         String where = new String(
-                FileColumns.MEDIA_TYPE +" = "+ FileColumns.MEDIA_TYPE_AUDIO +
-                " and " + "(" + FileColumns.DATA + " like'%.mp3' or " + Media.DATA + " like'%.wma') " +
-                ") group by ( " + FileColumns.PARENT
+                FileColumns.MEDIA_TYPE +" = "+ FileColumns.MEDIA_TYPE_AUDIO + " and (" +
+                        FileColumns.DATA + " like '%.mp3' or " +
+                        FileColumns.DATA + " like'%.wma' or " +
+                        FileColumns.DATA + " like '%.flac' or " +
+                        FileColumns.DATA + " like '%.wav' )" +
+                        ") group by ( " + FileColumns.PARENT
         );
 
         Cursor cursor = context.getContentResolver().query(

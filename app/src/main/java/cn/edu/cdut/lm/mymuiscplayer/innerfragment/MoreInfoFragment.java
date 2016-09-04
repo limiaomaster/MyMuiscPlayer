@@ -21,6 +21,7 @@ import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.MoreInfoFragmentAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 import cn.edu.cdut.lm.mymuiscplayer.module.ArtistInfo;
+import cn.edu.cdut.lm.mymuiscplayer.module.FolderInfo;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MoreInfoUtil;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
@@ -35,12 +36,13 @@ public class MoreInfoFragment extends DialogFragment{
     private LinearLayoutManager linearLayoutManager;
     private ArtistInfo artistInfo;
     private AlbumInfo albumInfo;
+    private FolderInfo folderInfo;
 
     private static String fragmentType;
 
     private String ARTIST_FRAGMENT = "artist_fragment";
     private String ALBUM_FRAGMENT = "album_fragment";
-
+    private String FOLDER_FRAGMENT = "folder_fragment";
 
 
 
@@ -63,6 +65,14 @@ public class MoreInfoFragment extends DialogFragment{
     }
 
 
+    public static MoreInfoFragment newInstance(FolderInfo folderInfo, String type) {
+        fragmentType = type;
+        MoreInfoFragment fragment =  new MoreInfoFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("FolderInfo",folderInfo);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
 
@@ -149,6 +159,7 @@ public class MoreInfoFragment extends DialogFragment{
 
         getArtistInfoFromParcel();
         getAlbumInfoFromParcel();
+        getFolderInfoFromParcel();
 
         View view = inflater.inflate(R.layout.layout_more_info_local_music,container);
         list = MoreInfoUtil.getMoreInfoOnArtist();
@@ -163,6 +174,9 @@ public class MoreInfoFragment extends DialogFragment{
             recyclerView.setAdapter(moreInfoArtistAdapter);
         }else if (fragmentType.equals(ALBUM_FRAGMENT)){
             MoreInfoFragmentAdapter moreInfoArtistAdapter = new MoreInfoFragmentAdapter(albumInfo,list,ALBUM_FRAGMENT);
+            recyclerView.setAdapter(moreInfoArtistAdapter);
+        }else if (fragmentType.equals(FOLDER_FRAGMENT)){
+            MoreInfoFragmentAdapter moreInfoArtistAdapter = new MoreInfoFragmentAdapter(folderInfo,list,FOLDER_FRAGMENT);
             recyclerView.setAdapter(moreInfoArtistAdapter);
         }
 
@@ -185,9 +199,8 @@ public class MoreInfoFragment extends DialogFragment{
         albumInfo = getArguments().getParcelable("AlbumInfo");
     }
 
-
-
-
-
+    private void getFolderInfoFromParcel() {
+        folderInfo = getArguments().getParcelable("FolderInfo");
+    }
 
 }
