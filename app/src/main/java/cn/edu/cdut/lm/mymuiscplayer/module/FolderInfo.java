@@ -10,7 +10,7 @@ import android.os.Parcelable;
 public class FolderInfo implements Parcelable {
     private String folderName;
     private String folderPath;
-    private String numberOfTracks;
+    private int numberOfTracks;
 
     public FolderInfo() {
     }
@@ -18,7 +18,7 @@ public class FolderInfo implements Parcelable {
     protected FolderInfo(Parcel in) {
         folderName = in.readString();
         folderPath = in.readString();
-        numberOfTracks = in.readString();
+        numberOfTracks = in.readInt();
     }
 
     public static final Creator<FolderInfo> CREATOR = new Creator<FolderInfo>() {
@@ -32,6 +32,14 @@ public class FolderInfo implements Parcelable {
             return new FolderInfo[size];
         }
     };
+
+    public int getNumberOfTracks() {
+        return numberOfTracks;
+    }
+
+    public void setNumberOfTracks(int numberOfTracks) {
+        this.numberOfTracks = numberOfTracks;
+    }
 
     public String getFolderName() {
         return folderName;
@@ -49,13 +57,6 @@ public class FolderInfo implements Parcelable {
         this.folderPath = folderPath;
     }
 
-    public String getNumberOfTracks() {
-        return numberOfTracks;
-    }
-
-    public void setNumberOfTracks(String numberOfTracks) {
-        this.numberOfTracks = numberOfTracks;
-    }
 
     @Override
     public int describeContents() {
@@ -66,6 +67,6 @@ public class FolderInfo implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(folderName);
         dest.writeString(folderPath);
-        dest.writeString(numberOfTracks);
+        dest.writeInt(numberOfTracks);
     }
 }

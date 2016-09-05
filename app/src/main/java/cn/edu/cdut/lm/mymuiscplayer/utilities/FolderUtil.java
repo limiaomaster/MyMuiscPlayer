@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Files.FileColumns;
+import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,17 +47,42 @@ public class FolderUtil {
                 );
         while(cursor.moveToNext()){
             FolderInfo folderInfo = new FolderInfo();
-            String data = cursor.getString(cursor.getColumnIndex(FileColumns.DATA));
-            String path = data.substring(0,data.lastIndexOf("/"));
-            String pathWithNoFolderName = path.substring(0,path.lastIndexOf("/")+1);
-            String folderName = path.substring(path.lastIndexOf("/")+1);
+            int number = 0;
+            String path = cursor.getString(cursor.getColumnIndex(FileColumns.DATA));
+            String pathWithFolderName = path.substring(0,path.lastIndexOf("/"));
+            String pathWithNoFolderName = pathWithFolderName.substring(0,pathWithFolderName.lastIndexOf("/")+1);
+            String folderName = pathWithFolderName.substring(pathWithFolderName.lastIndexOf("/")+1);
+
+            number = getNumberOfTracksFromFolder(pathWithFolderName);
 
             folderInfo.setFolderName(folderName);
+            folderInfo.setNumberOfTracks(number);
             folderInfo.setFolderPath(pathWithNoFolderName);
 
             folderInfoList.add(folderInfo);
         }
         cursor.close();
         return folderInfoList;
+    }
+
+
+    private static int getNumberOfTracksFromFolder(String path) {
+        int i = 0;
+        File file = new File(path);
+        File[] files = file.listFiles();
+        for (int j = 0; j < files.length; j++) {
+            String name = files[j].getName();
+            if (  files[j].isFile() &&
+                    name.endsWith(".mp3")||
+                    name.endsWith(".wma")||
+                    name.endsWith(".m4a")||
+                    name.endsWith(".flac")||
+                    name.endsWith(".wav")||
+                    name.endsWith(".ape")){
+                Log.i("FileName是：" , name);
+                i++;
+            }
+        }
+        return i;
     }
 }

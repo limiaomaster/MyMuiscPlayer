@@ -27,7 +27,7 @@ public class ArtistUtil {
     private static String defaultSortOrder1 = "artist_key";
     private static String defaultSortOrder2 = "artist COLLATE LOCALIZED asc";
 
-    private static String sortOrder1 = "artist_pinyin COLLATE LOCALIZED asc";
+    private static String defaultSortOrder3 = "artist_pinyin";
 
 
     public static List<ArtistInfo> getArtistList(Context context) {
@@ -37,7 +37,7 @@ public class ArtistUtil {
                 projectionOfSinger,
                 null,
                 null,
-                defaultSortOrder2
+                defaultSortOrder1
         );
 
         while (cursor.moveToNext()) {

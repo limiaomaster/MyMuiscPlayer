@@ -59,16 +59,21 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }else {
             String folderName = folderInfoList.get(position).getFolderName();
+            int number = folderInfoList.get(position).getNumberOfTracks();
             String folderPath = folderInfoList.get(position).getFolderPath();
+
             ((GeneralLinesViewHolder)holder).folderName.setText(folderName);
+            ((GeneralLinesViewHolder) holder).numberOfTracks.setText(number+"首");
             ((GeneralLinesViewHolder) holder).path.setText(folderPath);
 
              if (folderPath.equals(NETEASE_EXTERNAL_FOLDER)||folderPath.equals(NETEASE_INTERNAL_FOLDER)){
                 ((GeneralLinesViewHolder)holder).folderName.append(" (网易云音乐)");
             }
 
-            Log.i("onBindViewHolder()",folderInfoList.get(position).getFolderName());
-            Log.i("onBindViewHolder()",folderInfoList.get(position).getFolderPath());
+            Log.i("onBindViewHolder()",folderName);
+            Log.i("onBindViewHolder()",number+"");
+            Log.i("onBindViewHolder()",folderPath);
+
         }
     }
 
@@ -79,6 +84,7 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private class GeneralLinesViewHolder extends RecyclerView.ViewHolder {
         TextView folderName;
+        TextView numberOfTracks;
         TextView path;
         ImageView more;
         View view;
@@ -86,12 +92,15 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             view = itemView;
             folderName = (TextView) itemView.findViewById(R.id.tv_folder_name);
+            numberOfTracks = (TextView) itemView.findViewById(R.id.tv_number_of_track_folderFragment);
+            path = (TextView) itemView.findViewById(R.id.tv_path_folderFragment);
+            more = (ImageView) itemView.findViewById(R.id.iv_more_folderFragment);
+
             //要在此设置这些属性，在xml布局中设置的不管用。
             folderName.setSingleLine(true);
             folderName.setEllipsize(TextUtils.TruncateAt.END);
             //folderName.setSelected(true);
-            path = (TextView) itemView.findViewById(R.id.tv_path_folderFragment);
-            more = (ImageView) itemView.findViewById(R.id.iv_more_folderFragment);
+
             more.setOnClickListener(new View.OnClickListener() {
 
                 @Override

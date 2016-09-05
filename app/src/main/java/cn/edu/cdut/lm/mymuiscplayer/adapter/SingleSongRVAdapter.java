@@ -81,7 +81,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         if (position >= 1 && position <= list.size()) {
             mp3Info = list.get(position - 1);
-            ((GeneralLinesViewHolder) holder).title.setText(mp3Info.getDisplayName());
+            ((GeneralLinesViewHolder) holder).title.setText(mp3Info.getTitle());
             ((GeneralLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
             ((GeneralLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
 
