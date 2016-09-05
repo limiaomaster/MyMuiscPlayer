@@ -52,7 +52,8 @@ public class MediaUtil {
     private static String order2 = DEFAULT_SORT_ORDER; // "title_key"
     private static String order3 = "title_pinyin"; // "title_pinyin"
 
-    
+
+
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
 
