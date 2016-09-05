@@ -31,6 +31,7 @@ import static android.provider.MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
 
 public class MediaUtil {
     private static Uri uri = Media.EXTERNAL_CONTENT_URI;
+
     private static String[] projectionOfMusic = new String[] {
             Media._ID,  Media.TITLE,    Media.ARTIST,
             Media.ALBUM, Media.DISPLAY_NAME, Media.DATA,
@@ -43,10 +44,17 @@ public class MediaUtil {
     private static String selectionOfMusic3= Media.DATA+" like '%.mp3' ";  //1234首。
     private static String selectionOfMusic4= Media.DATA+" like '%.m4a' ";   //191首，通话录音。
     private static String selectionOfMusic5= Media.DATA+" like '%.flac' ";  //34首,可播放。
+    private static String selectionOfMusic6= Media.DISPLAY_NAME+" like '%.wav' ";  //40首,可播放。
+    private static String selectionOfMusic7= Media.DISPLAY_NAME+" like '%[a-z]%' ";  //匹配列表，查不到结果！。
+
+
+
 
     private static String order = Media.TITLE+" COLLATE LOCALIZED ASC";
     private static String order1 = Media.TITLE;
-    private static String order2 = DEFAULT_SORT_ORDER;
+    private static String order2 = DEFAULT_SORT_ORDER; // "title_key"
+    private static String order3 = "title_pinyin"; // "title_pinyin"
+
 
 
 
@@ -57,9 +65,9 @@ public class MediaUtil {
         Cursor cursor = context.getContentResolver().query(
                 uri,
                 projectionOfMusic,
-                selectionOfMusic2,
                 null,
-                order2
+                null,
+                order3
         );
 
         List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();

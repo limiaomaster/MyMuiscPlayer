@@ -24,13 +24,15 @@ public class FolderUtil {
         Uri uri1 = Uri.parse(string);
 
         String[] projectionOfFolder = new String[]{FileColumns.DATA};
+        String order = "bucket_display_name_pinyin";
 
         String where = new String(
                 FileColumns.MEDIA_TYPE +" = "+ FileColumns.MEDIA_TYPE_AUDIO + " and (" +
                         FileColumns.DATA + " like '%.mp3' or " +
                         FileColumns.DATA + " like'%.wma' or " +
                         FileColumns.DATA + " like '%.flac' or " +
-                        FileColumns.DATA + " like '%.wav' )" +
+                        FileColumns.DATA + " like '%.wav' or " +
+                        FileColumns.DATA + " like '%.m4a' )" +
                         ") group by ( " + FileColumns.PARENT
         );
 
@@ -39,7 +41,7 @@ public class FolderUtil {
                 projectionOfFolder,
                 where,
                 null,
-                null
+                order
                 );
         while(cursor.moveToNext()){
             FolderInfo folderInfo = new FolderInfo();

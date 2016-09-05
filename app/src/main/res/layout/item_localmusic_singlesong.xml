@@ -2,8 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:minHeight="50dp"
+    android:layout_height="55dp"
+    android:minHeight="55dp"
     android:gravity="start"
     android:clickable="true"
     android:background="?android:attr/selectableItemBackground">
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_toEndOf="@+id/speaker"
-
+        android:layout_centerVertical="true"
         android:layout_marginStart="10dp">
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_marginEnd="60dp"
             android:text="半兽人"
             android:maxLines="1"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textColor="#000000"
             android:layout_marginTop="6dp"/>
 
