@@ -1,6 +1,7 @@
 package cn.edu.cdut.lm.mymuiscplayer.service;
 
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -43,6 +44,11 @@ public class PlayerService extends Service {
 
     private int currentPosition;
 
+    private static final String CLOSE_NOTIFICATION = "close_notification";
+    private NotificationManager manager;
+    private static final int NOTIFICATION_ID = 5709;
+
+
 
     @Nullable
     @Override
@@ -78,33 +84,32 @@ public class PlayerService extends Service {
             }
         });
 
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        listPosition = intent.getIntExtra("position",0);
-        path = mp3InfoList.get(listPosition).getUrl();
-
-        if( listPosition == listLastPosition ){ //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
-            if( mediaPlayer.isPlaying()){          //   如果此时为正在播放，表示要暂停。
-                this.pause();
-
+        if(intent.getIntExtra("position",0) == -1){
+            manager.cancel(NOTIFICATION_ID);
+        }else {
+            listPosition = intent.getIntExtra("position",0);
+            path = mp3InfoList.get(listPosition).getUrl();
+            if( listPosition == listLastPosition ){ //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
+                if( mediaPlayer.isPlaying()){          //   如果此时为正在播放，表示要暂停。
+                    this.pause();
+                    handler.removeMessages(1);
+                } else {                                            //  如果此时为暂停，表示要继续播放。
+                    mediaPlayer.start();                  //   继续播放,用系统的方法start()
+                    handler.sendEmptyMessage(1);
+                }
+            } else {                                               //  如果不是一个，那肯定是要播放新的文件了。
+                this.playAnotherMusic(0);
                 handler.removeMessages(1);
-
-            } else {                                            //  如果此时为暂停，表示要继续播放。
-                mediaPlayer.start();                  //   继续播放,用系统的方法start()
-
-                handler.sendEmptyMessage(1);
-
             }
-        } else {                                               //  如果不是一个，那肯定是要播放新的文件了。
-            this.playAnotherMusic(0);
-            handler.removeMessages(1);
+            listLastPosition = listPosition;
+            recycleListPosition = (listPosition+1)%mp3InfoList.size();
         }
-
-        listLastPosition = listPosition;
-        recycleListPosition = (listPosition+1)%mp3InfoList.size();
         return super.onStartCommand(intent, flags, startId);
     }
 

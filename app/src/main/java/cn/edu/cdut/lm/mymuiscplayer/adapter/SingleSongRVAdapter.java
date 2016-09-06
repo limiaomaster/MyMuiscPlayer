@@ -1,14 +1,21 @@
 package cn.edu.cdut.lm.mymuiscplayer.adapter;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,6 +24,12 @@ import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoSingleSongFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
+import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
+
+import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
+
 
 /**
  * Created by LimiaoMaster on 2016/8/24 18:37
@@ -24,7 +37,12 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
-
+    //获取专辑封面的Uri
+    private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
+    private static final String CLOSE_NOTIFICATION = "close_notification";
+    private static final int FLAG_CLOSE = 111;
+    private static final int CODE_CLOSE = 222;
+    private static final int NOTIFICATION_ID = 5709;
     private  FragmentActivity fragmentActivity;
     private  Context context;
     private  List<Mp3Info> list;
@@ -32,10 +50,13 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final static int GENERAL_LINES=1;
     private final static int LAST_LINE = 2;
 
+    private NotificationManager manger;
+
     public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
         this.context = context;
         this.list = list;
         fragmentActivity = activity;
+        manger = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
     }
 
     /**
@@ -138,31 +159,86 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewOfGeneralLines.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.putExtra("position", getAdapterPosition()-1);
-                    intent.setClass(context, PlayerService.class);
-                    context.startService(intent);
-
-                    Intent broadCastIntent = new Intent();
-                    broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
-                    broadCastIntent.putExtra("position",getAdapterPosition()-1);
-                    context.sendBroadcast(broadCastIntent);
-
-                    /*((LastLinesViewHolder) holder).speaker.setVisibility(View.VISIBLE);*/
+                    startPlayService();
+                    updateBottomControlBar();
+                    sendNotification();
                 }
             });
-
-
 
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.i("LastLinesViewHolder()",list.get(getAdapterPosition()-1)+"");
                     MoreInfoSingleSongFragment moreInformationFragment = MoreInfoSingleSongFragment.newInstance(list.get(getAdapterPosition()-1),0);
-
                     moreInformationFragment.show(fragmentActivity.getSupportFragmentManager(),"music");
                 }
             });
+        }
+
+        private void startPlayService() {
+            Intent intent = new Intent();
+            intent.putExtra("position", getAdapterPosition()-1);
+            intent.setClass(context, PlayerService.class);
+            context.startService(intent);
+        }
+        private void updateBottomControlBar() {
+            Intent broadCastIntent = new Intent();
+            broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
+            broadCastIntent.putExtra("position",getAdapterPosition()-1);
+            context.sendBroadcast(broadCastIntent);
+        }
+        private void sendNotification() {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.layout_notification);
+            /**
+             *设置专辑封面
+             */
+            //Uri uri = ContentUris.withAppendedId(albumArtUri, list.get(getAdapterPosition()-1).getAlbumId());
+            long musicId = list.get(getAdapterPosition()-1).getId();
+            long albumId = list.get(getAdapterPosition()-1).getAlbumId();
+            Bitmap bitmap_art_work = MediaUtil.getArtwork(context,musicId,albumId,true,false);
+            remoteViews.setImageViewBitmap(R.id.iv_albumArt_Notification,bitmap_art_work);
+            /**
+             *设置歌名
+             */
+            String title = list.get(getAdapterPosition()-1).getTitle();
+            remoteViews.setTextViewText(R.id.tv_audio_title_notification,title);
+            /**
+             *设置歌手
+             */
+            String artist = list.get(getAdapterPosition()-1).getArtist();
+            Log.d("dd",artist);
+            remoteViews.setTextViewText(R.id.tv_artist_notification,artist);
+            remoteViews.setTextViewTextSize(R.id.tv_artist_notification,COMPLEX_UNIT_SP,17);
+            /**
+             *设置专辑
+             */
+            String album = list.get(getAdapterPosition()-1).getAlbum();
+            remoteViews.setTextViewText(R.id.tv_album_notification,album);
+            remoteViews.setTextViewTextSize(R.id.tv_album_notification,COMPLEX_UNIT_SP,17);
+            /**
+             *设置关闭
+             */
+                    /*Intent intent_close = new Intent();
+                    intent_close.putExtra("position",8);
+                    intent_close.setClass(context,PlayerService.class);*/
+            Intent intent_close = new Intent(context,PlayerService.class);
+            intent_close.putExtra("position",-1);
+            PendingIntent pendingIntent = PendingIntent.getService(context,CODE_CLOSE,intent_close,FLAG_CANCEL_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.iv_close_notification,pendingIntent);
+
+
+
+            builder.setTicker("网易云音乐正在播放");
+            builder.setAutoCancel(true);
+            builder.setSmallIcon(R.drawable.stat_notify);
+            builder.setContent(remoteViews);    //设置小布局显示内容。
+            builder.setOngoing(true);
+
+            Notification notification = builder.build();
+            notification.bigContentView = remoteViews;   //设置大布局显示内容。
+            notification.priority = Notification.PRIORITY_MAX;
+            manger.notify(NOTIFICATION_ID,notification);
         }
     }
 
@@ -171,4 +247,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(viewOfGeneralLines);
         }
     }
+
+
 }

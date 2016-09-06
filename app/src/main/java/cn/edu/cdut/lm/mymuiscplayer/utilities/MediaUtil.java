@@ -154,7 +154,7 @@ public class MediaUtil {
         if(small){	//返回小图片
             return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.placeholder_disk), null, opts);
         }
-        return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.wohenmang), null, opts);
+        return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.placeholder_disk_380), null, opts);
     }
 
 

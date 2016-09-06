@@ -13,6 +13,7 @@
     <color name="bottomControlBarNormal">#EEFFFFFF</color>
     <color name="bottomControlBarSelected">#EEDDDDDD</color>
 
+    <color name="notificationSubTitle">#435d6b</color>
 
     <color name="itemLocalMusicNormal">#FFEFF3F2</color>
     <color name="itemLocalMusicSelected">#FFCCCCCC</color>
