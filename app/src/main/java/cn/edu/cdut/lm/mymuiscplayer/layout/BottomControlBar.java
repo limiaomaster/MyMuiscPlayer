@@ -30,6 +30,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class BottomControlBar extends RelativeLayout implements View.OnClickListener{
 
+    private static final int PLAY_NEXT_SONG = -2;
     private static Context context;
 
     private static List<Mp3Info> mp3InfoList;
@@ -65,6 +66,8 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
+    public static final String RESET_PLAY_PAUSE = "cn.edu.cdut.lm.mymusicplayer.RESET_PLAY_PAUSE";
+
 
     public BottomControlBar(Context context, AttributeSet attrs) {
 
@@ -86,7 +89,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
         mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
         listSize = mp3InfoList.size();  //  获取歌曲总数
-        Log.e("BottomControlBar()","您的手机上一共有"+listSize+"首歌曲！！！");
     }
 
 
@@ -109,7 +111,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         if(isPlaying) {
             iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
         } else iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
-
         /**
          * 2
          * 更新歌名和艺术家
@@ -125,16 +126,16 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         tv_title_of_music.setMarqueeRepeatLimit(-1);
         title = title_pref;           //    务必注意把从xml文件中获取的内容再赋给当前变量
         artist = artist_pref;       //    否则第二次显示控制条的时候的内容都为空，，，
-
         /**
          * 3
          * 更新专辑封面
          */
-        long musicId_pref = pref.getLong("music_id",0);
+        //long musicId_pref = pref.getLong("music_id",0);
         long albumId_pref = pref.getLong("album_id",0);
-        bitmap_art_work = MediaUtil.getArtwork(context,musicId_pref,albumId_pref,true,true);
-        iv_art_work.setImageBitmap(bitmap_art_work);
-        musicId = musicId_pref;
+        //bitmap_art_work = MediaUtil.getArtwork(context,musicId_pref,albumId_pref,true,true);
+        Bitmap bitmap = MediaUtil.getAlbumArtByPath(albumId_pref,context);
+        iv_art_work.setImageBitmap(bitmap);
+        //musicId = musicId_pref;
         albumId = albumId_pref;
         /**
          * 4
@@ -147,8 +148,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         duration = duration_pref;
         currentPisition = currentPisition_pref;
     }
-
-
 
 
 
@@ -175,7 +174,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.play_pause_btn:
-                Log.e("onClick","点击了play_pause按钮，，，");
                     Intent intent = new Intent();
                     intent.putExtra("position", listPosition);
                     intent.setClass(getContext(), PlayerService.class);
@@ -192,10 +190,10 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
            break;
 
             case R.id.next_song:
-                Intent intent1 = new Intent();
-                intent1.putExtra("position", nextPosition);
-                intent1.setClass(getContext(), PlayerService.class);
-                getContext().startService(intent1);
+                Intent intent_next = new Intent();
+                intent_next.putExtra("position", PLAY_NEXT_SONG);
+                intent_next.setClass(getContext(), PlayerService.class);
+                getContext().startService(intent_next);
 
                 title = mp3InfoList.get(nextPosition).getTitle();
                 artist = mp3InfoList.get(nextPosition).getArtist();
@@ -228,11 +226,10 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(UPDATE_UI_ON_LIST_CLICK) || action.equals(UPDATE_UI_ON_COMPLETION)) {
-
                 listPosition = intent.getIntExtra("position",0);
                 /**
                  * 1
-                 * 判断歌曲状态，更新  播放暂停  按钮。
+                 * 更新  播放暂停  按钮。
                  */
                 if(listPosition == lastPosition){   // 点击同一条曲目，表示要暂停，或者继续播放该曲目。
                     if(isPlaying ){                         //  如果此时为正在播放，表示要暂停。
@@ -268,10 +265,17 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                  */
                 musicId = mp3InfoList.get(listPosition).getId();
                 albumId = mp3InfoList.get(listPosition).getAlbumId();
-                bitmap_art_work = MediaUtil.getArtwork(context,musicId,albumId,true,true);
-                iv_art_work.setImageBitmap(bitmap_art_work);
+                Log.e("UpdateBarReceiver","musicId是："+musicId);
+                Log.e("UpdateBarReceiver","albumId是："+albumId);
 
-            }   else if (action.equals(UPDATE_PROGRESS_BAR)){
+                //bitmap_art_work = MediaUtil.getArtwork(context,musicId,albumId,true,true);
+                Bitmap bitmapp = MediaUtil.getAlbumArtByPath(albumId,context);
+                iv_art_work.setImageBitmap(bitmapp);
+
+            } else if (action.equals(RESET_PLAY_PAUSE)){
+                Log.e("UpdateBarReceiver","这是关闭按钮的广播，收到了！");
+                iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
+            }else if (action.equals(UPDATE_PROGRESS_BAR)){
 
                 currentPisition = intent.getIntExtra("currentPosition", 0);
                 duration = intent.getLongExtra("duration",0);

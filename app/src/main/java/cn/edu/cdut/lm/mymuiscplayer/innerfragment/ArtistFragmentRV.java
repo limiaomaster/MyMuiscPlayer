@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ public class ArtistFragmentRV extends Fragment {
         View view = inflater.inflate(R.layout.inner_fragment_artist, container , false);
 
         List<ArtistInfo> artistInfoList = ArtistUtil.getArtistList(getContext());
-        Log.e("ArtistFragmentRV","歌手列表长度为："+ artistInfoList.size());
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_artistFragment);
         //1
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

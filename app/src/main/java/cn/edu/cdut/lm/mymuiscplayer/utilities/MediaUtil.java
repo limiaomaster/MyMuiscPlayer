@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 
 import java.io.FileDescriptor;
@@ -63,7 +64,7 @@ public class MediaUtil {
                 projectionOfMusic,
                 null,
                 null,
-                order3
+                order2
         );
 
         List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
@@ -140,6 +141,31 @@ public class MediaUtil {
             sec = "0000" + (time % (1000 * 60)) + "";
         }
         return min + ":" + sec.trim().substring(0, 2);
+    }
+
+    public static String getCoverArtPath(long albumId, Context context) {
+
+        Cursor albumCursor = context.getContentResolver().query(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Albums.ALBUM_ART},
+                MediaStore.Audio.Albums._ID + " = ?",
+                new String[]{Long.toString(albumId)},
+                null
+        );
+        boolean queryResult = albumCursor.moveToFirst();
+        String result = null;
+        if (queryResult) {
+            result = albumCursor.getString(0);
+        }
+        albumCursor.close();
+        return result;
+    }
+
+    public static Bitmap getAlbumArtByPath(long album_id,Context context){
+        String path = getCoverArtPath(album_id,context);
+        if (path!=null){
+            return BitmapFactory.decodeFile(path);
+        }else return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.placeholder_disk), null, null);
     }
 
 

@@ -43,7 +43,7 @@
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION"/>
-
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.RESET_PLAY_PAUSE"/>
             </intent-filter>
         </receiver>
     </application>
