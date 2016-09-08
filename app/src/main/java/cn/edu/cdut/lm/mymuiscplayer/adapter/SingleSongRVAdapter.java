@@ -48,7 +48,9 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private NotificationManager manger;
     public static NotificationUtil notificationUtil;
     long lastClickTime = 0;
-    final int MIN_CLICK_DELAY_TIME = 1000;
+    final int MIN_CLICK_DELAY_TIME = 700;
+    private int listPosition;
+    private int lastPosition = -1;
 
 
     public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
@@ -158,20 +160,19 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewOfGeneralLines.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    long currentTime = Calendar.getInstance().getTimeInMillis();
-                    if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
-                        //播放你点击的歌曲
-                        playTheMusicOnClick();
-                        //更新控制条
-                        updateBottomControlBar();
-                        //更新Notification
-                        new Thread(){
-                            @Override
-                            public void run() {
-                                notificationUtil.updateNotificationUI(getAdapterPosition()-1);
-                            }
-                        }.start();
-                        lastClickTime = currentTime;
+                    listPosition = getAdapterPosition()-1;
+                    if (listPosition != lastPosition){
+                        long currentTime = Calendar.getInstance().getTimeInMillis();
+                        if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+                            //播放你点击的歌曲
+                            playTheMusicOnClick();
+                            //更新控制条
+                            updateBottomControlBar();
+                            //更新Notification
+                            updateNotification();
+                            lastClickTime = currentTime;
+                            lastPosition = listPosition;
+                        }
                     }
                 }
             });
@@ -198,8 +199,17 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             broadCastIntent.putExtra("position",getAdapterPosition()-1);
             context.sendBroadcast(broadCastIntent);
         }
-
+        private void updateNotification() {
+            new Thread(){
+                @Override
+                public void run() {
+                    notificationUtil.updateNoteMusicInfo(getAdapterPosition()-1);
+                }
+            }.start();
+        }
     }
+
+
 
     private class LastLinesViewHolder extends RecyclerView.ViewHolder {
         public LastLinesViewHolder(View viewOfGeneralLines) {

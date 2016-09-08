@@ -41,7 +41,7 @@ public class PlayerService extends Service {
 
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
-    public static final String RESET_PLAY_PAUSE = "cn.edu.cdut.lm.mymusicplayer.RESET_PLAY_PAUSE";
+    public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
 
     private  int currentPosition;
 
@@ -81,7 +81,7 @@ public class PlayerService extends Service {
                 sendIntent.putExtra("position",recycleListPosition);
                 sendBroadcast(sendIntent);
                 //更新Notification的UI
-                SingleSongRVAdapter.notificationUtil.updateNotificationUI(recycleListPosition);
+                SingleSongRVAdapter.notificationUtil.updateNoteMusicInfo(recycleListPosition);
                 //位置重新设置。
                 listPosition = recycleListPosition;
                 listLastPosition = recycleListPosition;
@@ -133,7 +133,7 @@ public class PlayerService extends Service {
             handler.removeMessages(1);
             //控制条的播放按键复位
             Intent intent_resetPlayButton = new Intent();
-            intent_resetPlayButton.setAction(RESET_PLAY_PAUSE);
+            intent_resetPlayButton.setAction(STOP_PLAY_BY_NOTE);
             sendBroadcast(intent_resetPlayButton);
             //设为停止播放状态
             isStop = true;

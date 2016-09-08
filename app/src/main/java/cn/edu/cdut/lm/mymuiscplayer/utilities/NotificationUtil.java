@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.util.List;
@@ -28,67 +29,78 @@ public class NotificationUtil {
     private static final int CODE_PAUSE = 222;
     private static final int CODE_RESET_PLAY_PAUSE = 333;
 
-    private  List<Mp3Info> mp3InfoList;
-    private  NotificationManager manger;
+    private List<Mp3Info> mp3InfoList;
+    private NotificationManager manger;
     private static final int NOTIFICATION_ID = 5709;
-    private  int lastPosition;
-    private  int listPosition;
-    private static boolean isPlaying;
-    private  Context context;
+    private int lastPosition = -1;
+    private int listPosition ;
+    private static boolean isPlaying = false;
+    private Context context;
     private RemoteViews remoteViews;
+    private NotificationCompat.Builder builder;
+    private Notification notification;
+
+
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String RESET_PLAY_PAUSE = "cn.edu.cdut.lm.mymusicplayer.RESET_PLAY_PAUSE";
 
-
-    public NotificationUtil(Context context ) {
+    public NotificationUtil(Context context) {
         this.context = context;
         remoteViews = new RemoteViews(context.getPackageName(), R.layout.layout_notification);
         manger = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        builder = new NotificationCompat.Builder(context);
+        builder.setTicker("网易云音乐正在播放");
+        builder.setAutoCancel(true);
+        builder.setSmallIcon(R.drawable.stat_notify);
+        builder.setContent(remoteViews);    //设置小布局显示内容。
+        builder.setOngoing(true);
+        notification = builder.build();
+        notification.priority=Notification.PRIORITY_MAX;
+
+        /**
+         *设置Notification点击关闭的动作。
+         */
+        //  只能通过PlayerService来停止发送更新进度条的广播。
+        Intent intent_close = new Intent();
+        intent_close.putExtra("position", -1);
+        intent_close.setClass(context, PlayerService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context, CODE_CLOSE, intent_close, FLAG_CANCEL_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.iv_close_notification, pendingIntent);
+
+        mp3InfoList = MediaUtil.getMp3List(context);
+        Log.e("NotificationUtil()","获取到了本机歌曲列表---------");
     }
 
-    public  void updateNotificationUI(int position){
-
+    public void updateNoteMusicInfo(int position) {
         listPosition = position;
-        mp3InfoList = MediaUtil.getMp3List(context);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        /**
-         *设置Notification专辑封面
-         */
-        //long musicId = mp3InfoList.get(position).getId();
-        long albumId = mp3InfoList.get(position).getAlbumId();
-        Bitmap bitmap_art_work = MediaUtil.getAlbumArtByPath(albumId,context);
-        remoteViews.setImageViewBitmap(R.id.iv_albumArt_Notification,bitmap_art_work);
-        /**
-         *设置Notification歌名
-         */
-        String title = mp3InfoList.get(position).getTitle();
-        remoteViews.setTextViewText(R.id.tv_audio_title_notification,title);
-        /**
-         *设置Notification歌手
-         */
-        String artist = mp3InfoList.get(position).getArtist();
-        remoteViews.setTextViewText(R.id.tv_artist_notification,artist);
-        remoteViews.setTextViewTextSize(R.id.tv_artist_notification,COMPLEX_UNIT_SP,17);
-        /**
-         *设置Notification专辑名称
-         */
-        String album = mp3InfoList.get(position).getAlbum();
-        remoteViews.setTextViewText(R.id.tv_album_notification,album);
-        remoteViews.setTextViewTextSize(R.id.tv_album_notification,COMPLEX_UNIT_SP,17);
-        /**
-         *设置Notification播放暂停键的图标
-         */
-        if(listPosition == lastPosition){
-            if(isPlaying){
-                remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_play_white);
-                isPlaying = false;
-            }else {
-                remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
-                isPlaying = true;
-            }
-        }else {
+        if (listPosition != lastPosition) {
+            Log.e("updateNotificationUI()","不是同一个listposition"+listPosition);
+            /**
+             *设置Notification专辑封面
+             */
+            //long musicId = mp3InfoList.get(position).getId();
+            long albumId = mp3InfoList.get(position).getAlbumId();
+            Bitmap bitmap_art_work = MediaUtil.getAlbumArtByPath(albumId, context);
+            remoteViews.setImageViewBitmap(R.id.iv_albumArt_Notification, bitmap_art_work);
+            /**
+             *设置Notification歌名
+             */
+            String title = mp3InfoList.get(position).getTitle();
+            remoteViews.setTextViewText(R.id.tv_audio_title_notification, title);
+            /**
+             *设置Notification歌手
+             */
+            String artist = mp3InfoList.get(position).getArtist();
+            remoteViews.setTextViewText(R.id.tv_artist_notification, artist);
+            remoteViews.setTextViewTextSize(R.id.tv_artist_notification, COMPLEX_UNIT_SP, 17);
+            /**
+             *设置Notification专辑名称
+             */
+            String album = mp3InfoList.get(position).getAlbum();
+            remoteViews.setTextViewText(R.id.tv_album_notification, album);
+            remoteViews.setTextViewTextSize(R.id.tv_album_notification, COMPLEX_UNIT_SP, 17);
+
             remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
-            isPlaying = true;
         }
         lastPosition = listPosition;
 
@@ -96,36 +108,25 @@ public class NotificationUtil {
          *设置Notification点击播放和暂停键的动作
          */
         Intent intent_pause_play = new Intent();
-        intent_pause_play.putExtra("position",listPosition);
-        intent_pause_play.setClass(context,PlayerService.class);
-        PendingIntent pendingIntent1 = PendingIntent.getService(context,CODE_PAUSE,intent_pause_play,FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification,pendingIntent1);
+        intent_pause_play.putExtra("position", listPosition);
+        intent_pause_play.setClass(context, PlayerService.class);
+        PendingIntent pendingIntent1 = PendingIntent.getService(context, CODE_PAUSE, intent_pause_play, FLAG_CANCEL_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent1);
         /**
-         *设置Notification点击关闭的动作。
+         *设置Notification播放暂停键的图标
          */
-        //  只能通过PlayerService来停止发送更新进度条的广播。
-        Intent intent_close = new Intent();
-        intent_close.putExtra("position",-1);
-        intent_close.setClass(context,PlayerService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context,CODE_CLOSE,intent_close,FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.iv_close_notification,pendingIntent);
-
-        /*Intent intent_resetPlayButton = new Intent();
-        intent_resetPlayButton.setAction(RESET_PLAY_PAUSE);
-        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context,CODE_RESET_PLAY_PAUSE,intent_resetPlayButton,FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.iv_close_notification,pendingIntent2);*/
+        if (isPlaying){
+            remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_play_white);
+            isPlaying = false;
+        }else {
+            remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
+            isPlaying = true;
+        }
 
 
-        builder.setTicker("网易云音乐正在播放");
-        builder.setAutoCancel(true);
-        builder.setSmallIcon(R.drawable.stat_notify);
-        builder.setContent(remoteViews);    //设置小布局显示内容。
-        builder.setOngoing(true);
 
-        Notification notification = builder.build();
-        notification.bigContentView = remoteViews;   //设置大布局显示内容。
-        notification.priority = Notification.PRIORITY_MAX;
-        manger.notify(NOTIFICATION_ID,notification);
-
+        notification.bigContentView=remoteViews;   //设置大布局显示内容。
+        manger.notify(NOTIFICATION_ID, notification);
     }
 }
+

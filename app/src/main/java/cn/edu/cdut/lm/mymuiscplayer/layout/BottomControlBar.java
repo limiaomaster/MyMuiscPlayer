@@ -47,7 +47,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     private static String artist;
     private static long musicId;
     private static long albumId;
-    private static int lastPosition;
+    private static int lastPosition = -1;
     private static int listPosition;
     private static int  nextPosition;
     private static long duration;
@@ -58,7 +58,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
-    public static final String RESET_PLAY_PAUSE = "cn.edu.cdut.lm.mymusicplayer.RESET_PLAY_PAUSE";
+    public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
 
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 1000;
@@ -137,6 +137,12 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         progressBar.setProgress(currentPisition_pref);
         duration = duration_pref;
         currentPisition = currentPisition_pref;
+        /**
+         * 5
+         * 更新正在播放歌曲的位置
+         */
+        int listPosition_pref = pref.getInt("listPosition",0);
+        listPosition = listPosition_pref;
     }
 
 
@@ -157,6 +163,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         editor.putInt("currentPisition",currentPisition);
         editor.putLong("music_id",musicId);
         editor.putLong("album_id",albumId);
+        editor.putInt("listPosition",listPosition);
         editor.commit();
     }
 
@@ -174,31 +181,30 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     intent.setClass(getContext(), PlayerService.class);
                     getContext().startService(intent);  //  注意是调用getContext()，不是SingleSongFragment中的getActivity()
                 /**
-                 * 如果停止播放，就产生Notification
+                 * 如果停止播放，就更新Notification
                  */
                 if(isStop){
                     new Thread(){
                         @Override
                         public void run() {
-                            notificationUtil.updateNotificationUI(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
+                            notificationUtil.updateNoteMusicInfo(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
                         }
                     }.start();
                 }
                 /**
-                 * 更新按钮图标
+                 * 更新ControlBar和Notification播放按钮图标
                  */
                 if( !isPlaying ){                     //    如果处于暂停或者停止状态，表示要播放歌曲了，要把图标置为暂停！！
-                    Log.e("onClick","此时处于暂停或者停止状态");
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
+
                     isPlaying = true;
                     isStop = false;
                 }else {                                //    如果处于播放状态，表示要暂停歌曲，要把图标置为播放！！
-                    Log.e("onClick","此时处于播放状态");
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
                     isPlaying = false;
                     isStop = false;
                 }
-           break;
+                break;
 
             case R.id.next_song:
                 long currentTime = Calendar.getInstance().getTimeInMillis();
@@ -234,7 +240,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     new Thread(){
                         @Override
                         public void run() {
-                            notificationUtil.updateNotificationUI(nextPosition);
+                            notificationUtil.updateNoteMusicInfo(nextPosition);
                             isPlaying = true;
                             isStop = false;
 
@@ -261,61 +267,45 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
             String action = intent.getAction();
             if (action.equals(UPDATE_UI_ON_LIST_CLICK) || action.equals(UPDATE_UI_ON_COMPLETION)) {
                 listPosition = intent.getIntExtra("position",0);
-                /**
-                 * 1
-                 * 更新  播放暂停  按钮。
-                 */
-                if(listPosition == lastPosition){   // 点击同一条曲目，表示要暂停，或者继续播放该曲目。
-                    if(isPlaying ){                         //  如果此时为正在播放，表示要暂停。
-                        isPlaying = false;
-                        iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
-                    }else{                                    //    如果此时为暂停，表示要继续播放。
-                        isPlaying = true;
-                        iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
-                    }
-                }else{                                       //  点击不同的曲目，一定是播放新的歌曲。
-                    isPlaying = true;
+                if (listPosition != lastPosition){
+                    /**
+                     * 1
+                     * 更新  播放暂停  按钮。
+                     */
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
+                    /**
+                     * 2
+                     * 更新歌名和艺术家
+                     */
+                    title = mp3InfoList.get(listPosition).getTitle();
+                    artist = mp3InfoList.get(listPosition).getArtist();
+                    tv_title_of_music.setText(title);
+                    tv_artist_of_music.setText(artist);
+                    //设置跑马灯，滚动显示歌名。
+                    tv_title_of_music.setSingleLine(true);
+                    tv_title_of_music.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                    tv_title_of_music.setSelected(true);
+                    tv_title_of_music.setMarqueeRepeatLimit(-1);
+                    /**
+                     * 3
+                     * 更新专辑封面
+                     */
+                    albumId = mp3InfoList.get(listPosition).getAlbumId();
+                    Bitmap bitmapp = MediaUtil.getAlbumArtByPath(albumId,context);
+                    iv_art_work.setImageBitmap(bitmapp);
                 }
+                isPlaying = true;
+                isStop = false;
                 lastPosition = listPosition;
                 nextPosition = (listPosition+1)%listSize;
-                /**
-                 * 2
-                 * 更新歌名和艺术家
-                 */
-                title = mp3InfoList.get(listPosition).getTitle();
-                artist = mp3InfoList.get(listPosition).getArtist();
-                tv_title_of_music.setText(title);
-                tv_artist_of_music.setText(artist);
-                //设置跑马灯，滚动显示歌名。
-                tv_title_of_music.setSingleLine(true);
-                tv_title_of_music.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                tv_title_of_music.setSelected(true);
-                tv_title_of_music.setMarqueeRepeatLimit(-1);
-
-                /**
-                 * 3
-                 * 更新专辑封面
-                 */
-                musicId = mp3InfoList.get(listPosition).getId();
-                albumId = mp3InfoList.get(listPosition).getAlbumId();
-                Log.e("UpdateBarReceiver","musicId是："+musicId);
-                Log.e("UpdateBarReceiver","albumId是："+albumId);
-
-                //bitmap_art_work = MediaUtil.getArtwork(context,musicId,albumId,true,true);
-                Bitmap bitmapp = MediaUtil.getAlbumArtByPath(albumId,context);
-                iv_art_work.setImageBitmap(bitmapp);
-
-            } else if (action.equals(RESET_PLAY_PAUSE)){
+            } else if (action.equals(STOP_PLAY_BY_NOTE)){
                 Log.e("UpdateBarReceiver","这是关闭按钮的广播，收到了！");
                 iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
                 isPlaying = false;
                 isStop = true;
             }else if (action.equals(UPDATE_PROGRESS_BAR)){
-
                 currentPisition = intent.getIntExtra("currentPosition", 0);
                 duration = intent.getLongExtra("duration",0);
-
                 progressBar.setMax(Integer.parseInt(String.valueOf(duration)));
                 progressBar.setProgress(currentPisition);
             }
