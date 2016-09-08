@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.List;
 
@@ -47,7 +48,8 @@ public class PlayerService extends Service {
     private static final String CLOSE_NOTIFICATION = "close_notification";
     private NotificationManager manager;
     private static final int NOTIFICATION_ID = 5709;
-    private boolean isPlaying;
+    private boolean isPlaying = false;
+    private boolean isStop = true;
     //private NotificationUtil notificationUtil;
 
     @Nullable
@@ -99,9 +101,12 @@ public class PlayerService extends Service {
             listPosition = intent.getIntExtra("position",0);
             path = mp3InfoList.get(listPosition).getUrl();
             if( listPosition == listLastPosition ){ //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
-                if( mediaPlayer.isPlaying()){          //   如果此时为正在播放，表示要暂停。
+                if(isStop){
+                    playAnotherMusic(0);
+                }else if( mediaPlayer.isPlaying()){          //   如果此时为正在播放，表示要暂停。
                     pausePlayingMusic();
                 } else {                                            //  如果此时为暂停，表示要继续播放。
+                    Log.e("onStartCommand","将要继续播放！"+listPosition);
                     continuePlayingMusic();                //  继续播放,用系统的方法start()
                 }
             } else {                                               //  如果不是一个，那肯定是要播放新的文件了。
@@ -115,20 +120,24 @@ public class PlayerService extends Service {
 
     private void stopPlayingMusic() {
         if(mediaPlayer != null){
+            //停止播放
             mediaPlayer.stop();
-
+            //关闭notification
             manager.cancel(NOTIFICATION_ID);
-
+            //进度条复位
             Intent intent_resetBar = new Intent();
             intent_resetBar.setAction(UPDATE_PROGRESS_BAR);
             intent_resetBar.putExtra("duration",duration);
             intent_resetBar.putExtra("currentPosition",0);
             sendBroadcast(intent_resetBar);
             handler.removeMessages(1);
-
+            //控制条的播放按键复位
             Intent intent_resetPlayButton = new Intent();
             intent_resetPlayButton.setAction(RESET_PLAY_PAUSE);
             sendBroadcast(intent_resetPlayButton);
+            //设为停止播放状态
+            isStop = true;
+            isPlaying = false;
         }
 
     }
@@ -138,6 +147,7 @@ public class PlayerService extends Service {
         if (mediaPlayer != null ) {
             mediaPlayer.pause();
             handler.removeMessages(1);
+            isStop = false;
             isPlaying = false;
         }
     }
@@ -145,6 +155,7 @@ public class PlayerService extends Service {
         if (mediaPlayer != null ) {
             mediaPlayer.start();
             handler.sendEmptyMessage(1);
+            isStop = false;
             isPlaying = true;
         }
     }
@@ -162,6 +173,8 @@ public class PlayerService extends Service {
         catch (Exception e) {
             e.printStackTrace();
         }
+        isStop = false;
+        isPlaying = true;
     }
 
     private final class PreparedListener implements MediaPlayer.OnPreparedListener {

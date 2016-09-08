@@ -23,6 +23,7 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 import static android.content.Context.MODE_PRIVATE;
+import static cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongRVAdapter.notificationUtil;
 
 /**
  * Created by LimiaoMaster on 2016/8/17 9:22
@@ -59,7 +60,9 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     private static long duration;
     private static int currentPisition;
 
-    private static boolean isPlaying;
+    private static boolean isPlaying = false;
+    private static boolean isStop = true;
+
 
     private UpdateBarReceiver updateBarReceiver;
 
@@ -174,10 +177,21 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.play_pause_btn:
+
                     Intent intent = new Intent();
                     intent.putExtra("position", listPosition);
                     intent.setClass(getContext(), PlayerService.class);
                     getContext().startService(intent);  //  注意是调用getContext()，不是SingleSongFragment中的getActivity()
+
+                if(isStop){
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            notificationUtil.updateNotificationUI(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
+                        }
+                    }.start();
+                }
+
                 if( !isPlaying ){                     //    如果处于暂停或者停止状态，表示要播放歌曲了，要把图标置为暂停！！
                     Log.e("onClick","此时处于暂停或者停止状态");
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
@@ -275,6 +289,8 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
             } else if (action.equals(RESET_PLAY_PAUSE)){
                 Log.e("UpdateBarReceiver","这是关闭按钮的广播，收到了！");
                 iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
+                isPlaying = false;
+                isStop = true;
             }else if (action.equals(UPDATE_PROGRESS_BAR)){
 
                 currentPisition = intent.getIntExtra("currentPosition", 0);
