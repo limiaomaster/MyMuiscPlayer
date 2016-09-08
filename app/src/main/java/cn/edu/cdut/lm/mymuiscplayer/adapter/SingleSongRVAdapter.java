@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
@@ -46,6 +47,8 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private NotificationManager manger;
     public static NotificationUtil notificationUtil;
+    long lastClickTime = 0;
+    final int MIN_CLICK_DELAY_TIME = 1000;
 
 
     public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
@@ -155,18 +158,21 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewOfGeneralLines.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //播放你点击的歌曲
-                    playTheMusicOnClick();
-                    //更新控制条
-                    updateBottomControlBar();
-                    //更新Notification
-                    //notificationUtil.updateNotificationUI(getAdapterPosition()-1);
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            notificationUtil.updateNotificationUI(getAdapterPosition()-1);
-                        }
-                    }.start();
+                    long currentTime = Calendar.getInstance().getTimeInMillis();
+                    if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+                        //播放你点击的歌曲
+                        playTheMusicOnClick();
+                        //更新控制条
+                        updateBottomControlBar();
+                        //更新Notification
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                notificationUtil.updateNotificationUI(getAdapterPosition()-1);
+                            }
+                        }.start();
+                        lastClickTime = currentTime;
+                    }
                 }
             });
 
