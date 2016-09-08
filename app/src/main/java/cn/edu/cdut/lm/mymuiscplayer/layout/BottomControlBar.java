@@ -196,11 +196,22 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                  */
                 if( !isPlaying ){                     //    如果处于暂停或者停止状态，表示要播放歌曲了，要把图标置为暂停！！
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
-
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            notificationUtil.updateNoteMusicInfo(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
+                        }
+                    }.start();
                     isPlaying = true;
                     isStop = false;
                 }else {                                //    如果处于播放状态，表示要暂停歌曲，要把图标置为播放！！
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            notificationUtil.updateNoteMusicInfo(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
+                        }
+                    }.start();
                     isPlaying = false;
                     isStop = false;
                 }
@@ -217,25 +228,25 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 intent_next.setClass(getContext(), PlayerService.class);
                 getContext().startService(intent_next);
                 /**
-                 * 更新歌名和歌手
+                 * 更新ControlBar歌名和歌手
                  */
                 title = mp3InfoList.get(nextPosition).getTitle();
                 artist = mp3InfoList.get(nextPosition).getArtist();
                 tv_title_of_music.setText(title);
                 tv_artist_of_music.setText(artist);
                 /**
-                 * 更新专辑封面
+                 * 更新ControlBar专辑封面
                  */
                 //musicId = mp3InfoList.get(nextPosition).getId();
                 albumId = mp3InfoList.get(nextPosition).getAlbumId();
                 bitmap_art_work = MediaUtil.getAlbumArtByPath(albumId,context);
                 iv_art_work.setImageBitmap(bitmap_art_work);
                 /**
-                 * 更新按钮图标
+                 * 更新ControlBar按钮图标
                  */
                 iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
                 /**
-                 * 更新notification
+                 * 更新notification的UI
                  */
                     new Thread(){
                         @Override

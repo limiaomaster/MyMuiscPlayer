@@ -101,32 +101,34 @@ public class NotificationUtil {
             remoteViews.setTextViewTextSize(R.id.tv_album_notification, COMPLEX_UNIT_SP, 17);
 
             remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
+            isPlaying = true;
+        }else {
+            /**
+             *设置Notification播放暂停键的图标
+             */
+            if (isPlaying){
+                remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_play_white);
+                isPlaying = false;
+            }else {
+                remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
+                isPlaying = true;
+            }
         }
         lastPosition = listPosition;
 
         /**
          *设置Notification点击播放和暂停键的动作
          */
-        Intent intent_pause_play = new Intent();
+        /*Intent intent_pause_play = new Intent();
         intent_pause_play.putExtra("position", listPosition);
         intent_pause_play.setClass(context, PlayerService.class);
         PendingIntent pendingIntent1 = PendingIntent.getService(context, CODE_PAUSE, intent_pause_play, FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent1);
-        /**
-         *设置Notification播放暂停键的图标
-         */
-        if (isPlaying){
-            remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_play_white);
-            isPlaying = false;
-        }else {
-            remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
-            isPlaying = true;
-        }
-
-
+        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent1);*/
 
         notification.bigContentView=remoteViews;   //设置大布局显示内容。
         manger.notify(NOTIFICATION_ID, notification);
     }
+
+
 }
 
