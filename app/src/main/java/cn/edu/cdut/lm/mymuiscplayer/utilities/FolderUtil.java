@@ -28,6 +28,7 @@ public class FolderUtil {
         String[] projectionOfFolder = new String[]{FileColumns.DATA};
         String order = "bucket_display_name_pinyin";
 
+
         String where = new String(
                 FileColumns.MEDIA_TYPE +" = "+ FileColumns.MEDIA_TYPE_AUDIO + " and (" +
                         FileColumns.DATA + " like '%.mp3' or " +
@@ -43,7 +44,7 @@ public class FolderUtil {
                 projectionOfFolder,
                 where,
                 null,
-                order
+                null
                 );
         while(cursor.moveToNext()){
             FolderInfo folderInfo = new FolderInfo();
