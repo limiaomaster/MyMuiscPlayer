@@ -34,7 +34,7 @@ public class NotificationUtil {
     private static final int NOTIFICATION_ID = 5709;
     private int lastPosition = -1;
     private int listPosition ;
-    private static boolean isPlaying = false;
+    public  boolean isPlaying = false;
     private Context context;
     private RemoteViews remoteViews;
     private NotificationCompat.Builder builder;

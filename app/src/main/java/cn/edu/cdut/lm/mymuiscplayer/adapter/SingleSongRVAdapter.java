@@ -167,7 +167,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             //播放你点击的歌曲
                             playTheMusicOnClick();
                             //更新控制条
-                            updateBottomControlBar();
+                            //updateBottomControlBar();
                             //更新Notification
                             updateNotification();
                             lastClickTime = currentTime;

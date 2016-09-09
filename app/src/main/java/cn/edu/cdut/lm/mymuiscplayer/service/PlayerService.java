@@ -140,6 +140,7 @@ public class PlayerService extends Service {
             intent_resetPlayButton.setAction(STOP_PLAY_BY_NOTE);
             sendBroadcast(intent_resetPlayButton);
             //设为停止播放状态
+            notificationUtil.isPlaying = false;
             isStop = true;
             isPlaying = false;
         }
@@ -180,6 +181,10 @@ public class PlayerService extends Service {
     }
 
     private void playAnotherMusic (int currentTime) {
+        Intent intent = new Intent();
+        intent.setAction(UPDATE_UI_ON_BUTTON_CLICK);
+        intent.putExtra("position",listPosition);
+        sendBroadcast(intent);
         handler.removeMessages(1);
         try {
             mediaPlayer.reset();//把各项参数恢复到初始状态

@@ -12,7 +12,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
-        android:src="@mipmap/topmenu_icn_free"/>
+        android:src="@drawable/topmenu_icn_free"/>
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
