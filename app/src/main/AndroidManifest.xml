@@ -44,6 +44,7 @@
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE"/>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_BUTTON_CLICK"/>
             </intent-filter>
         </receiver>
     </application>

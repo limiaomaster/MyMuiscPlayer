@@ -54,11 +54,14 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     private static int currentPisition;
     private static boolean isPlaying = false;
     private static boolean isStop = true;
+    private boolean isPlaying_afterSendNote = false;
+
     private UpdateBarReceiver updateBarReceiver;
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
+    public static final String UPDATE_UI_ON_BUTTON_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_BUTTON_CLICK";
 
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 1000;
@@ -194,28 +197,35 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 /**
                  * 更新ControlBar和Notification播放按钮图标
                  */
-                if( !isPlaying ){                     //    如果处于暂停或者停止状态，表示要播放歌曲了，要把图标置为暂停！！
-                    iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
+                if( !isPlaying_afterSendNote ){                     //    如果处于暂停或者停止状态，表示要播放歌曲了，要把图标置为暂停！！
+                    //iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
                     new Thread(){
                         @Override
                         public void run() {
                             notificationUtil.updateNoteMusicInfo(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
                         }
                     }.start();
-                    isPlaying = true;
+                    isPlaying_afterSendNote = true;
                     isStop = false;
+                    Log.e("1111111111111111","isPlaying的状态为："+isPlaying+"");
+
                 }else {                                //    如果处于播放状态，表示要暂停歌曲，要把图标置为播放！！
-                    iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
+                    //iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
                     new Thread(){
                         @Override
                         public void run() {
                             notificationUtil.updateNoteMusicInfo(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
                         }
                     }.start();
-                    isPlaying = false;
+                    isPlaying_afterSendNote = false;
                     isStop = false;
+                    Log.e("22222222222222","isPlaying的状态为："+isPlaying+"");
+
                 }
                 break;
+
+
+
 
             case R.id.next_song:
                 long currentTime = Calendar.getInstance().getTimeInMillis();
@@ -254,6 +264,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                             notificationUtil.updateNoteMusicInfo(nextPosition);
                             isPlaying = true;
                             isStop = false;
+                            Log.e("33333333333333","isPlaying的状态为："+isPlaying+"");
 
                             listPosition = nextPosition;                           //   也要注意更新当前位置listPosition
                             lastPosition = nextPosition;                          //   也要注意更新上一个位置lastPosition
@@ -276,7 +287,9 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(UPDATE_UI_ON_LIST_CLICK) || action.equals(UPDATE_UI_ON_COMPLETION)) {
+            if (action.equals(UPDATE_UI_ON_LIST_CLICK) ||
+                    action.equals(UPDATE_UI_ON_COMPLETION) ||
+                    action.equals(UPDATE_UI_ON_BUTTON_CLICK)) {
                 listPosition = intent.getIntExtra("position",0);
                 if (listPosition != lastPosition){
                     /**
@@ -304,16 +317,37 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     albumId = mp3InfoList.get(listPosition).getAlbumId();
                     Bitmap bitmapp = MediaUtil.getAlbumArtByPath(albumId,context);
                     iv_art_work.setImageBitmap(bitmapp);
+
+                    isPlaying = true;
+                    isStop = false;
+                    Log.e("444444444444","isPlaying的状态为："+isPlaying+"");
+
+                    lastPosition = listPosition;
+                    nextPosition = (listPosition+1)%listSize;
+                }else {
+                    Log.e("onReceive()","收到广播，，，这是相同行。。。"+listPosition+isPlaying);
+
+                    if (isPlaying){
+                        iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
+                        Log.e("onReceive()","收到广播，，，这是相同行。。。设为了播放按钮！"+listPosition+isPlaying);
+
+                        isPlaying = false;
+                        isStop = false;
+                    }else {
+                        iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
+                        Log.e("onReceive()","收到广播，，，这是相同行。。。设为了暂停按钮！"+listPosition+isPlaying);
+
+                        isPlaying = true;
+                        isStop = false;
+                        Log.e("onReceive()","收到广播，，，这是相同行。。。设为了暂停按钮！"+listPosition+isPlaying);
+
+                    }
                 }
-                isPlaying = true;
-                isStop = false;
-                lastPosition = listPosition;
-                nextPosition = (listPosition+1)%listSize;
             } else if (action.equals(STOP_PLAY_BY_NOTE)){
-                Log.e("UpdateBarReceiver","这是关闭按钮的广播，收到了！");
                 iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
                 isPlaying = false;
                 isStop = true;
+                Log.e("5555555555555","isPlaying的状态为："+isPlaying+"");
             }else if (action.equals(UPDATE_PROGRESS_BAR)){
                 currentPisition = intent.getIntExtra("currentPosition", 0);
                 duration = intent.getLongExtra("duration",0);

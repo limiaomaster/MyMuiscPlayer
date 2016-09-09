@@ -42,6 +42,8 @@ public class PlayerService extends Service {
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
+    public static final String UPDATE_UI_ON_BUTTON_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_BUTTON_CLICK";
+
 
     private  int currentPosition;
 
@@ -95,10 +97,11 @@ public class PlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent.getIntExtra("position",0) == -1){ //点击了关闭按钮，关闭notification、停止播放歌曲、进度条复位。
+        int position = intent.getIntExtra("position",0);
+        if(position == -1){ //点击了关闭按钮，关闭notification、停止播放歌曲、进度条复位。
             stopPlayingMusic();
         }else {
-            listPosition = intent.getIntExtra("position",0);
+            listPosition = position;
             path = mp3InfoList.get(listPosition).getUrl();
             if( listPosition == listLastPosition ){ //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
                 if(isStop){
@@ -147,6 +150,12 @@ public class PlayerService extends Service {
         if (mediaPlayer != null ) {
             mediaPlayer.pause();
             handler.removeMessages(1);
+
+            Intent intent = new Intent();
+            intent.setAction(UPDATE_UI_ON_BUTTON_CLICK);
+            intent.putExtra("position",listPosition);
+            sendBroadcast(intent);
+
             isStop = false;
             isPlaying = false;
         }
@@ -155,6 +164,12 @@ public class PlayerService extends Service {
         if (mediaPlayer != null ) {
             mediaPlayer.start();
             handler.sendEmptyMessage(1);
+
+            Intent intent = new Intent();
+            intent.setAction(UPDATE_UI_ON_BUTTON_CLICK);
+            intent.putExtra("position",listPosition);
+            sendBroadcast(intent);
+
             isStop = false;
             isPlaying = true;
         }

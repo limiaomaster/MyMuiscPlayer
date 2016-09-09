@@ -73,7 +73,7 @@ public class NotificationUtil {
 
     public void updateNoteMusicInfo(int position) {
         listPosition = position;
-        if (listPosition != lastPosition) {
+        if (listPosition != lastPosition) {     //如果不是同一行，一定是点击了新的行，或者下一首按钮。
             Log.e("updateNotificationUI()","不是同一个listposition"+listPosition);
             /**
              *设置Notification专辑封面
@@ -102,9 +102,10 @@ public class NotificationUtil {
 
             remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
             isPlaying = true;
-        }else {
+        }else {            //  如果是相同的行，肯定是点击了ControlBar的播放暂停键，只需更新Notification的按键的图标。
+            Log.e("updateNotificationUI()","是相同行的listposition"+listPosition);
             /**
-             *设置Notification播放暂停键的图标
+             *设置自己播放暂停键的图标
              */
             if (isPlaying){
                 remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_play_white);
@@ -119,11 +120,18 @@ public class NotificationUtil {
         /**
          *设置Notification点击播放和暂停键的动作
          */
-        /*Intent intent_pause_play = new Intent();
+        Intent intent_pause_play = new Intent();
         intent_pause_play.putExtra("position", listPosition);
+        /*if(isPlaying){
+            intent_pause_play.putExtra("playOrPause","to_pause");
+            isPlaying = false;
+        }else {
+            intent_pause_play.putExtra("playOrPause","to_play");
+            isPlaying = true;
+        }*/
         intent_pause_play.setClass(context, PlayerService.class);
         PendingIntent pendingIntent1 = PendingIntent.getService(context, CODE_PAUSE, intent_pause_play, FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent1);*/
+        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent1);
 
         notification.bigContentView=remoteViews;   //设置大布局显示内容。
         manger.notify(NOTIFICATION_ID, notification);
