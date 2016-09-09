@@ -109,30 +109,26 @@ public class NotificationUtil {
              */
             if (isPlaying){
                 remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_play_white);
+                Log.e("updateNotificationUI()","设为播放键了，，，"+listPosition+isPlaying);
+
                 isPlaying = false;
             }else {
                 remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
+                Log.e("updateNotificationUI()","设为暂停键了，，，"+listPosition+isPlaying);
+
                 isPlaying = true;
             }
         }
-        lastPosition = listPosition;
-
         /**
          *设置Notification点击播放和暂停键的动作
          */
         Intent intent_pause_play = new Intent();
         intent_pause_play.putExtra("position", listPosition);
-        /*if(isPlaying){
-            intent_pause_play.putExtra("playOrPause","to_pause");
-            isPlaying = false;
-        }else {
-            intent_pause_play.putExtra("playOrPause","to_play");
-            isPlaying = true;
-        }*/
         intent_pause_play.setClass(context, PlayerService.class);
         PendingIntent pendingIntent1 = PendingIntent.getService(context, CODE_PAUSE, intent_pause_play, FLAG_CANCEL_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent1);
 
+        lastPosition = listPosition;
         notification.bigContentView=remoteViews;   //设置大布局显示内容。
         manger.notify(NOTIFICATION_ID, notification);
     }

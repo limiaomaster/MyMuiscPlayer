@@ -13,9 +13,10 @@ import android.util.Log;
 
 import java.util.List;
 
-import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongRVAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
+
+import static cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongRVAdapter.notificationUtil;
 
 
 /**
@@ -83,7 +84,7 @@ public class PlayerService extends Service {
                 sendIntent.putExtra("position",recycleListPosition);
                 sendBroadcast(sendIntent);
                 //更新Notification的UI
-                SingleSongRVAdapter.notificationUtil.updateNoteMusicInfo(recycleListPosition);
+                notificationUtil.updateNoteMusicInfo(recycleListPosition);
                 //位置重新设置。
                 listPosition = recycleListPosition;
                 listLastPosition = recycleListPosition;
@@ -156,6 +157,7 @@ public class PlayerService extends Service {
             intent.putExtra("position",listPosition);
             sendBroadcast(intent);
 
+            notificationUtil.updateNoteMusicInfo(listPosition);
             isStop = false;
             isPlaying = false;
         }
@@ -169,6 +171,8 @@ public class PlayerService extends Service {
             intent.setAction(UPDATE_UI_ON_BUTTON_CLICK);
             intent.putExtra("position",listPosition);
             sendBroadcast(intent);
+
+            notificationUtil.updateNoteMusicInfo(listPosition);
 
             isStop = false;
             isPlaying = true;
