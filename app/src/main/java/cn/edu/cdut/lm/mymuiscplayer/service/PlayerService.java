@@ -43,7 +43,7 @@ public class PlayerService extends Service {
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
-    public static final String UPDATE_UI_ON_BUTTON_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_BUTTON_CLICK";
+    public static final String UPDATE_CONTROL_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR";
 
 
     private  int currentPosition;
@@ -154,7 +154,7 @@ public class PlayerService extends Service {
             handler.removeMessages(1);
 
             Intent intent = new Intent();
-            intent.setAction(UPDATE_UI_ON_BUTTON_CLICK);
+            intent.setAction(UPDATE_CONTROL_BAR);
             intent.putExtra("position",listPosition);
             sendBroadcast(intent);
 
@@ -169,7 +169,7 @@ public class PlayerService extends Service {
             handler.sendEmptyMessage(1);
 
             Intent intent = new Intent();
-            intent.setAction(UPDATE_UI_ON_BUTTON_CLICK);
+            intent.setAction(UPDATE_CONTROL_BAR);
             intent.putExtra("position",listPosition);
             sendBroadcast(intent);
 
@@ -182,7 +182,7 @@ public class PlayerService extends Service {
 
     private void playAnotherMusic (int currentTime) {
         Intent intent = new Intent();
-        intent.setAction(UPDATE_UI_ON_BUTTON_CLICK);
+        intent.setAction(UPDATE_CONTROL_BAR);
         intent.putExtra("position",listPosition);
         sendBroadcast(intent);
         handler.removeMessages(1);
@@ -202,9 +202,7 @@ public class PlayerService extends Service {
     }
 
     private final class PreparedListener implements MediaPlayer.OnPreparedListener {
-
         private int currentTime;
-
         PreparedListener(int currentTime) {
             this.currentTime = currentTime;
         }

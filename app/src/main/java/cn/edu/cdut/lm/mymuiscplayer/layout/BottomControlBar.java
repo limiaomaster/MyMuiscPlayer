@@ -61,7 +61,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
-    public static final String UPDATE_UI_ON_BUTTON_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_BUTTON_CLICK";
+    public static final String UPDATE_CONTROL_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR";
 
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 1000;
@@ -221,40 +221,37 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 intent_next.putExtra("position", nextPosition);
                 intent_next.setClass(getContext(), PlayerService.class);
                 getContext().startService(intent_next);
-                /**
-                 * 更新ControlBar歌名和歌手
-                 */
-                title = mp3InfoList.get(nextPosition).getTitle();
-                artist = mp3InfoList.get(nextPosition).getArtist();
-                tv_title_of_music.setText(title);
-                tv_artist_of_music.setText(artist);
-                /**
-                 * 更新ControlBar专辑封面
-                 */
-                //musicId = mp3InfoList.get(nextPosition).getId();
-                albumId = mp3InfoList.get(nextPosition).getAlbumId();
-                bitmap_art_work = MediaUtil.getAlbumArtByPath(albumId,context);
-                iv_art_work.setImageBitmap(bitmap_art_work);
-                /**
-                 * 更新ControlBar按钮图标
-                 */
-                iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
-                /**
-                 * 更新notification的UI
-                 */
+
                     new Thread(){
                         @Override
                         public void run() {
                             notificationUtil.updateNoteMusicInfo(nextPosition);
-                            isPlaying = true;
-                            isStop = false;
-                            Log.e("33333333333333","isPlaying的状态为："+isPlaying+"");
-
-                            listPosition = nextPosition;                           //   也要注意更新当前位置listPosition
-                            lastPosition = nextPosition;                          //   也要注意更新上一个位置lastPosition
-                            nextPosition = (nextPosition+1)%listSize;   //  注意更新nextPosition，，，
                         }
                     }.start();
+                /**
+                 * 更新ControlBar歌名和歌手
+                 */
+                /*title = mp3InfoList.get(nextPosition).getTitle();
+                artist = mp3InfoList.get(nextPosition).getArtist();
+                tv_title_of_music.setText(title);
+                tv_artist_of_music.setText(artist);*/
+                /**
+                 * 更新ControlBar专辑封面
+                 */
+                //musicId = mp3InfoList.get(nextPosition).getId();
+                /*albumId = mp3InfoList.get(nextPosition).getAlbumId();
+                bitmap_art_work = MediaUtil.getAlbumArtByPath(albumId,context);
+                iv_art_work.setImageBitmap(bitmap_art_work);*/
+                /**
+                 * 更新ControlBar按钮图标
+                 */
+                iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
+
+                    //isPlaying = true;
+                    //isStop = false;
+                  //  listPosition = nextPosition;                           //   也要注意更新当前位置listPosition
+                    //lastPosition = nextPosition;                          //   也要注意更新上一个位置lastPosition
+                    //nextPosition = (nextPosition+1)%listSize;   //  注意更新nextPosition，，，
                     lastClickTime = currentTime;
                 }
                 break;
@@ -273,7 +270,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
             String action = intent.getAction();
             if (action.equals(UPDATE_UI_ON_LIST_CLICK) ||
                     action.equals(UPDATE_UI_ON_COMPLETION) ||
-                    action.equals(UPDATE_UI_ON_BUTTON_CLICK)) {
+                    action.equals(UPDATE_CONTROL_BAR)) {
                 listPosition = intent.getIntExtra("position",0);
                 if (listPosition != lastPosition){
                     /**
