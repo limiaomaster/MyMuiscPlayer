@@ -24,7 +24,6 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 import static android.content.Context.MODE_PRIVATE;
-import static cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongRVAdapter.notificationUtil;
 
 /**
  * Created by LimiaoMaster on 2016/8/17 9:22
@@ -176,82 +175,23 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.play_pause_btn:
-                /**
-                 * 启动播放服务
-                 */
-                    Intent intent = new Intent();
-                    intent.putExtra("position", listPosition);
-                    intent.setClass(getContext(), PlayerService.class);
-                    getContext().startService(intent);  //  注意是调用getContext()，不是SingleSongFragment中的getActivity()
-                /**
-                 * 如果停止播放，就更新Notification
-                 */
-                if(isStop){
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            notificationUtil.updateNoteMusicInfo(listPosition);    //注意开启线程来开启notification，否则会有按键卡顿
-                        }
-                    }.start();
-                }
-                /**
-                 * 更新ControlBar和Notification播放按钮图标
-                 */
-                /*if( !isPlaying ){                     //    如果处于暂停或者停止状态，表示要播放歌曲了，要把图标置为暂停！！
-                    iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
-                    isPlaying = true;
-                    isStop = false;
-                    Log.e("1111111111111111","isPlaying的状态为："+isPlaying+"");
-
-                }else {                                //    如果处于播放状态，表示要暂停歌曲，要把图标置为播放！！
-                    iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
-                    isPlaying = false;
-                    isStop = false;
-                    Log.e("22222222222222","isPlaying的状态为："+isPlaying+"");
-                }*/
+                // 启动播放服务
+                Intent intent = new Intent();
+                intent.putExtra("position", listPosition);
+                intent.setClass(getContext(), PlayerService.class);
+                getContext().startService(intent);  //  注意是调用getContext()，不是SingleSongFragment中的getActivity()
                 break;
 
             case R.id.next_song:
                 long currentTime = Calendar.getInstance().getTimeInMillis();
                 if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
-                /**
-                 * 启动播放服务
-                 */
-                Intent intent_next = new Intent();
-                intent_next.putExtra("position", nextPosition);
-                intent_next.setClass(getContext(), PlayerService.class);
-                getContext().startService(intent_next);
-
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            notificationUtil.updateNoteMusicInfo(nextPosition);
-                        }
-                    }.start();
-                /**
-                 * 更新ControlBar歌名和歌手
-                 */
-                /*title = mp3InfoList.get(nextPosition).getTitle();
-                artist = mp3InfoList.get(nextPosition).getArtist();
-                tv_title_of_music.setText(title);
-                tv_artist_of_music.setText(artist);*/
-                /**
-                 * 更新ControlBar专辑封面
-                 */
-                //musicId = mp3InfoList.get(nextPosition).getId();
-                /*albumId = mp3InfoList.get(nextPosition).getAlbumId();
-                bitmap_art_work = MediaUtil.getAlbumArtByPath(albumId,context);
-                iv_art_work.setImageBitmap(bitmap_art_work);*/
-                /**
-                 * 更新ControlBar按钮图标
-                 */
-                iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
-
-                    //isPlaying = true;
-                    //isStop = false;
-                  //  listPosition = nextPosition;                           //   也要注意更新当前位置listPosition
-                    //lastPosition = nextPosition;                          //   也要注意更新上一个位置lastPosition
-                    //nextPosition = (nextPosition+1)%listSize;   //  注意更新nextPosition，，，
+                    //启动播放服务
+                    Intent intent_next = new Intent();
+                    intent_next.putExtra("position", nextPosition);
+                    intent_next.setClass(getContext(), PlayerService.class);
+                    getContext().startService(intent_next);
+                    //更新ControlBar按钮图标
+                    iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
                     lastClickTime = currentTime;
                 }
                 break;

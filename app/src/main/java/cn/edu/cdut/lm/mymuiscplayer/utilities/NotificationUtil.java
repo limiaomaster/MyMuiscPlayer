@@ -26,11 +26,13 @@ import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 public class NotificationUtil {
     private static final int CODE_CLOSE = 111;
-    private static final int CODE_PAUSE = 222;
-    private final int CODE_NEXT = 333;
+    private static final int CODE_PAUSE_PLAY = 222;
+    private static final int CODE_NEXT = 333;
+
     private static final int CLOSE_INTENT = -1;
-    private static final int NEXT_INTENT = -2;
-    private static final int PRE_INTENT = -3;
+    private static final int PAUSE_PLAY_INTENT = -2;
+    private static final int NEXT_INTENT = -3;
+    private static final int PRE_INTENT = -4;
 
 
 
@@ -66,7 +68,7 @@ public class NotificationUtil {
         notification.priority=Notification.PRIORITY_MAX;
 
         /**
-         *设置Notification点击关闭的动作。
+         *设置Note点击关闭的动作。
          */
         //  只能通过PlayerService来停止发送更新进度条的广播。
         Intent intent_close = new Intent();
@@ -74,6 +76,14 @@ public class NotificationUtil {
         intent_close.setClass(context, PlayerService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context, CODE_CLOSE, intent_close, FLAG_CANCEL_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.iv_close_notification, pendingIntent);
+        /**
+         *设置Note播放和暂停键
+         */
+        Intent intent_pause_play = new Intent();
+        intent_pause_play.putExtra("position", PAUSE_PLAY_INTENT);
+        intent_pause_play.setClass(context, PlayerService.class);
+        PendingIntent pendingIntent_play_pause = PendingIntent.getService(context, CODE_PAUSE_PLAY, intent_pause_play, FLAG_CANCEL_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent_play_pause);
         /**
          *设置Note下一首
          */
@@ -130,21 +140,11 @@ public class NotificationUtil {
         }
         lastPosition = listPosition;
         //nextPosition = (listPosition+1)%mp3InfoList.size();
-        /**
-         *设置Note播放和暂停键
-         */
-        Intent intent_pause_play = new Intent();
-        intent_pause_play.putExtra("position", listPosition);
-        intent_pause_play.setClass(context, PlayerService.class);
-        PendingIntent pendingIntent_play_pause = PendingIntent.getService(context, CODE_PAUSE, intent_pause_play, FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.iv_pause_play_notification, pendingIntent_play_pause);
+
 
         notification.bigContentView=remoteViews;   //设置大布局显示内容。
         manger.notify(NOTIFICATION_ID, notification);
         Log.e("Note()","所有视图已更新完毕-------------------");
-
     }
-
-
 }
 

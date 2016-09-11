@@ -53,9 +53,9 @@ public class PlayerService extends Service {
     private boolean isStop = true;
     //private NotificationUtil notificationUtil;
     private static final int CLOSE_INTENT = -1;
-    private static final int NEXT_INTENT = -2;
-    private static final int PRE_INTENT = -3;
-
+    private static final int PAUSE_PLAY_INTENT = -2;
+    private static final int NEXT_INTENT = -3;
+    private static final int PRE_INTENT = -4;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -106,6 +106,11 @@ public class PlayerService extends Service {
             if(position == CLOSE_INTENT){                       //点击了Note中的关闭按钮，关闭notification、停止播放歌曲、进度条复位。
                 Log.e("Service()","这是关闭的intent"+position);
                 stopPlayingMusic();
+            }else if (position == PAUSE_PLAY_INTENT){ //点击了Note中的播放和暂停按钮。
+                if(isPlaying){
+                    pausePlayingMusic();
+                    isPlaying = false;
+                }else continuePlayingMusic();
             }else if (position == NEXT_INTENT){              //点击了Note中的下一首按钮。
                 Log.e("Service()","这是下一首的intent"+position);
                 duration = mp3InfoList.get(recycleListPosition).getDuration();
