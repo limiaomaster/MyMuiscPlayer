@@ -35,7 +35,7 @@ public class PlayerService extends Service {
     private long albumId;
 
     private int listLastPosition = -1;  //  这首曲目之前的曲目位置
-    private int listPosition ;  // 从列表传来的新的曲目位置
+    private int listPosition = -1;  // 从列表传来的新的曲目位置
     private int recycleListPosition;
 
     private long duration;	//播放长度
@@ -46,14 +46,15 @@ public class PlayerService extends Service {
     public static final String UPDATE_CONTROL_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR";
 
 
-    private  int currentPosition;
-
     private static final String CLOSE_NOTIFICATION = "close_notification";
     private NotificationManager manager;
     private static final int NOTIFICATION_ID = 5709;
     private boolean isPlaying = false;
     private boolean isStop = true;
     //private NotificationUtil notificationUtil;
+    private static final int CLOSE_INTENT = -1;
+    private static final int NEXT_INTENT = -2;
+    private static final int PRE_INTENT = -3;
 
     @Nullable
     @Override
@@ -64,10 +65,9 @@ public class PlayerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
         mediaPlayer = new MediaPlayer();
         mp3InfoList = MediaUtil.getMp3List(this);
-        //notificationUtil = new NotificationUtil(getApplicationContext());
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -76,7 +76,7 @@ public class PlayerService extends Service {
                 handler.removeMessages(1);
                 //获取下一首歌的路径，并播放，并继续发送更新进度条。
                 path = mp3InfoList.get(recycleListPosition).getUrl();
-                playAnotherMusic(0);
+                playAnotherMusic(recycleListPosition);
                 handler.sendEmptyMessage(1);
                 //发送广播，更新BottomControlBar的UI。
                 Intent sendIntent = new Intent();
@@ -84,7 +84,7 @@ public class PlayerService extends Service {
                 sendIntent.putExtra("position",recycleListPosition);
                 sendBroadcast(sendIntent);
                 //更新Notification的UI
-                notificationUtil.updateNoteMusicInfo(recycleListPosition);
+                //notificationUtil.updateNoteMusicInfo(recycleListPosition);
                 //位置重新设置。
                 listPosition = recycleListPosition;
                 listLastPosition = recycleListPosition;
@@ -93,31 +93,57 @@ public class PlayerService extends Service {
             }
         });
 
-        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int position = intent.getIntExtra("position",0);
-        if(position == -1){ //点击了关闭按钮，关闭notification、停止播放歌曲、进度条复位。
-            stopPlayingMusic();
-        }else {
-            listPosition = position;
-            path = mp3InfoList.get(listPosition).getUrl();
-            if( listPosition == listLastPosition ){ //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
-                if(isStop){
-                    playAnotherMusic(0);
-                }else if( mediaPlayer.isPlaying()){          //   如果此时为正在播放，表示要暂停。
-                    pausePlayingMusic();
-                } else {                                            //  如果此时为暂停，表示要继续播放。
-                    Log.e("onStartCommand","将要继续播放！"+listPosition);
-                    continuePlayingMusic();                //  继续播放,用系统的方法start()
-                }
-            } else {                                               //  如果不是一个，那肯定是要播放新的文件了。
-                playAnotherMusic(0);
+        if(intent!=null){
+
+            int position = intent.getIntExtra("position",0);
+            Log.e("Service()","获取发送的intent中的position"+position);
+
+
+            if(position == CLOSE_INTENT){                       //点击了Note中的关闭按钮，关闭notification、停止播放歌曲、进度条复位。
+                Log.e("Service()","这是关闭的intent"+position);
+                stopPlayingMusic();
+            }else if (position == NEXT_INTENT){              //点击了Note中的下一首按钮。
+                Log.e("Service()","这是下一首的intent"+position);
+                duration = mp3InfoList.get(recycleListPosition).getDuration();
+                path = mp3InfoList.get(recycleListPosition).getUrl();
+                playAnotherMusic(recycleListPosition);
+                listPosition = recycleListPosition;
+                listLastPosition = (mp3InfoList.size()+(recycleListPosition-1))%mp3InfoList.size();
+                recycleListPosition = (recycleListPosition+1)%mp3InfoList.size();
+            }else if (position == PRE_INTENT) {               //点击了Note中的上一首按钮。
+                Log.e("Service()","这是上一首的intent"+position);
+                path = mp3InfoList.get(listLastPosition).getUrl();
+                playAnotherMusic(listLastPosition);
             }
-            listLastPosition = listPosition;
-            recycleListPosition = (listPosition+1)%mp3InfoList.size();
+
+
+                else {                                                             //点击列表中的项目item。
+                path = mp3InfoList.get(position).getUrl();
+                if( position == listPosition ){                      //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
+                    if(isStop){                                              //  如果是停止状态，表示要播放新的歌曲。
+                        Log.e("Service()","是同一行，停止状态，要播放新文件，，，playAnotherMusic "+position);
+                        playAnotherMusic(position);
+                    }else if( mediaPlayer.isPlaying()){       //   如果此时为正在播放，表示要暂停。
+                        Log.e("Service()","是同一行，播放状态，要暂停播放该文件，，，playAnotherMusic "+position);
+                        pausePlayingMusic();
+                    } else {                                                  //  如果此时为暂停，表示要继续播放。
+                        Log.e("Service()","是同一行，暂停状态，要继续播放该文件，，，playAnotherMusic "+position);
+                        continuePlayingMusic();                      //  继续播放,用系统的方法start()
+                    }
+                }
+
+                else {                                                      //  如果不是一个，那肯定是要播放新的文件了。
+                    Log.e("Service()","不是同一行，播放新文件，，，playAnotherMusic "+position);
+                    playAnotherMusic(position);
+                }
+                listPosition = position;
+                listLastPosition = (mp3InfoList.size()+(position-1))%mp3InfoList.size();
+                recycleListPosition = (position+1)%mp3InfoList.size();
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -180,42 +206,48 @@ public class PlayerService extends Service {
         }
     }
 
-    private void playAnotherMusic (int currentTime) {
+    private void playAnotherMusic (final int position) {
+        //更新controlBar
         Intent intent = new Intent();
         intent.setAction(UPDATE_CONTROL_BAR);
-        intent.putExtra("position",listPosition);
+        intent.putExtra("position",position);
         sendBroadcast(intent);
+        //
         handler.removeMessages(1);
+        //
         try {
-            mediaPlayer.reset();//把各项参数恢复到初始状态
-            //重新初始化
-            mediaPlayer.setDataSource(path);    //  设置播放地址
-            mediaPlayer.prepare();  //进行缓冲
-            //注册一个监听器
-            mediaPlayer.setOnPreparedListener(new PreparedListener(currentTime));
+            mediaPlayer.reset();                           //   把各项参数恢复到初始状态
+            mediaPlayer.setDataSource(path);    //   设置播放地址
+            mediaPlayer.prepare();                      //  进行缓冲
+            mediaPlayer.setOnPreparedListener(new MyOnPreparedListener());
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+        //更新notification
+            new Thread(){       //  务必开启线程更新note，否则按键动画会有卡顿。
+            @Override
+            public void run() {
+                notificationUtil.updateNoteMusicInfo(position);
+            }
+        };
         isStop = false;
         isPlaying = true;
     }
 
-    private final class PreparedListener implements MediaPlayer.OnPreparedListener {
-        private int currentTime;
-        PreparedListener(int currentTime) {
-            this.currentTime = currentTime;
+    private final class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
+        MyOnPreparedListener() {
         }
         @Override
         public void onPrepared(MediaPlayer mp) {
-            if(currentTime > 0) {    //如果音乐不是从头播放
-                mediaPlayer.seekTo(currentTime);
-            } else {
-                mediaPlayer.start();    //开始播放
-                handler.sendEmptyMessage(1);
-            }
+            mediaPlayer.start();                     //开始播放
+            Log.e("Service()","文件准备就绪，要开始播放该文件，，， ");
+            handler.sendEmptyMessage(1);
         }
     }
+
+
+
 
 
     public Handler handler = new Handler(){
@@ -223,12 +255,11 @@ public class PlayerService extends Service {
         public void handleMessage(Message msg) {
             if (msg.what == 1){
                 if (mediaPlayer != null){
-                    currentPosition = mediaPlayer.getCurrentPosition();
-                    duration = mp3InfoList.get(listPosition).getDuration();
+                    int currentPosition = mediaPlayer.getCurrentPosition();
                     Intent intent = new Intent();
                     intent.setAction(UPDATE_PROGRESS_BAR);
                     intent.putExtra("duration",duration);
-                    intent.putExtra("currentPosition",currentPosition);
+                    intent.putExtra("currentPosition", currentPosition);
                     sendBroadcast(intent);
                     handler.sendEmptyMessageDelayed(1,1000);
                 }
@@ -236,10 +267,12 @@ public class PlayerService extends Service {
         }
     };
 
-
-
-
-
-
-
+    @Override
+    public void onDestroy() {
+        if(mediaPlayer!=null){
+            mediaPlayer.reset();
+            mediaPlayer.release();
+        }
+        super.onDestroy();
+    }
 }

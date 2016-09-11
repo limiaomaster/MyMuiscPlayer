@@ -49,7 +49,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public static NotificationUtil notificationUtil;
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 700;
-    private int listPosition;
+    private int listPosition = -1;
     private int lastPosition = -1;
 
 
@@ -96,7 +96,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * @param position
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         Mp3Info mp3Info = null;
         if (holder instanceof FirstLineViewHolder) {
             ((FirstLineViewHolder) holder).textView.setText("(共" + list.size() + "首)");
@@ -107,8 +107,55 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((GeneralLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
             ((GeneralLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
 
-
+            ((GeneralLinesViewHolder) holder).view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if ((position-1) != listPosition) {
+                        long currentTime = Calendar.getInstance().getTimeInMillis();
+                        if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+                            /*setThisItemSelected(position -1);
+                            if (list.get(position-1).isSelected()){
+                                ((GeneralLinesViewHolder) holder).speaker.setVisibility(View.VISIBLE);
+                            }*/
+                            Log.e("Adaptor","点击了不同的行 "+(position-1));
+                            playTheMusicOnClick(position-1);
+                            //updateNotification(position-1);
+                            lastClickTime = currentTime;
+                            listPosition = position-1;
+                        }
+                    }
+                }
+            });
         }
+    }
+
+    private void playTheMusicOnClick(int position) {
+        Intent intent = new Intent();
+        intent.putExtra("position", position);
+        intent.setClass(context, PlayerService.class);
+        context.startService(intent);
+        Log.e("Adaptor","点击了不同的行 "+position+"发送了请求播放的广播--------");
+    }
+    private void updateBottomControlBar() {
+        Intent broadCastIntent = new Intent();
+        broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
+        broadCastIntent.putExtra("position",listPosition);
+        context.sendBroadcast(broadCastIntent);
+    }
+    private void updateNotification(final int position) {
+        new Thread(){
+            @Override
+            public void run() {
+                notificationUtil.updateNoteMusicInfo(position);
+            }
+        }.start();
+    }
+
+    private void setThisItemSelected(int position) {
+        for (int i = 0 ; i<list.size(); i++){
+            list.get(i).setSelected(position == i);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -157,7 +204,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             more = (ImageView) viewOfGeneralLines.findViewById(R.id.iv_more_localmusic);
             speaker = (ImageView) viewOfGeneralLines.findViewById(R.id.speaker);
 
-            viewOfGeneralLines.setOnClickListener(new View.OnClickListener() {
+            /*viewOfGeneralLines.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listPosition = getAdapterPosition()-1;
@@ -175,7 +222,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 }
-            });
+            });*/
 
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -187,26 +234,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
 
-        private void playTheMusicOnClick() {
-            Intent intent = new Intent();
-            intent.putExtra("position", getAdapterPosition()-1);
-            intent.setClass(context, PlayerService.class);
-            context.startService(intent);
-        }
-        private void updateBottomControlBar() {
-            Intent broadCastIntent = new Intent();
-            broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
-            broadCastIntent.putExtra("position",getAdapterPosition()-1);
-            context.sendBroadcast(broadCastIntent);
-        }
-        private void updateNotification() {
-            new Thread(){
-                @Override
-                public void run() {
-                    notificationUtil.updateNoteMusicInfo(getAdapterPosition()-1);
-                }
-            }.start();
-        }
+
     }
 
 

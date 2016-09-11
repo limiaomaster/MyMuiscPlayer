@@ -17,9 +17,10 @@ public class Mp3Info implements Parcelable {
     private String url;
     private String album;
     private long albumId;
+    private boolean selected;
+
 
     public Mp3Info(){
-
     }
 
     protected Mp3Info(Parcel in) {
@@ -32,7 +33,12 @@ public class Mp3Info implements Parcelable {
         url = in.readString();
         album = in.readString();
         albumId = in.readLong();
+        selected = in.readByte() != 0;
     }
+
+
+
+
 
     public static final Creator<Mp3Info> CREATOR = new Creator<Mp3Info>() {
         @Override
@@ -45,6 +51,20 @@ public class Mp3Info implements Parcelable {
             return new Mp3Info[size];
         }
     };
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+
+
+
+
+
 
     public String getDisplayName() {
         return displayName;
@@ -132,6 +152,7 @@ public class Mp3Info implements Parcelable {
         this.url = url;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -148,5 +169,6 @@ public class Mp3Info implements Parcelable {
         dest.writeString(url);
         dest.writeString(album);
         dest.writeLong(albumId);
+        dest.writeByte((byte) (selected ? 1 : 0));
     }
 }
