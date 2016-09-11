@@ -225,12 +225,13 @@ public class PlayerService extends Service {
             e.printStackTrace();
         }
         //更新notification
-            new Thread(){       //  务必开启线程更新note，否则按键动画会有卡顿。
+        new Thread(){       //  务必开启线程更新note，否则按键动画会有卡顿。
             @Override
             public void run() {
                 notificationUtil.updateNoteMusicInfo(position);
             }
-        };
+        }.start();
+
         isStop = false;
         isPlaying = true;
     }
