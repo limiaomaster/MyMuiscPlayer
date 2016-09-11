@@ -119,7 +119,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             }*/
                             Log.e("Adaptor","点击了不同的行 "+(position-1));
                             playTheMusicOnClick(position-1);
-                            //updateNotification(position-1);
                             lastClickTime = currentTime;
                             listPosition = position-1;
                         }
@@ -135,20 +134,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         intent.setClass(context, PlayerService.class);
         context.startService(intent);
         Log.e("Adaptor","点击了不同的行 "+position+"发送了请求播放的广播--------");
-    }
-    private void updateBottomControlBar() {
-        Intent broadCastIntent = new Intent();
-        broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
-        broadCastIntent.putExtra("position",listPosition);
-        context.sendBroadcast(broadCastIntent);
-    }
-    private void updateNotification(final int position) {
-        new Thread(){
-            @Override
-            public void run() {
-                notificationUtil.updateNoteMusicInfo(position);
-            }
-        }.start();
     }
 
     private void setThisItemSelected(int position) {

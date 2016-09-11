@@ -128,6 +128,7 @@ public class PlayerService extends Service {
 
                 else {                                                             //点击列表中的项目item。
                 path = mp3InfoList.get(position).getUrl();
+                duration = mp3InfoList.get(position).getDuration();
                 if( position == listPosition ){                      //  点击同一条曲目，表示要暂停，或者继续播放该曲目。
                     if(isStop){                                              //  如果是停止状态，表示要播放新的歌曲。
                         Log.e("Service()","是同一行，停止状态，要播放新文件，，，playAnotherMusic "+position);

@@ -42,7 +42,7 @@ public class NotificationUtil {
     private NotificationManager manger;
     private static final int NOTIFICATION_ID = 5709;
     private int lastPosition = -1;
-    private int listPosition ;
+    private int listPosition = -1 ;
     public  boolean isPlaying = false;
     private Context context;
     private RemoteViews remoteViews;
@@ -67,6 +67,8 @@ public class NotificationUtil {
         notification = builder.build();
         notification.priority=Notification.PRIORITY_MAX;
 
+        mp3InfoList = MediaUtil.getMp3List(context);
+        Log.e("Note()","获取到了本机歌曲列表---------");
         /**
          *设置Note点击关闭的动作。
          */
@@ -92,56 +94,49 @@ public class NotificationUtil {
         intent_next.setClass(context, PlayerService.class);
         PendingIntent pendingIntent_next = PendingIntent.getService(context, CODE_NEXT, intent_next, FLAG_CANCEL_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.iv_next_notification, pendingIntent_next);
-
-        mp3InfoList = MediaUtil.getMp3List(context);
-        Log.e("Note()","获取到了本机歌曲列表---------");
     }
 
     public void updateNoteMusicInfo(int position) {
-        listPosition = position;
-        if (listPosition != lastPosition) {     //如果不是同一行，一定是点击了新的行，或者下一首按钮。
-            Log.e("Note()","不是同一个listposition"+listPosition);
+        if (position != listPosition) {     //如果不是同一行，一定是点击了新的行，或者下一首按钮。
+            Log.e("Note()","不是同一个listposition"+position);
             //设置Notification专辑封面
             long albumId = mp3InfoList.get(position).getAlbumId();
             Bitmap bitmap_art_work = MediaUtil.getAlbumArtByPath(albumId, context);
             remoteViews.setImageViewBitmap(R.id.iv_albumArt_Notification, bitmap_art_work);
-            Log.e("Note()","专辑封面已更新！"+listPosition);
+            Log.e("Note()","专辑封面已更新！"+position);
             //设置Notification歌名
             String title = mp3InfoList.get(position).getTitle();
             remoteViews.setTextViewText(R.id.tv_audio_title_notification, title);
-            Log.e("Note()","歌名已更新！"+listPosition);
+            Log.e("Note()","歌名已更新！"+position);
             //设置Notification歌手
             String artist = mp3InfoList.get(position).getArtist();
             remoteViews.setTextViewText(R.id.tv_artist_notification, artist);
             remoteViews.setTextViewTextSize(R.id.tv_artist_notification, COMPLEX_UNIT_SP, 17);
-            Log.e("Note()","歌手已更新！"+listPosition);
+            Log.e("Note()","歌手已更新！"+position);
             //设置Notification专辑名称
             String album = mp3InfoList.get(position).getAlbum();
             remoteViews.setTextViewText(R.id.tv_album_notification, album);
             remoteViews.setTextViewTextSize(R.id.tv_album_notification, COMPLEX_UNIT_SP, 17);
-            Log.e("Note()","专辑名称已更新！"+listPosition);
+            Log.e("Note()","专辑名称已更新！"+position);
             //设置Notification播放按钮
             remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
-            Log.e("Note()","设为暂停键了，，，"+listPosition);
+            Log.e("Note()","设为暂停键了，，，"+position);
             isPlaying = true;
             Log.e("Note()","播放状态已更新！"+"isPlaying为"+isPlaying);
         }else {            //  如果是相同的行，肯定是点击了ControlBar的播放暂停键，只需更新Notification的按键的图标。
-            Log.e("Note()","是相同行的listposition"+listPosition);
+            Log.e("Note()","是相同行的listposition"+position);
             //设置自己播放暂停键的图标
             if (isPlaying){
                 remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_play_white);
-                Log.e("Note()","设为播放键了，，，"+listPosition+isPlaying);
+                Log.e("Note()","设为播放键了，，，"+position+isPlaying);
                 isPlaying = false;
             }else {
                 remoteViews.setImageViewResource(R.id.iv_pause_play_notification,R.drawable.note_btn_pause_white);
-                Log.e("Note()","设为暂停键了，，，"+listPosition+isPlaying);
+                Log.e("Note()","设为暂停键了，，，"+position+isPlaying);
                 isPlaying = true;
             }
         }
-        lastPosition = listPosition;
-        //nextPosition = (listPosition+1)%mp3InfoList.size();
-
-
+        listPosition = position;
         notification.bigContentView=remoteViews;   //设置大布局显示内容。
         manger.notify(NOTIFICATION_ID, notification);
         Log.e("Note()","所有视图已更新完毕-------------------");

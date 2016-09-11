@@ -96,55 +96,32 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
     public void getDataAndUpdateBarOnAttachedToWindow(){
         SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
-        /**
-         * 1
-         * 判断歌曲状态，更新  播放暂停  按钮。
-         */
+        //1判断歌曲状态，更新  播放暂停  按钮。
         if(isPlaying) {
             iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
         } else iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
-        /**
-         * 2
-         * 更新歌名和艺术家
-         */
-        String title_pref = pref.getString("title", "");
-        String artist_pref = pref.getString("artist", "");
-        tv_title_of_music.setText(title_pref);
-        tv_artist_of_music.setText(artist_pref);
+        //2 更新歌名和艺术家
+        title = pref.getString("title", "");
+        artist = pref.getString("artist", "");
+        tv_title_of_music.setText(title);
+        tv_artist_of_music.setText(artist);
         //设置跑马灯，滚动显示歌名。
         tv_title_of_music.setSingleLine(true);
         tv_title_of_music.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         tv_title_of_music.setSelected(true);
         tv_title_of_music.setMarqueeRepeatLimit(-1);
-        title = title_pref;           //    务必注意把从xml文件中获取的内容再赋给当前变量
-        artist = artist_pref;       //    否则第二次显示控制条的时候的内容都为空，，，
-        /**
-         * 3
-         * 更新专辑封面
-         */
-        //long musicId_pref = pref.getLong("music_id",0);
-        long albumId_pref = pref.getLong("album_id",0);
+        //3更新专辑封面
+        albumId = pref.getLong("album_id",0);
         //bitmap_art_work = MediaUtil.getArtwork(context,musicId_pref,albumId_pref,true,true);
-        Bitmap bitmap = MediaUtil.getAlbumArtByPath(albumId_pref,context);
+        Bitmap bitmap = MediaUtil.getAlbumArtByPath(albumId,context);
         iv_art_work.setImageBitmap(bitmap);
-        //musicId = musicId_pref;
-        albumId = albumId_pref;
-        /**
-         * 4
-         * 更新进度条
-         */
-        Long duration_pref = pref.getLong("duration",0);
-        int currentPisition_pref = pref.getInt("currentPisition",0);
-        progressBar.setMax(Integer.parseInt(String.valueOf(duration_pref)));
-        progressBar.setProgress(currentPisition_pref);
-        duration = duration_pref;
-        currentPisition = currentPisition_pref;
-        /**
-         * 5
-         * 更新正在播放歌曲的位置
-         */
-        int listPosition_pref = pref.getInt("listPosition",0);
-        listPosition = listPosition_pref;
+        //4更新进度条
+        duration = pref.getLong("duration",0);
+        currentPisition = pref.getInt("currentPisition",0);
+        progressBar.setMax(Integer.parseInt(String.valueOf(duration)));
+        progressBar.setProgress(currentPisition);
+        //5更新正在播放歌曲的位置
+        listPosition = pref.getInt("listPosition",-1);
     }
 
 
@@ -163,7 +140,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         editor.putBoolean("isplaying", isPlaying);
         editor.putLong("duration",duration);
         editor.putInt("currentPisition",currentPisition);
-        editor.putLong("music_id",musicId);
         editor.putLong("album_id",albumId);
         editor.putInt("listPosition",listPosition);
         editor.commit();
@@ -190,8 +166,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     intent_next.putExtra("position", nextPosition);
                     intent_next.setClass(getContext(), PlayerService.class);
                     getContext().startService(intent_next);
-                    //更新ControlBar按钮图标
-                    iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
                     lastClickTime = currentTime;
                 }
                 break;
