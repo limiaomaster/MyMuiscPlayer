@@ -15,8 +15,7 @@ import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
-
-import static cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongRVAdapter.notificationUtil;
+import cn.edu.cdut.lm.mymuiscplayer.utilities.NotificationUtil;
 
 
 /**
@@ -56,6 +55,8 @@ public class PlayerService extends Service {
     private static final int PAUSE_PLAY_INTENT = -2;
     private static final int NEXT_INTENT = -3;
     private static final int PRE_INTENT = -4;
+    private NotificationUtil notificationUtil;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -68,7 +69,7 @@ public class PlayerService extends Service {
         mediaPlayer = new MediaPlayer();
         mp3InfoList = MediaUtil.getMp3List(this);
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
+        notificationUtil = new NotificationUtil(getApplicationContext());
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -116,13 +117,27 @@ public class PlayerService extends Service {
                 duration = mp3InfoList.get(recycleListPosition).getDuration();
                 path = mp3InfoList.get(recycleListPosition).getUrl();
                 playAnotherMusic(recycleListPosition);
+
                 listPosition = recycleListPosition;
                 listLastPosition = (mp3InfoList.size()+(recycleListPosition-1))%mp3InfoList.size();
+                Log.e("Service()","上一首为："+listLastPosition);
                 recycleListPosition = (recycleListPosition+1)%mp3InfoList.size();
+                Log.e("Service()","下一首为："+recycleListPosition);
+
             }else if (position == PRE_INTENT) {               //点击了Note中的上一首按钮。
                 Log.e("Service()","这是上一首的intent"+position);
+                duration = mp3InfoList.get(listLastPosition).getDuration();
                 path = mp3InfoList.get(listLastPosition).getUrl();
                 playAnotherMusic(listLastPosition);
+
+                listPosition = listLastPosition;
+                recycleListPosition = (listLastPosition+1)%mp3InfoList.size();
+                Log.e("Service()","下一首为："+recycleListPosition);
+                listLastPosition = (mp3InfoList.size()+(listLastPosition-1))%mp3InfoList.size();
+                Log.e("Service()","上一首为："+listLastPosition);
+
+
+
             }
 
 
@@ -224,8 +239,15 @@ public class PlayerService extends Service {
         try {
             mediaPlayer.reset();                           //   把各项参数恢复到初始状态
             mediaPlayer.setDataSource(path);    //   设置播放地址
-            mediaPlayer.prepare();                      //  进行缓冲
-            mediaPlayer.setOnPreparedListener(new MyOnPreparedListener());
+            mediaPlayer.prepareAsync();             //  进行缓冲
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                    Log.e("Service()","文件准备就绪，要开始播放该文件，，， ");
+                    handler.sendEmptyMessage(1);
+                }
+            });
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -247,7 +269,7 @@ public class PlayerService extends Service {
         }
         @Override
         public void onPrepared(MediaPlayer mp) {
-            mediaPlayer.start();                     //开始播放
+            mp.start();                     //开始播放
             Log.e("Service()","文件准备就绪，要开始播放该文件，，， ");
             handler.sendEmptyMessage(1);
         }

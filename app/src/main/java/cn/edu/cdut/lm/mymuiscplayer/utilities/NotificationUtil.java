@@ -28,6 +28,7 @@ public class NotificationUtil {
     private static final int CODE_CLOSE = 111;
     private static final int CODE_PAUSE_PLAY = 222;
     private static final int CODE_NEXT = 333;
+    private static final int CODE_PRE = 444;
 
     private static final int CLOSE_INTENT = -1;
     private static final int PAUSE_PLAY_INTENT = -2;
@@ -94,6 +95,15 @@ public class NotificationUtil {
         intent_next.setClass(context, PlayerService.class);
         PendingIntent pendingIntent_next = PendingIntent.getService(context, CODE_NEXT, intent_next, FLAG_CANCEL_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.iv_next_notification, pendingIntent_next);
+
+        /**
+         *设置Note下一首
+         */
+        Intent intent_pre = new Intent();
+        intent_pre.putExtra("position",PRE_INTENT);
+        intent_pre.setClass(context,PlayerService.class);
+        PendingIntent pendingIntent_pre = PendingIntent.getService(context,CODE_PRE,intent_pre,FLAG_CANCEL_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.iv_pre_notification,pendingIntent_pre);
     }
 
     public void updateNoteMusicInfo(int position) {
@@ -138,6 +148,8 @@ public class NotificationUtil {
         }
         listPosition = position;
         notification.bigContentView=remoteViews;   //设置大布局显示内容。
+        Log.e("Note()","设置notification的大布局为remoteViews");
+
         manger.notify(NOTIFICATION_ID, notification);
         Log.e("Note()","所有视图已更新完毕-------------------");
     }

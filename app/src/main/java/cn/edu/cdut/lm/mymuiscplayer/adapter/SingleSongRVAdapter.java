@@ -1,6 +1,5 @@
 package cn.edu.cdut.lm.mymuiscplayer.adapter;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,9 +19,6 @@ import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoSingleSongFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
-import cn.edu.cdut.lm.mymuiscplayer.utilities.NotificationUtil;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 
 /**
@@ -45,8 +41,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final static int GENERAL_LINES=1;
     private final static int LAST_LINE = 2;
 
-    private NotificationManager manger;
-    public static NotificationUtil notificationUtil;
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 700;
     private int listPosition = -1;
@@ -57,8 +51,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.context = context;
         this.list = list;
         fragmentActivity = activity;
-        manger = (NotificationManager) activity.getSystemService(NOTIFICATION_SERVICE);
-        notificationUtil = new NotificationUtil(context);
     }
 
     /**
