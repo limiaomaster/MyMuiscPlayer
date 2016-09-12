@@ -89,7 +89,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        Mp3Info mp3Info = null;
+        final Mp3Info mp3Info ;
         if (holder instanceof FirstLineViewHolder) {
             ((FirstLineViewHolder) holder).textView.setText("(共" + list.size() + "首)");
         }
@@ -99,9 +99,15 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ((GeneralLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
             ((GeneralLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
 
-            ((GeneralLinesViewHolder) holder).view.setOnClickListener(new View.OnClickListener() {
+            ((GeneralLinesViewHolder) holder).speaker.setVisibility(mp3Info.isSelected()?View.VISIBLE:View.GONE);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (mp3Info.isSelected()){
+
+                    }else selectThisMusic(position-1);
+
                     if ((position-1) != listPosition) {
                         long currentTime = Calendar.getInstance().getTimeInMillis();
                         if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
@@ -118,6 +124,15 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
+    }
+
+    private void selectThisMusic(int position) {
+        for(int i = 0; i<list.size(); i++){
+            if (i == position){
+                list.get(i).setSelected(true);
+            }else list.get(i).setSelected(false);
+        }
+        notifyDataSetChanged();
     }
 
     private void playTheMusicOnClick(int position) {
@@ -181,26 +196,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             more = (ImageView) viewOfGeneralLines.findViewById(R.id.iv_more_localmusic);
             speaker = (ImageView) viewOfGeneralLines.findViewById(R.id.speaker);
 
-            /*viewOfGeneralLines.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listPosition = getAdapterPosition()-1;
-                    if (listPosition != lastPosition){
-                        long currentTime = Calendar.getInstance().getTimeInMillis();
-                        if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
-                            //播放你点击的歌曲
-                            playTheMusicOnClick();
-                            //更新控制条
-                            //updateBottomControlBar();
-                            //更新Notification
-                            updateNotification();
-                            lastClickTime = currentTime;
-                            lastPosition = listPosition;
-                        }
-                    }
-                }
-            });*/
-
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -210,10 +205,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
-
-
     }
-
 
 
     private class LastLinesViewHolder extends RecyclerView.ViewHolder {
