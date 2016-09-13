@@ -36,7 +36,7 @@
             </intent-filter>
         </receiver>-->
 
-        <receiver
+        <!--<receiver
             android:name=".layout.BottomControlBar$UpdateBarReceiver"
             android:exported="false">
             <intent-filter>
@@ -46,7 +46,7 @@
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE"/>
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR"/>
             </intent-filter>
-        </receiver>
+        </receiver>-->
 
         <!--<receiver
             android:name=".adapter.SingleSongRVAdapter$UpdateSpeakerReceiver"

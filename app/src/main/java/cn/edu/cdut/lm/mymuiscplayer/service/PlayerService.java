@@ -4,6 +4,7 @@ package cn.edu.cdut.lm.mymuiscplayer.service;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
@@ -40,15 +41,11 @@ public class PlayerService extends Service {
     private long duration;	//播放长度
 
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
-    public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
     public static final String UPDATE_CONTROL_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR";
-    public static final String UPDATE_SPEAKER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER";
+    public static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
 
-
-
-    private static final String CLOSE_NOTIFICATION = "close_notification";
-    private NotificationManager manager;
+    public static NotificationManager manager;
     private static final int NOTIFICATION_ID = 5709;
     private boolean isPlaying = false;
     private boolean isStop = true;
@@ -75,27 +72,35 @@ public class PlayerService extends Service {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                //停止更新进度条
-                handler.removeMessages(1);
                 //获取下一首歌的路径，并播放，并继续发送更新进度条。
+                duration = mp3InfoList.get(recycleListPosition).getDuration();
                 path = mp3InfoList.get(recycleListPosition).getUrl();
+                title = mp3InfoList.get(recycleListPosition).getTitle();
+                artist = mp3InfoList.get(recycleListPosition).getArtist();
+                albumId = mp3InfoList.get(recycleListPosition).getAlbumId();
+
                 playAnotherMusic(recycleListPosition);
-                handler.sendEmptyMessage(1);
-                //发送广播，更新BottomControlBar的UI。
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(UPDATE_UI_ON_COMPLETION);
-                sendIntent.putExtra("position",recycleListPosition);
-                sendBroadcast(sendIntent);
-                //更新Notification的UI
-                //notificationUtil.updateNoteMusicInfo(recycleListPosition);
+
                 //位置重新设置。
                 listPosition = recycleListPosition;
-                listLastPosition = recycleListPosition;
+                listLastPosition = (mp3InfoList.size()+(recycleListPosition-1))%mp3InfoList.size();
                 //产生新的下一首歌的position。
                 recycleListPosition = (recycleListPosition+1)%mp3InfoList.size();
+                saveDataOnDetachedFromWindow();
             }
         });
+    }
 
+    public  void saveDataOnDetachedFromWindow(){
+        SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+        editor.putString("title", title);
+        editor.putString("artist", artist);
+        editor.putBoolean("isplaying", isPlaying);
+        editor.putLong("duration",duration);
+        //editor.putInt("currentPisition",currentPisition);
+        editor.putLong("album_id",albumId);
+        editor.putInt("listPosition",listPosition);
+        editor.commit();
     }
 
     @Override
@@ -236,9 +241,9 @@ public class PlayerService extends Service {
         intent.setAction(UPDATE_CONTROL_BAR);
         intent.putExtra("position",position);
         sendBroadcast(intent);
-        //
+        //更新RecyclerView的小喇叭
         Intent intent_speaker = new Intent();
-        intent_speaker.setAction(UPDATE_SPEAKER);
+        intent_speaker.setAction(UPDATE_SPEAKER_LIST_POSITION);
         intent_speaker.putExtra("position",position);
         sendBroadcast(intent_speaker);
         //

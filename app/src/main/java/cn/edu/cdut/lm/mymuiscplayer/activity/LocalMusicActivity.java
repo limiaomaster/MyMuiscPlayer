@@ -1,5 +1,6 @@
 package cn.edu.cdut.lm.mymuiscplayer.activity;
 
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -23,8 +24,8 @@ import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.AlbumFragment;
-import cn.edu.cdut.lm.mymuiscplayer.innerfragment.FolderFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.ArtistFragmentRV;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.FolderFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragmentRV;
 
 
@@ -47,12 +48,15 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
 
     private ImageView back;
     private ActionBar actionBar;
+    private NotificationManager manager;
+    private static final int NOTIFICATION_ID = 5709;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_music);
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_localmusic);
         // Title
@@ -178,7 +182,9 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-
+        Log.e("Activity","onDestroy方法得到执行。");
+        //关闭notification
+        //PlayerService.manager.cancel(NOTIFICATION_ID);
         super.onDestroy();
     }
 

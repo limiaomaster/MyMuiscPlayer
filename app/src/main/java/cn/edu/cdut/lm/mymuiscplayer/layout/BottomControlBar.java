@@ -3,6 +3,7 @@ package cn.edu.cdut.lm.mymuiscplayer.layout;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -55,7 +56,6 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     private static boolean isStop = true;
     private boolean isPlaying_afterSendNote = false;
 
-    private UpdateBarReceiver updateBarReceiver;
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
@@ -76,11 +76,20 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         iv_next_song = (ImageView) view.findViewById(R.id.next_song);
         iv_art_work = (ImageView) view.findViewById(R.id.art_work);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
-        updateBarReceiver = new UpdateBarReceiver();
+
         iv_play_pause.setOnClickListener(this);
         iv_next_song.setOnClickListener(this);
         mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
         listSize = mp3InfoList.size();  //  获取歌曲总数
+
+        UpdateBarReceiver updateBarReceiver = new UpdateBarReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_UI_ON_LIST_CLICK);
+        intentFilter.addAction(UPDATE_UI_ON_COMPLETION);
+        intentFilter.addAction(STOP_PLAY_BY_NOTE);
+        intentFilter.addAction(UPDATE_CONTROL_BAR);
+        intentFilter.addAction(UPDATE_PROGRESS_BAR);
+        context.registerReceiver(updateBarReceiver,intentFilter);
     }
 
 
@@ -176,10 +185,8 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
     //  内部类，广播接收器，更新底部控制条的UI。
     //  要为static类型的，要在Manifest文件中注册，并设置过滤器。
-    public static class UpdateBarReceiver extends BroadcastReceiver {
-
-        public UpdateBarReceiver() {
-        }
+    //  已改为动态注册，，，
+    class UpdateBarReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {

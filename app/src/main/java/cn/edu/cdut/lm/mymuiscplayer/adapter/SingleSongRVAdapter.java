@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,15 +28,8 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
-    public static final String UPDATE_SPEAKER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER";
+    public static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
 
-    //获取专辑封面的Uri
-    private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
-    private static final String CLOSE_NOTIFICATION = "close_notification";
-
-    private static final int CODE_CLOSE = 111;
-    private static final int CODE_PAUSE = 222;
-    private static final int NOTIFICATION_ID = 5709;
     private  FragmentActivity fragmentActivity;
     private  Context context;
     private  List<Mp3Info> list;
@@ -48,16 +40,14 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 700;
     private int listPosition = -1;
-    private int lastPosition = -1;
-    private UpdateSpeakerReceiver updateSpeakerReceiver;
 
     public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
         this.context = context;
         this.list = list;
         fragmentActivity = activity;
-        updateSpeakerReceiver = new UpdateSpeakerReceiver();
+        UpdateSpeakerReceiver updateSpeakerReceiver = new UpdateSpeakerReceiver();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UPDATE_SPEAKER);
+        intentFilter.addAction(UPDATE_SPEAKER_LIST_POSITION);
         context.registerReceiver(updateSpeakerReceiver,intentFilter);
     }
 
@@ -210,16 +200,15 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     class UpdateSpeakerReceiver extends BroadcastReceiver{
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(UPDATE_SPEAKER)){
+            if (action.equals(UPDATE_SPEAKER_LIST_POSITION)){
                 Log.e("Adapter","收到UPDATE_SPEAKER的广播");
                 int position = intent.getIntExtra("position",0);
                 selectThisMusic(position);
+                listPosition = position;
             }
         }
     }
-
 }
