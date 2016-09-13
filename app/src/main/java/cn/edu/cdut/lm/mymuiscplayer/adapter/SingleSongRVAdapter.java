@@ -1,7 +1,9 @@
 package cn.edu.cdut.lm.mymuiscplayer.adapter;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +29,8 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
+    public static final String UPDATE_SPEAKER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER";
+
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
     private static final String CLOSE_NOTIFICATION = "close_notification";
@@ -45,12 +49,16 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     final int MIN_CLICK_DELAY_TIME = 700;
     private int listPosition = -1;
     private int lastPosition = -1;
-
+    private UpdateSpeakerReceiver updateSpeakerReceiver;
 
     public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
         this.context = context;
         this.list = list;
         fragmentActivity = activity;
+        updateSpeakerReceiver = new UpdateSpeakerReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_SPEAKER);
+        context.registerReceiver(updateSpeakerReceiver,intentFilter);
     }
 
     /**
@@ -104,29 +112,22 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mp3Info.isSelected()){
-
-                    }else selectThisMusic(position-1);
+                    long currentTime = Calendar.getInstance().getTimeInMillis();
 
                     if ((position-1) != listPosition) {
-                        long currentTime = Calendar.getInstance().getTimeInMillis();
                         if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
-                            /*setThisItemSelected(position -1);
-                            if (list.get(position-1).isSelected()){
-                                ((GeneralLinesViewHolder) holder).speaker.setVisibility(View.VISIBLE);
-                            }*/
                             Log.e("Adaptor","点击了不同的行 "+(position-1));
                             playTheMusicOnClick(position-1);
-                            lastClickTime = currentTime;
                             listPosition = position-1;
                         }
                     }
+                    lastClickTime = currentTime;
                 }
             });
         }
     }
 
-    private void selectThisMusic(int position) {
+    public void selectThisMusic(int position) {
         for(int i = 0; i<list.size(); i++){
             if (i == position){
                 list.get(i).setSelected(true);
@@ -143,12 +144,6 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Log.e("Adaptor","点击了不同的行 "+position+"发送了请求播放的广播--------");
     }
 
-    private void setThisItemSelected(int position) {
-        for (int i = 0 ; i<list.size(); i++){
-            list.get(i).setSelected(position == i);
-        }
-        notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {
@@ -207,12 +202,24 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-
     private class LastLinesViewHolder extends RecyclerView.ViewHolder {
         public LastLinesViewHolder(View viewOfGeneralLines) {
             super(viewOfGeneralLines);
         }
     }
 
+
+    class UpdateSpeakerReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(UPDATE_SPEAKER)){
+                Log.e("Adapter","收到UPDATE_SPEAKER的广播");
+                int position = intent.getIntExtra("position",0);
+                selectThisMusic(position);
+            }
+        }
+    }
 
 }

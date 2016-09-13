@@ -43,6 +43,8 @@ public class PlayerService extends Service {
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
     public static final String UPDATE_CONTROL_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR";
+    public static final String UPDATE_SPEAKER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER";
+
 
 
     private static final String CLOSE_NOTIFICATION = "close_notification";
@@ -190,6 +192,7 @@ public class PlayerService extends Service {
             notificationUtil.isPlaying = false;
             isStop = true;
             isPlaying = false;
+            stopSelf();
         }
 
     }
@@ -233,6 +236,11 @@ public class PlayerService extends Service {
         intent.setAction(UPDATE_CONTROL_BAR);
         intent.putExtra("position",position);
         sendBroadcast(intent);
+        //
+        Intent intent_speaker = new Intent();
+        intent_speaker.setAction(UPDATE_SPEAKER);
+        intent_speaker.putExtra("position",position);
+        sendBroadcast(intent_speaker);
         //
         handler.removeMessages(1);
         //
@@ -302,6 +310,8 @@ public class PlayerService extends Service {
             mediaPlayer.reset();
             mediaPlayer.release();
         }
+        //关闭notification
+        manager.cancel(NOTIFICATION_ID);
         super.onDestroy();
     }
 }

@@ -166,6 +166,8 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     intent_next.putExtra("position", nextPosition);
                     intent_next.setClass(getContext(), PlayerService.class);
                     getContext().startService(intent_next);
+
+
                     lastClickTime = currentTime;
                 }
                 break;

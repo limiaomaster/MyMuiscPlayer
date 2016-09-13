@@ -176,6 +176,12 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
+
     private void initTabAndPager() {
         tabNameList.add("单曲");
         tabNameList.add("歌手");
@@ -225,7 +231,6 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
 
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
-
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);

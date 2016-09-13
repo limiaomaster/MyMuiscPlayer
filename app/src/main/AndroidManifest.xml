@@ -47,6 +47,15 @@
                 <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR"/>
             </intent-filter>
         </receiver>
+
+        <!--<receiver
+            android:name=".adapter.SingleSongRVAdapter$UpdateSpeakerReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER"/>
+            </intent-filter>
+        </receiver>-->
+
     </application>
 
 </manifest>
