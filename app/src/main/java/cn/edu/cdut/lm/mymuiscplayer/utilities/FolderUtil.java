@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Files.FileColumns;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -80,7 +79,6 @@ public class FolderUtil {
                     name.endsWith(".flac")||
                     name.endsWith(".wav")||
                     name.endsWith(".ape")){
-                Log.i("FileName是：" , name);
                 i++;
             }
         }

@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import cn.edu.cdut.lm.mymuiscplayer.fragments.MusicFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "MainActivity";
     private List<Fragment> fragmentList = new ArrayList<>(3);
     private ImageView iv_disco;
     private ImageView iv_music;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "onCreate方法得到执行。");
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
@@ -254,5 +257,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG, "onStart方法得到执行。");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume方法得到执行。");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG, "onPause方法得到执行。");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG, "onStop方法得到执行。");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG, "onRestart方法得到执行。");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e(TAG,"onDestroy方法得到执行。");
+        //关闭notification
+        //PlayerService.manager.cancel(NOTIFICATION_ID);
+        super.onDestroy();
     }
 }

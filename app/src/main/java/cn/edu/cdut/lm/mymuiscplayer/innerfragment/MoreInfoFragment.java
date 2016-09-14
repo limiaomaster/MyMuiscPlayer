@@ -88,9 +88,9 @@ public class MoreInfoFragment extends DialogFragment{
         Log.i("MoreInfoArtistFragment","onCreate正在执行-----"+fragmentType);
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.CustomDatePickerDialog);
-
-
     }
+
+    //onCreateView()
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -113,6 +113,8 @@ public class MoreInfoFragment extends DialogFragment{
         Log.i("MoreInfoArtistFragment","onResume正在执行-----"+fragmentType);
         super.onResume();
     }
+
+    //Fragment is active
 
     @Override
     public void onPause() {

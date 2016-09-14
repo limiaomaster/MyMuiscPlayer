@@ -25,7 +25,7 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 /**
  * Created by LimiaoMaster on 2016/8/24 18:37
  */
-public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
     public static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
@@ -41,7 +41,7 @@ public class SingleSongRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     final int MIN_CLICK_DELAY_TIME = 700;
     private int listPosition = -1;
 
-    public SingleSongRVAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
+    public SingleSongAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
         this.context = context;
         this.list = list;
         fragmentActivity = activity;

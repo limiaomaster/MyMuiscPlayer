@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.adapter.FolderRVAdapter;
+import cn.edu.cdut.lm.mymuiscplayer.adapter.FolderAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.FolderInfo;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.FolderUtil;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
@@ -33,7 +33,7 @@ public class FolderFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         //2
-        FolderRVAdapter folderRVAdapter = new FolderRVAdapter(getActivity(),getContext(),folderInfoList);
+        FolderAdapter folderRVAdapter = new FolderAdapter(getActivity(),getContext(),folderInfoList);
         recyclerView.setAdapter(folderRVAdapter);
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);

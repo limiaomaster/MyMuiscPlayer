@@ -1,93 +1,116 @@
 package cn.edu.cdut.lm.mymuiscplayer.innerfragment;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.adapter.LocalMusicAdapter;
+import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
-import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
+import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
 /**
- * Created by LimiaoMaster on 2016/8/14 0014 21:43
+ * Created by LimiaoMaster on 2016/8/24 18:26
  */
 
-public class SingleSongFragment extends Fragment implements AdapterView.OnItemClickListener{
-
-    public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
-
-    private List<Mp3Info> mp3InfoList;
-
-
-    private int listPosition ;
-
-
+public class SingleSongFragment extends Fragment {
+    private RecyclerView recyclerView;
+    private List<Mp3Info> list ;
+    private static final String TAG = "SingleSongFragment";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.inner_fragment_single_music, container , false);
-        ListView listView = (ListView) view.findViewById(R.id.listview_localmusic);
+        Log.e(TAG,"onCreateView正在执行-----");
 
-        mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
+        View view = inflater.inflate(R.layout.inner_fragment_single_music_recycler_view,container,false);
 
-        LocalMusicAdapter localMusicAdapter = new LocalMusicAdapter(getContext(), mp3InfoList);
-        listView.setAdapter(localMusicAdapter);
-        listView.setOnItemClickListener(this);
-
-
-
+        list = MediaUtil.getMp3List(getContext());
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_singleMusic);
+        //1
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //2
+        SingleSongAdapter singleSongRVAdapter = new SingleSongAdapter(getActivity(),getContext(),list);
+        recyclerView.setAdapter(singleSongRVAdapter);
+        //3
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+        recyclerView.addItemDecoration(dividerItemDecoration);
         return view;
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Mp3Info mp3Info = mp3InfoList.get(position);
-        Log.e("onItemClick","您点击了第："+position+"行！");
+    public void onAttach(Activity activity) {
+        Log.e(TAG,"onAttach正在执行-----");
+        super.onAttach(activity);
+    }
 
-        Intent intent = new Intent();
-        intent.putExtra("position", position);
-        intent.setClass(getContext(), PlayerService.class);
-        getActivity().startService(intent);
-        Log.e("onItemClick","启动了PlayerService播放服务！");
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG,"onCreate正在执行-----");
+        super.onCreate(savedInstanceState);
+    }
 
-        Intent broadCastIntent = new Intent();
-        broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
-        broadCastIntent.putExtra("position",position);
-        getActivity().sendBroadcast(broadCastIntent);
-        Log.e("onItemClick","发送了UPDATE_UI的广播！");
+    //onCreateView()
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.e(TAG,"onActivityCreated正在执行-----");
+        super.onActivityCreated(savedInstanceState);
+    }
 
+    @Override
+    public void onStart() {
+        Log.e(TAG,"onStart正在执行-----");
+        super.onStart();
+    }
 
-        /*ImageView thisSpeaker = (ImageView) listView.getChildAt(position).findViewById(speaker);
-        ImageView lastSpeaker = (ImageView) listView.getChildAt(listPosition).findViewById(speaker);
+    @Override
+    public void onResume() {
+        Log.e(TAG,"onResume正在执行-----");
+        super.onResume();
 
-        if(position != listPosition ){
-            thisSpeaker.setVisibility(View.VISIBLE);
-            lastSpeaker.setVisibility(View.GONE);
-            listPosition = position;
-        }else thisSpeaker.setVisibility(View.VISIBLE);*/
+    }
 
+    //Fragment is active
 
+    @Override
+    public void onPause() {
+        /*fragmentType = null;*/
+        Log.e(TAG,"onPause正在执行-----");
+        super.onPause();
+    }
 
-        /*View v=parent.getChildAt(position);
-        v.setBackgroundColor(Color.RED);*/
+    @Override
+    public void onStop() {
+        Log.e(TAG,"onStop正在执行-----");
+        super.onStop();
+    }
 
+    @Override
+    public void onDestroyView() {
+        Log.e(TAG,"onDestroyView正在执行-----");
+        super.onDestroyView();
+    }
 
+    @Override
+    public void onDestroy() {
+        Log.e(TAG,"onStop正在执行-----");
+        super.onDestroy();
+    }
 
-
-
-
+    @Override
+    public void onDetach() {
+        Log.e(TAG,"onDetach正在执行-----");
+        super.onDetach();
     }
 }

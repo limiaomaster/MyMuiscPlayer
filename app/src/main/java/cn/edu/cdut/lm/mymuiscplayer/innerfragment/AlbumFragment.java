@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.adapter.AlbumRVAdapter;
+import cn.edu.cdut.lm.mymuiscplayer.adapter.AlbumAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.AlbumUtil;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
@@ -32,7 +32,7 @@ public class AlbumFragment extends Fragment {
         //1
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //2
-        AlbumRVAdapter albumRVAdapter = new AlbumRVAdapter(getActivity(), getContext(), albumInfoList);
+        AlbumAdapter albumRVAdapter = new AlbumAdapter(getActivity(), getContext(), albumInfoList);
         recyclerView.setAdapter(albumRVAdapter);
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);

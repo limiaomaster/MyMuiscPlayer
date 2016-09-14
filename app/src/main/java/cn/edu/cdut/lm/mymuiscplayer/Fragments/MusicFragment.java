@@ -79,6 +79,7 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
                 Log.i("onItemClick","准备进入“本地音乐”，，，");
                 Intent intent = new Intent(getActivity(), LocalMusicActivity.class);
                 startActivity(intent);
+                //getActivity().finish();
         }
     }
 }

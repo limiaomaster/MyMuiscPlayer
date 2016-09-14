@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import cn.edu.cdut.lm.mymuiscplayer.module.FolderInfo;
 /**
  * Created by LimiaoMaster on 2016/9/3 16:07
  */
-public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private FragmentActivity fragmentActivity;
     private Context context;
@@ -32,7 +31,7 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private String FOLDER_FRAGMENT = "folder_fragment";
 
 
-    public FolderRVAdapter(FragmentActivity activity, Context context, List<FolderInfo> folderInfoList) {
+    public FolderAdapter(FragmentActivity activity, Context context, List<FolderInfo> folderInfoList) {
         fragmentActivity = activity;
         this.context = context;
         this.folderInfoList = folderInfoList;
@@ -70,10 +69,12 @@ public class FolderRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ((GeneralLinesViewHolder)holder).folderName.append(" (网易云音乐)");
             }
 
-            Log.i("onBindViewHolder()",folderName);
-            Log.i("onBindViewHolder()",number+"");
-            Log.i("onBindViewHolder()",folderPath);
-
+            //Log.i("onBindViewHolder()",folderName);
+            //  Music
+            //Log.i("onBindViewHolder()",number+"");
+            //  102
+            //Log.i("onBindViewHolder()",folderPath);
+            //  /storage/emulated/0/netease/cloudmusic/
         }
     }
 

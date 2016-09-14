@@ -1,6 +1,7 @@
 package cn.edu.cdut.lm.mymuiscplayer.activity;
 
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -24,9 +25,9 @@ import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.AlbumFragment;
-import cn.edu.cdut.lm.mymuiscplayer.innerfragment.ArtistFragmentRV;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.ArtistFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.FolderFragment;
-import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragmentRV;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragment;
 
 
 /**
@@ -35,11 +36,12 @@ import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragmentRV;
 
 public class LocalMusicActivity extends AppCompatActivity implements View.OnClickListener, Toolbar.OnMenuItemClickListener {
 
+    private static final String TAG = "LocalMusicActivity";
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-    private SingleSongFragmentRV singleSongFragment;
-    private ArtistFragmentRV singerFragment;
+    private SingleSongFragment singleSongFragment;
+    private ArtistFragment singerFragment;
     private AlbumFragment albumFragment;
     private FolderFragment folderFragment;
 
@@ -52,11 +54,19 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
     private static final int NOTIFICATION_ID = 5709;
 
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.e(TAG, "onNewIntent方法得到执行。");
+        super.onNewIntent(intent);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.e(TAG, "onCreate方法得到执行。");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_music);
-        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_localmusic);
         // Title
@@ -76,7 +86,6 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         //设置显示HomeAsUp图标。
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,30 +98,44 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         initView();
     }
 
-
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        String msg = "";
-        switch (item.getItemId()) {
-            case R.id.action_scan:
-                msg += "扫描歌曲";
-                break;
-            case R.id.action_order:
-                msg += "选择排序方式";
-                break;
-            case R.id.action_get_lrc:
-                msg += "一键获取封面歌词";
-                break;
-            case R.id.action_music_update:
-                msg += "升级音质";
-                break;
+    private void initTabAndPager() {
+        tabNameList.add("单曲");
+        tabNameList.add("歌手");
+        tabNameList.add("专辑");
+        tabNameList.add("文件夹");
+        if (singleSongFragment == null) {
+            singleSongFragment = new SingleSongFragment();
+            fragmentList.add(singleSongFragment);
         }
-        if(!msg.equals("")) {
-            Toast.makeText(LocalMusicActivity.this, msg, Toast.LENGTH_SHORT).show();
+        if (singerFragment == null) {
+            singerFragment = new ArtistFragment();
+            fragmentList.add(singerFragment);
         }
-        return true;
+        if (albumFragment == null) {
+            albumFragment = new AlbumFragment();
+            fragmentList.add(albumFragment);
+        }
+        if (folderFragment == null) {
+            folderFragment = new FolderFragment();
+            fragmentList.add(folderFragment);
+        }
     }
+
+    public void initView(){
+        tabLayout = (TabLayout) findViewById(R.id.tab_localmusic);
+        viewPager = (ViewPager) findViewById(R.id.view_pager_localmusic);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        myPagerAdapter.notifyDataSetChanged();
+        viewPager.setAdapter(myPagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setupWithViewPager(viewPager);
+
+        /*back = (ImageView) findViewById(R.id.arrow);
+        back.setOnClickListener(this);*/
+    }
+
+
 
     /*@Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -141,6 +164,28 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        String msg = "";
+        switch (item.getItemId()) {
+            case R.id.action_scan:
+                msg += "扫描歌曲";
+                break;
+            case R.id.action_order:
+                msg += "选择排序方式";
+                break;
+            case R.id.action_get_lrc:
+                msg += "一键获取封面歌词";
+                break;
+            case R.id.action_music_update:
+                msg += "升级音质";
+                break;
+        }
+        if(!msg.equals("")) {
+            Toast.makeText(LocalMusicActivity.this, msg, Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
     /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -181,50 +226,6 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    protected void onDestroy() {
-        Log.e("Activity","onDestroy方法得到执行。");
-        //关闭notification
-        //PlayerService.manager.cancel(NOTIFICATION_ID);
-        super.onDestroy();
-    }
-
-    private void initTabAndPager() {
-        tabNameList.add("单曲");
-        tabNameList.add("歌手");
-        tabNameList.add("专辑");
-        tabNameList.add("文件夹");
-        if (singleSongFragment == null) {
-            singleSongFragment = new SingleSongFragmentRV();
-            fragmentList.add(singleSongFragment);
-        }
-        if (singerFragment == null) {
-            singerFragment = new ArtistFragmentRV();
-            fragmentList.add(singerFragment);
-        }
-        if (albumFragment == null) {
-            albumFragment = new AlbumFragment();
-            fragmentList.add(albumFragment);
-        }
-        if (folderFragment == null) {
-            folderFragment = new FolderFragment();
-            fragmentList.add(folderFragment);
-        }
-    }
-
-    public void initView(){
-        tabLayout = (TabLayout) findViewById(R.id.tab_localmusic);
-        viewPager = (ViewPager) findViewById(R.id.view_pager_localmusic);
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
-        myPagerAdapter.notifyDataSetChanged();
-        viewPager.setAdapter(myPagerAdapter);
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setupWithViewPager(viewPager);
-
-        /*back = (ImageView) findViewById(R.id.arrow);
-        back.setOnClickListener(this);*/
-    }
-
-    @Override
     public void onClick(View v) {
         /*switch (v.getId()){
             case R.id.arrow:
@@ -232,6 +233,64 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
                 break;
         }*/
     }
+    /*@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Log.e("Activity","您按下了返回键！");
+            moveTaskToBack(true);//true对任何Activity都适用
+        }
+        return super.onKeyDown(keyCode, event);
+    }*/
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG, "onStart方法得到执行。");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume方法得到执行。");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG, "onPause方法得到执行。");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG, "onStop方法得到执行。");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG, "onRestart方法得到执行。");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.e(TAG,"onDestroy方法得到执行。");
+        //关闭notification
+        //PlayerService.manager.cancel(NOTIFICATION_ID);
+        super.onDestroy();
+    }
+
+
+
 
 
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 /**
  * Created by LimiaoMaster on 2016/9/1 15:35
  */
-public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private Context context;
     private FragmentActivity fragmentActivity;
@@ -34,7 +33,7 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private String ALBUM_FRAGMENT = "album_fragment";
 
 
-    public AlbumRVAdapter(FragmentActivity activity, Context context, List<AlbumInfo> albumInfoList) {
+    public AlbumAdapter(FragmentActivity activity, Context context, List<AlbumInfo> albumInfoList) {
         fragmentActivity = activity;
         this.context = context;
         this.albumInfoList = albumInfoList;
@@ -66,8 +65,10 @@ public class AlbumRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((GeneralLinesViewHolder) holder).artistName.setText(albumInfoList.get(position).getArtist());
 
             Uri uri = Uri.parse(albumInfoList.get(position).getArtPath());
-            Log.i("onBindViewHolder()",albumInfoList.get(position).getArtPath());
-            Log.i("onBindViewHolder()",albumInfoList.get(position).getAlbumID()+"");
+            //Log.i("onBindViewHolder()",albumInfoList.get(position).getArtPath());
+            //content://media/external/audio/albumart/239
+            //Log.i("onBindViewHolder()",albumInfoList.get(position).getAlbumID()+"");
+            //239
 
             ((GeneralLinesViewHolder) holder).draweeView.setImageURI(uri);
         }
