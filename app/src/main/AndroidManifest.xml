@@ -9,15 +9,20 @@
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/logo"
-        android:label="@string/app_name"
-       >
+        android:label="@string/app_name">
         <activity
-            android:name=".activity.MainActivity"
-            android:theme="@style/AppTheme">
+            android:name=".activity.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:theme="@style/AppTheme">
+
         </activity>
 
         <activity
@@ -29,33 +34,6 @@
         <service
             android:name=".service.PlayerService">
         </service>
-
-        <!--<receiver
-            android:name=".broadcastreceiver.UpdateBarReceiver">
-            <intent-filter>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_TITLE_ARTIST"/>
-            </intent-filter>
-        </receiver>-->
-
-        <!--<receiver
-            android:name=".layout.BottomControlBar$UpdateBarReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR"/>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK"/>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION"/>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE"/>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR"/>
-            </intent-filter>
-        </receiver>-->
-
-        <!--<receiver
-            android:name=".adapter.SingleSongRVAdapter$UpdateSpeakerReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER"/>
-            </intent-filter>
-        </receiver>-->
 
     </application>
 
