@@ -93,10 +93,9 @@ public class MoreInfoFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private class GeneralViewHolder extends RecyclerView.ViewHolder {
-
         ImageView imageView ;
         TextView textView;
-        public GeneralViewHolder(View generalView) {
+        GeneralViewHolder(View generalView) {
             super(generalView);
             imageView = (ImageView) generalView.findViewById(R.id.iv_moreInfo);
             textView = (TextView) generalView.findViewById(R.id.tv_moreInfo);

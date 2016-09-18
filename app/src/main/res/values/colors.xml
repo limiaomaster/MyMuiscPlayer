@@ -33,4 +33,6 @@
 
     <color name="whaite_text">#fafafa</color>
 
+    <color name="toolbarSubTextColor">#ffd4d4d4</color>
+
 </resources>

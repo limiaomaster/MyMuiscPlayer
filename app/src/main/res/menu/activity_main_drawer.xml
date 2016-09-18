@@ -47,5 +47,9 @@
             android:id="@+id/nav_11"
             android:icon="@drawable/topmenu_icn_cloud"
             android:title="我的音乐云盘" />
+        <item
+            android:id="@+id/nav_12"
+            android:icon="@drawable/topmenu_icn_cloud"
+            android:title="我的音乐云盘" />
     </group>
 </menu>

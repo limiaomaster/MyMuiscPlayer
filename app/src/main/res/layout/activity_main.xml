@@ -16,13 +16,42 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFffffff"
+        android:background="#FFeeeeee"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer"
-        app:itemIconTint="@color/themeColor"/>
+        app:itemIconTint="@color/themeColor">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="bottom">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="49.9"
+                    android:background="@drawable/bottom_btnback"
+                    android:text="设置"
+                    android:textSize="16sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:layout_marginBottom="6.0dip"
+                    android:layout_marginTop="6.0dip"
+                    android:background="#fff1f1f1" />
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="49.9"
+                    android:text="退出应用"
+                    android:background="@drawable/bottom_btnback"
+                    android:textSize="16sp" />
+            </LinearLayout>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

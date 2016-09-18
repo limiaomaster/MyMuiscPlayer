@@ -1,6 +1,7 @@
 package cn.edu.cdut.lm.mymuiscplayer.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.adapter.NavigationAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.DiscoFragment;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.FriendFragment;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.MusicFragment;
@@ -31,12 +36,14 @@ import cn.edu.cdut.lm.mymuiscplayer.fragments.MusicFragment;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
+    private static final int NOTIFICATION_ID = 5709;
     private List<Fragment> fragmentList = new ArrayList<>(3);
     private ImageView iv_disco;
     private ImageView iv_music;
     private ImageView iv_friend;
     private ViewPager view_pager;
     private long time;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,43 +51,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
+        setContentView(R.layout.activity_main_recycler_view);
+        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //NavigationView navigationView = (NavigationView) findViewById(R.id.recyclerview_nav);
+        //navigationView.setNavigationItemSelectedListener(this);
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        //  设置不显示title
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-        fragmentList.add(new DiscoFragment());
-        fragmentList.add(new MusicFragment());
-        fragmentList.add(new FriendFragment());
+        //  设置不显示title
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         iv_disco = (ImageView) findViewById(R.id.bar_disco);
         iv_music = (ImageView) findViewById(R.id.bar_music);
         iv_friend = (ImageView) findViewById(R.id.bar_friends);
+        fragmentList.add(new DiscoFragment());
+        fragmentList.add(new MusicFragment());
+        fragmentList.add(new FriendFragment());
+
 
         iv_music.setSelected(true);
 
         view_pager = (ViewPager) findViewById(R.id.view_pager);
 
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_nav);
+        //1
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        //2
+        NavigationAdapter navigationAdapter = new NavigationAdapter(this);
+        recyclerView.setAdapter(navigationAdapter);
+        //3
+        //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        //recyclerView.addItemDecoration(dividerItemDecoration);
+
 
         MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         view_pager.setAdapter(myFragmentPagerAdapter);
-
-
+        //  设置初始选中viewpager的第二页，
+        // 但要注意写在 view_pager.setAdapter(myFragmentPagerAdapter);之后才能生效
+        view_pager.setCurrentItem(1);
         view_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -112,9 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        //  设置初始选中viewpager的第二页，
-        // 但要注意写在 view_pager.setAdapter(myFragmentPagerAdapter);之后才能生效
-        view_pager.setCurrentItem(1);
+
 
         iv_disco.setOnClickListener(myOnClickListener);
         iv_music.setOnClickListener(myOnClickListener);
@@ -123,9 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     MyOnClickListener myOnClickListener = new MyOnClickListener();
-
     class MyOnClickListener implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -147,49 +170,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     iv_friend.setSelected(true);
                     view_pager.setCurrentItem(2);
                     break;
-
-                /*case R.id.play_btn:
-                    if(isPlaying){
-                        Intent intent = new Intent();
-                        intent.putExtra("url",mp3Info.getUrl());
-                        intent.putExtra("position", position);
-                        intent.setClass(getContext(), PlayerService.class);
-                        getActivity().startService(intent);
-
-                    }*/
             }
         }
     }
 
-
     class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-
-        public MyFragmentPagerAdapter(FragmentManager fm) {
+        MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
             return fragmentList.get(position);
         }
-
         @Override
         public int getCount() {
             return fragmentList.size();
         }
     }
-
-
-    /*@Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }*/
-
 
     //  以下两个方法是创建标题栏右边的菜单键，注释掉的话就没有菜单键，
     // 可以自己编写自己的按键，比如网易云音乐的搜索等。
@@ -232,9 +229,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_5) {
 
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

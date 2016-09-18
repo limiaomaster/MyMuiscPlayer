@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#FFeeeeee">
+    <ImageView
+        android:id="@+id/iv_navi_item"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:src="@drawable/topmenu_icn_msg" />
+    <TextView
+        android:id="@+id/tv_navi_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="我的消息"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:gravity="center_vertical"/>
+
+</LinearLayout>
