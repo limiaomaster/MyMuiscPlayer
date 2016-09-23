@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ import cn.edu.cdut.lm.mymuiscplayer.fragments.DiscoFragment;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.FriendFragment;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.MusicFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     private static final int NOTIFICATION_ID = 5709;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager view_pager;
     private long time;
     private DrawerLayout drawerLayout;
+    private Button bt_exit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
         //recyclerView.addItemDecoration(dividerItemDecoration);
 
+        bt_exit = (Button) findViewById(R.id.bt_navi_exit);
+        bt_exit.setOnClickListener(this);
+
 
         MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         view_pager.setAdapter(myFragmentPagerAdapter);
@@ -144,6 +149,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iv_disco.setOnClickListener(myOnClickListener);
         iv_music.setOnClickListener(myOnClickListener);
         iv_friend.setOnClickListener(myOnClickListener);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bt_navi_setting:
+                break;
+            case R.id.bt_navi_exit:
+                finish();
+                break;
+        }
     }
 
 

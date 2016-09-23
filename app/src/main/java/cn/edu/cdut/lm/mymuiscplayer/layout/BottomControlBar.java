@@ -19,7 +19,9 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.List;
 
+import cn.edu.cdut.lm.mymuiscplayer.MyApplication;
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.activity.PlayingActivity;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
@@ -32,28 +34,26 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class BottomControlBar extends RelativeLayout implements View.OnClickListener {
 
-    private static final int PLAY_NEXT_SONG = -2;
-    private static Context context;
-    private static List<Mp3Info> mp3InfoList;
-    private static int listSize;
-    private static TextView tv_title_of_music;
-    private static TextView tv_artist_of_music;
-    private static ImageView iv_play_pause;
-    private static ImageView iv_next_song;
-    private static ImageView iv_art_work;
-    private static Bitmap bitmap_art_work;
-    private static ProgressBar progressBar;
-    private static String title;
-    private static String artist;
-    private static long albumId;
-    private static int lastPosition = -1;
-    private static int listPosition;
-    private static int  nextPosition;
-    private static long duration;
-    private static int currentPisition;
-    private static boolean isPlaying = false;
-    private static boolean isStop = true;
-    private boolean isPlaying_afterSendNote = false;
+    private  Context context;
+    private  List<Mp3Info> mp3InfoList;
+    private  int listSize;
+    private TextView tv_title_of_music;
+    private TextView tv_artist_of_music;
+    private ImageView iv_play_pause;
+    private ImageView iv_next_song;
+    private ImageView iv_art_work;
+
+    private ProgressBar progressBar;
+    private String title;
+    private String artist;
+    private long albumId;
+    private int lastPosition = -1;
+    private int listPosition;
+    private int  nextPosition;
+    private long duration;
+    private int currentPisition;
+    private boolean isPlaying = false;
+    private boolean isStop = true;
 
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
@@ -65,9 +65,12 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     final int MIN_CLICK_DELAY_TIME = 1000;
     private final UpdateBarReceiver updateBarReceiver;
 
+    private View controlBar;
 
-    public BottomControlBar(Context context, AttributeSet attrs) {
+    public BottomControlBar(final Context context, AttributeSet attrs) {
+
         super(context, attrs);  //  必须放在第一行
+        Log.e("BottomControlBar","执行构造方法！");
         this.context = context;
         View view = LayoutInflater.from(context).inflate(R.layout.bottom_control_bar,this);
         tv_title_of_music = (TextView) view.findViewById(R.id.title_of_music);
@@ -77,8 +80,21 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         iv_art_work = (ImageView) view.findViewById(R.id.art_work);
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
 
+        controlBar = view.findViewById(R.id.bottom_layout);
+        controlBar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ControlBar","您点击了ControlBar！");
+                Intent intent = new Intent();
+                intent.setClass(MyApplication.context, PlayingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                MyApplication.context.startActivity(intent);
+             }
+        });
+
         iv_play_pause.setOnClickListener(this);
         iv_next_song.setOnClickListener(this);
+
         mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
         listSize = mp3InfoList.size();  //  获取歌曲总数
 
@@ -103,9 +119,10 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         getDataAndUpdateBarOnAttachedToWindow();
     }
 
-    public void getDataAndUpdateBarOnAttachedToWindow(){
+    private void getDataAndUpdateBarOnAttachedToWindow(){
         SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
         //1判断歌曲状态，更新  播放暂停  按钮。
+        isPlaying = pref.getBoolean("isplaying",true);
         if(isPlaying) {
             iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
         } else iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
@@ -143,7 +160,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         context.unregisterReceiver(updateBarReceiver);
     }
 
-    public static void saveDataOnDetachedFromWindow(){
+    private void saveDataOnDetachedFromWindow(){
         SharedPreferences.Editor editor = context.getSharedPreferences("data",MODE_PRIVATE).edit();
         editor.putString("title", title);
         editor.putString("artist", artist);
@@ -164,8 +181,8 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                 // 启动播放服务
                 Intent intent = new Intent();
                 intent.putExtra("position", listPosition);
-                intent.setClass(getContext(), PlayerService.class);
-                getContext().startService(intent);  //  注意是调用getContext()，不是SingleSongFragment中的getActivity()
+                intent.setClass(context, PlayerService.class);
+                context.startService(intent);  //  注意是调用getContext()，不是SingleSongFragment中的getActivity()
                 break;
 
             case R.id.next_song:
@@ -174,10 +191,8 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     //启动播放服务
                     Intent intent_next = new Intent();
                     intent_next.putExtra("position", nextPosition);
-                    intent_next.setClass(getContext(), PlayerService.class);
-                    getContext().startService(intent_next);
-
-
+                    intent_next.setClass(context, PlayerService.class);
+                    context.startService(intent_next);
                     lastClickTime = currentTime;
                 }
                 break;

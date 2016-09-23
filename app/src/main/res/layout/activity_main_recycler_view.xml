@@ -13,11 +13,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_nav"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start">
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/bt_navi_setting"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="49.9"
+                android:background="@drawable/bottom_btnback"
+                android:text="设置"
+                android:textSize="14sp" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:layout_marginBottom="6.0dip"
+                android:layout_marginTop="6.0dip"
+                android:background="#fff1f1f1" />
+            <Button
+                android:id="@+id/bt_navi_exit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="49.9"
+                android:text="退出应用"
+                android:background="@drawable/bottom_btnback"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
 
 </android.support.v4.widget.DrawerLayout>

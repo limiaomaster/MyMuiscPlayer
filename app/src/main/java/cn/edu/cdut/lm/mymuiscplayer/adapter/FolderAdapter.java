@@ -115,7 +115,7 @@ public class FolderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private class LastLineViewHolder extends RecyclerView.ViewHolder{
 
-        public LastLineViewHolder(View itemView) {
+        LastLineViewHolder(View itemView) {
             super(itemView);
         }
     }

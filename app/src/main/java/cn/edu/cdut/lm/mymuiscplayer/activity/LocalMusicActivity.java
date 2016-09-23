@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.AlbumFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.ArtistFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.FolderFragment;
@@ -49,10 +50,9 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
     private List<Fragment> fragmentList = new ArrayList<>(4);
 
     private ImageView back;
-    private ActionBar actionBar;
     private NotificationManager manager;
     private static final int NOTIFICATION_ID = 5709;
-
+    public static SingleSongAdapter singleSongAdapter;
 
 
     @Override
@@ -81,12 +81,13 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         // SubTitle
         //toolbar.setSubtitle("次标题");
 
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         //actionBar.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         //设置显示HomeAsUp图标。
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         toolbar.setOnMenuItemClickListener(this);
+        //设置title坐标箭头的响应
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,11 +246,11 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
 
 
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
-    }
+    }*/
 
     @Override
     protected void onStart() {
@@ -261,6 +262,12 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume方法得到执行。");
+
+  /*      singleSongAdapter = new SingleSongAdapter(this,getApplicationContext());
+        SingleSongAdapter.UpdateSpeakerReceiver updateSpeakerReceiver = singleSongAdapter.new UpdateSpeakerReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_SPEAKER_LIST_POSITION);
+        getApplicationContext().registerReceiver(updateSpeakerReceiver,intentFilter);*/
     }
 
     @Override
@@ -297,7 +304,7 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
 
-        public MyPagerAdapter(FragmentManager fm) {
+        MyPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

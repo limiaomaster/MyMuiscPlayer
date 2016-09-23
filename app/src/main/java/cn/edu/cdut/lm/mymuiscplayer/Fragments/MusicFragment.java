@@ -44,7 +44,7 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v("MusicFrag_CreateView","我正在创建视图，，，");
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         ListView musicAboutListView = (ListView) view.findViewById(R.id.listview);
@@ -55,6 +55,7 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
         musicAboutListView.setAdapter(musicAdapter);
 
         musicAboutListView.setOnItemClickListener(this);
+
         return view;
     }
 

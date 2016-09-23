@@ -1,32 +1,35 @@
 package cn.edu.cdut.lm.mymuiscplayer.activity;
 
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 
 /**
- * Created by LimiaoMaster on 2016/9/17 17:28
+ * Created by LimiaoMaster on 2016/9/20 8:45
  */
 
-public class FlashActivity extends AppCompatActivity {
-    private static final int DELAY_TIME = 1000;
-    private static final String TAG = "FlashActivity";
+public class PlayingActivity extends AppCompatActivity {
+    private static final String TAG = "PlayingActivity";
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         Log.e(TAG, "onCreate方法得到执行。");
         super.onCreate(savedInstanceState);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(FlashActivity.this, MainActivity.class));
-                overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
-                finish();
-            }
-        }, DELAY_TIME);
+        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            // Translucent status bar
+            window.setFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        setContentView(R.layout.activity_player_2);
     }
 
     @Override

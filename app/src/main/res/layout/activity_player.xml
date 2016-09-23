@@ -2,14 +2,15 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
     <ImageView
         android:id="@+id/albumArt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/login_bg_night" />
+        android:src="@drawable/star" />
 
     <View
         android:layout_width="match_parent"
@@ -30,8 +31,6 @@
             android:layout_alignParentTop="true"
             android:background="@android:color/transparent"
             android:fitsSystemWindows="true"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/Theme.AppCompat"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <FrameLayout
@@ -55,8 +54,17 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/play_disc_halo"
                     app:layout_heightPercent="77%"
-                    app:layout_widthPercent="69%" />
+                    app:layout_widthPercent="76%" />
 
+                <!--<com.wm.remusic.widget.RoundImageView xmlns:app="http://schemas.android.com/apk/res-auto"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:layout_margin="45dp"-->
+                <!--android:id="@+id/circle_view"-->
+                <!--/>-->
                 <cn.edu.cdut.lm.mymuiscplayer.widget.AlbumViewPager
                     android:id="@+id/view_pager"
                     android:layout_width="match_parent"
@@ -68,15 +76,15 @@
                     android:id="@+id/needle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="0dp"
-                    app:layout_heightPercent="37%"
-                    app:layout_widthPercent="30%"
-                    android:rotation="0"
+                    android:layout_marginTop="-16dp"
+                    android:rotation="-30"
                     android:src="@drawable/play_needle"
-                    android:transformPivotX="0dp"
-                    android:transformPivotY="0dp" />
+                    android:transformPivotX="15.1dp"
+                    android:transformPivotY="15.1dp"
+                    app:layout_marginRightPercent="23%"
+                    android:layout_alignParentRight="true" />
             </android.support.percent.PercentRelativeLayout>
         </FrameLayout>
 
@@ -84,7 +92,7 @@
             android:id="@+id/lrcviewContainer"
             android:layout_marginTop="?attr/actionBarSize"
             android:visibility="invisible"
-            app:layout_heightPercent="60%"
+            app:layout_heightPercent="70%"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -101,7 +109,6 @@
                 android:layout_marginBottom="10dp"
                 android:layout_width="100dp"
                 android:layout_height="30dp" />
-
             <cn.edu.cdut.lm.mymuiscplayer.lrc.LrcView
                 android:id="@+id/lrcview"
                 android:layout_width="match_parent"
@@ -120,7 +127,7 @@
             <LinearLayout
                 android:id="@+id/music_tool"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="90dp"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
                 android:layout_marginTop="-10dp"
@@ -201,7 +208,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <ImageView

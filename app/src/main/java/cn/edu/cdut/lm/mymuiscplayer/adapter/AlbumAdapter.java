@@ -89,7 +89,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         TextView artistName;
         ImageView more;
         View view;
-        public GeneralLinesViewHolder(View itemView) {
+        GeneralLinesViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             draweeView = (SimpleDraweeView) itemView.findViewById(R.id.iv_albumArt_albumFragment);
@@ -108,7 +108,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     private class LastLinesViewHolder extends RecyclerView.ViewHolder {
-        public LastLinesViewHolder(View viewOfGeneralLines) {
+        LastLinesViewHolder(View viewOfGeneralLines) {
             super(viewOfGeneralLines);
         }
     }

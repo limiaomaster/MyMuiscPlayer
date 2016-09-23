@@ -1,6 +1,7 @@
 package cn.edu.cdut.lm.mymuiscplayer.innerfragment;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,10 +15,12 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
-import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
+
+import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SPEAKER_LIST_POSITION;
 
 /**
  * Created by LimiaoMaster on 2016/8/24 18:26
@@ -27,6 +30,7 @@ public class SingleSongFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Mp3Info> list ;
     private static final String TAG = "SingleSongFragment";
+    private SingleSongAdapter.UpdateSpeakerReceiver updateSpeakerReceiver;
 
     @Nullable
     @Override
@@ -35,13 +39,19 @@ public class SingleSongFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.inner_fragment_single_music_recycler_view,container,false);
 
-        list = MediaUtil.getMp3List(getContext());
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_singleMusic);
         //1
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //2
-        SingleSongAdapter singleSongRVAdapter = new SingleSongAdapter(getActivity(),getContext(),list);
-        recyclerView.setAdapter(singleSongRVAdapter);
+        SingleSongAdapter singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext());
+        recyclerView.setAdapter(singleSongAdapter);
+        //在这里注册小喇叭的监听器，之前是在adapter的构造函数中注册的，现在改在这里，
+        //因为方便利用该fragment的生命周期，取消注册。
+        updateSpeakerReceiver = singleSongAdapter.new UpdateSpeakerReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_SPEAKER_LIST_POSITION);
+        getActivity().registerReceiver(updateSpeakerReceiver,intentFilter);
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -49,9 +59,9 @@ public class SingleSongFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context context) {
         Log.e(TAG,"onAttach正在执行-----");
-        super.onAttach(activity);
+        super.onAttach(context);
     }
 
     @Override
@@ -100,6 +110,7 @@ public class SingleSongFragment extends Fragment {
     public void onDestroyView() {
         Log.e(TAG,"onDestroyView正在执行-----");
         super.onDestroyView();
+        getActivity().unregisterReceiver(updateSpeakerReceiver);
     }
 
     @Override

@@ -4,6 +4,7 @@ package cn.edu.cdut.lm.mymuiscplayer;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
@@ -16,12 +17,19 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
  */
 
 public class MyApplication extends Application {
+    private static final String TAG = "MyApplication";
+    public static Context context;
     private static int MAX_MEM = (int) Runtime.getRuntime().maxMemory() / 3;
     @Override
     public void onCreate() {
+        Log.e(TAG, "onCreate方法得到执行。");
         super.onCreate();
+        context = this;
         Fresco.initialize(this, getConfigureCaches(this));
     }
+
+
+
 
     private ImagePipelineConfig getConfigureCaches(Context context) {
         final MemoryCacheParams bitmapCacheParams = new MemoryCacheParams(

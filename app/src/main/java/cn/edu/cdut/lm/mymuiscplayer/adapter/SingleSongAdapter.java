@@ -3,8 +3,7 @@ package cn.edu.cdut.lm.mymuiscplayer.adapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,20 +16,21 @@ import java.util.Calendar;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
+import cn.edu.cdut.lm.mymuiscplayer.activity.PlayingActivity;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoSingleSongFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
+import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 
 /**
  * Created by LimiaoMaster on 2016/8/24 18:37
  */
 public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
 
-    public static final String UPDATE_UI_ON_LIST_CLICK = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_LIST_CLICK";
-    public static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
-
-    private  FragmentActivity fragmentActivity;
+    private AppCompatActivity activity;
     private  Context context;
     private  List<Mp3Info> list;
     private final static int FIRST_LINE = 0;
@@ -41,14 +41,17 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final int MIN_CLICK_DELAY_TIME = 700;
     private int listPosition = -1;
 
-    public SingleSongAdapter(FragmentActivity activity, Context context, List<Mp3Info> list) {
+    public SingleSongAdapter(AppCompatActivity activity, Context context) {
         this.context = context;
-        this.list = list;
-        fragmentActivity = activity;
-        UpdateSpeakerReceiver updateSpeakerReceiver = new UpdateSpeakerReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UPDATE_SPEAKER_LIST_POSITION);
-        context.registerReceiver(updateSpeakerReceiver,intentFilter);
+        list = MediaUtil.getMp3List(context);
+        this.activity = activity;
+    }
+
+    public SingleSongAdapter(LocalMusicActivity localMusicActivity, Context applicationContext) {
+        this.context = applicationContext;
+        list = MediaUtil.getMp3List(applicationContext);
+        this.activity = localMusicActivity;
+
     }
 
     /**
@@ -117,7 +120,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void selectThisMusic(int position) {
+    private void selectThisMusic(int position) {
         for(int i = 0; i<list.size(); i++){
             if (i == position){
                 list.get(i).setSelected(true);
@@ -144,7 +147,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class FirstLineViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textView ;
         ImageView imageView;
-        public FirstLineViewHolder(View viewOfFirst) {
+        FirstLineViewHolder(View viewOfFirst) {
             super(viewOfFirst);
             textView = (TextView) viewOfFirst.findViewById(R.id.number_of_music);
             imageView = (ImageView) viewOfFirst.findViewById(R.id.multi_pick_to_do_someting);
@@ -158,10 +161,14 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             intent.setClass(context, PlayerService.class);
             context.startService(intent);
 
-            Intent broadCastIntent = new Intent();
+            Intent intent1 = new Intent();
+            intent1.setClass(context, PlayingActivity.class);
+            context.startActivity(intent1);
+
+            /*Intent broadCastIntent = new Intent();
             broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
             broadCastIntent.putExtra("position",0);
-            context.sendBroadcast(broadCastIntent);
+            context.sendBroadcast(broadCastIntent);*/
         }
     }
 
@@ -172,7 +179,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView more;
         ImageView speaker;
         View view;
-        public GeneralLinesViewHolder(View viewOfGeneralLines) {
+        GeneralLinesViewHolder(View viewOfGeneralLines) {
             super(viewOfGeneralLines);
             view = viewOfGeneralLines;
             title = (TextView) viewOfGeneralLines.findViewById(R.id.title_localmusic);
@@ -186,20 +193,20 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onClick(View v) {
                     Log.i("LastLinesViewHolder()",list.get(getAdapterPosition()-1)+"");
                     MoreInfoSingleSongFragment moreInformationFragment = MoreInfoSingleSongFragment.newInstance(list.get(getAdapterPosition()-1),0);
-                    moreInformationFragment.show(fragmentActivity.getSupportFragmentManager(),"music");
+                    moreInformationFragment.show(activity.getSupportFragmentManager(),"music");
                 }
             });
         }
     }
 
     private class LastLinesViewHolder extends RecyclerView.ViewHolder {
-        public LastLinesViewHolder(View viewOfGeneralLines) {
+        LastLinesViewHolder(View viewOfGeneralLines) {
             super(viewOfGeneralLines);
         }
     }
 
 
-    class UpdateSpeakerReceiver extends BroadcastReceiver{
+    public class UpdateSpeakerReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

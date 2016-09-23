@@ -7,4 +7,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="over_flow">10dp</dimen>
+    <dimen name="playerOpHeight">90dp</dimen>
+    <dimen name="playerOpMarginBottom">10dp</dimen>
 </resources>

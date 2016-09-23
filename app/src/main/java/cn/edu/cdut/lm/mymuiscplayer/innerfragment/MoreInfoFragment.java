@@ -159,8 +159,7 @@ public class MoreInfoFragment extends DialogFragment{
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setAttributes(params);
 
-        getArtistInfoFromParcel();
-        getAlbumInfoFromParcel();
+
         getFolderInfoFromParcel();
 
         View view = inflater.inflate(R.layout.layout_more_info_local_music,container);
@@ -172,12 +171,15 @@ public class MoreInfoFragment extends DialogFragment{
         recyclerView.setLayoutManager(linearLayoutManager);
         //2
         if(fragmentType.equals(ARTIST_FRAGMENT) ){
+            getArtistInfoFromParcel();
             MoreInfoFragmentAdapter moreInfoArtistAdapter = new MoreInfoFragmentAdapter(artistInfo,list,ARTIST_FRAGMENT);
             recyclerView.setAdapter(moreInfoArtistAdapter);
         }else if (fragmentType.equals(ALBUM_FRAGMENT)){
+            getAlbumInfoFromParcel();
             MoreInfoFragmentAdapter moreInfoArtistAdapter = new MoreInfoFragmentAdapter(albumInfo,list,ALBUM_FRAGMENT);
             recyclerView.setAdapter(moreInfoArtistAdapter);
         }else if (fragmentType.equals(FOLDER_FRAGMENT)){
+            getFolderInfoFromParcel();
             MoreInfoFragmentAdapter moreInfoArtistAdapter = new MoreInfoFragmentAdapter(folderInfo,list,FOLDER_FRAGMENT);
             recyclerView.setAdapter(moreInfoArtistAdapter);
         }

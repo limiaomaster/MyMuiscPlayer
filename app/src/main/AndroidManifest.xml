@@ -26,9 +26,14 @@
         </activity>
 
         <activity
-            android:name=".activity.LocalMusicActivity"
+            android:name=".activity.PlayingActivity"
             android:theme="@style/AppTheme"
-            android:launchMode="singleTask">
+            >
+        </activity>
+
+        <activity
+            android:name=".activity.LocalMusicActivity"
+            android:theme="@style/AppTheme">
         </activity>
 
         <service

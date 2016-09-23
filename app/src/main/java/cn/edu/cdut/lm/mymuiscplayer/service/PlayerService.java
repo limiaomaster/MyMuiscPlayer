@@ -86,12 +86,12 @@ public class PlayerService extends Service {
                 listLastPosition = (mp3InfoList.size()+(recycleListPosition-1))%mp3InfoList.size();
                 //产生新的下一首歌的position。
                 recycleListPosition = (recycleListPosition+1)%mp3InfoList.size();
-                saveDataOnDetachedFromWindow();
+                saveDataOnCompletion();
             }
         });
     }
 
-    public  void saveDataOnDetachedFromWindow(){
+    public void saveDataOnCompletion(){
         SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
         editor.putString("title", title);
         editor.putString("artist", artist);
