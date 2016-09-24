@@ -12,12 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
-import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
 import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SPEAKER_LIST_POSITION;
@@ -28,7 +25,6 @@ import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SPEAKER_
 
 public class SingleSongFragment extends Fragment {
     private RecyclerView recyclerView;
-    private List<Mp3Info> list ;
     private static final String TAG = "SingleSongFragment";
     private SingleSongAdapter.UpdateSpeakerReceiver updateSpeakerReceiver;
 
@@ -47,7 +43,7 @@ public class SingleSongFragment extends Fragment {
         SingleSongAdapter singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext());
         recyclerView.setAdapter(singleSongAdapter);
         //在这里注册小喇叭的监听器，之前是在adapter的构造函数中注册的，现在改在这里，
-        //因为方便利用该fragment的生命周期，取消注册。
+        //因为方便利用该fragment的生命周期，取消注册。onDestroyView中取消注册的。
         updateSpeakerReceiver = singleSongAdapter.new UpdateSpeakerReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UPDATE_SPEAKER_LIST_POSITION);

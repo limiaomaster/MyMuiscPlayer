@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="themeColor">#ce3d3a</color>
+    <color name="toolbarTextColor">#FFffffff</color>
+    <color name="white">#FFffffff</color>
+    <color name="tabTextColor">#FF666666</color>
+
+    <color name="itemMain">#000000</color>
+    <color name="itemSubMain">#999999</color>
+
+    <color name="innerFragmentBackGround">#EEeeEE</color>
+
+    <color name="bottomControlBarNormal">#EEFFFFFF</color>
+    <color name="bottomControlBarSelected">#EEDDDDDD</color>
+
+    <color name="notificationSubTitle">#435d6b</color>
+
+    <color name="itemLocalMusicNormal">#FFEFF3F2</color>
+    <color name="itemLocalMusicSelected">#FFCCCCCC</color>
+
+    <color name="text_color">#FF000000</color>
+
+    <color name="bantouming">#DDFFFFFF</color>
+    <color name="actionbarTabUnselected">#EEEEEE</color>
+
+    <color name="statusBarTranslucent">#00ffffff</color>
+    <color name="menu_item_white">#FFFFFF</color>
+    <color name="primary_text_material_dark">#bb8888</color>
+    <color name="secondary_text_material_light">#8aa0ec3d</color>
+    <color name="tab_text_gray">#656565</color>
+    <color name="tou_ming">#00ffffff</color>
+    <color name="black">#000000</color>
+
+    <color name="whaite_text">#fafafa</color>
+
+</resources>

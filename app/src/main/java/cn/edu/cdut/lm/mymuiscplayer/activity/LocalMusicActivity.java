@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import cn.edu.cdut.lm.mymuiscplayer.innerfragment.AlbumFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.ArtistFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.FolderFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragment;
+import cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBarFragment;
 
 
 /**
@@ -36,6 +38,7 @@ import cn.edu.cdut.lm.mymuiscplayer.innerfragment.SingleSongFragment;
  */
 
 public class LocalMusicActivity extends AppCompatActivity implements View.OnClickListener, Toolbar.OnMenuItemClickListener {
+    private BottomControlBarFragment fragment;
 
     private static final String TAG = "LocalMusicActivity";
     private TabLayout tabLayout;
@@ -97,6 +100,26 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
 
         initTabAndPager();
         initView();
+        showQuickControl(true);
+    }
+
+    /**
+     * @param show 显示或关闭底部播放控制栏
+     */
+    protected void showQuickControl(boolean show) {
+        Log.e(TAG, "显不显示controlBar");
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (show) {
+            if (fragment == null) {
+                fragment = BottomControlBarFragment.newInstance();
+                ft.add(R.id.bottom_container, fragment).commitAllowingStateLoss();
+            } else {
+                ft.show(fragment).commitAllowingStateLoss();
+            }
+        } else {
+            if (fragment != null)
+                ft.hide(fragment).commitAllowingStateLoss();
+        }
     }
 
     private void initTabAndPager() {

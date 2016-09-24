@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -33,6 +34,8 @@ import cn.edu.cdut.lm.mymuiscplayer.adapter.NavigationAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.DiscoFragment;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.FriendFragment;
 import cn.edu.cdut.lm.mymuiscplayer.fragments.MusicFragment;
+import cn.edu.cdut.lm.mymuiscplayer.layout.BottomControlBarFragment;
+import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
@@ -46,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private long time;
     private DrawerLayout drawerLayout;
     private Button bt_exit;
-
+    private BottomControlBarFragment fragment;
+    private static final int CLOSE_INTENT = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e(TAG, "onCreate方法得到执行。");
@@ -61,13 +65,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-
         setContentView(R.layout.activity_main_recycler_view);
         //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         //NavigationView navigationView = (NavigationView) findViewById(R.id.recyclerview_nav);
         //navigationView.setNavigationItemSelectedListener(this);
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -88,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentList.add(new MusicFragment());
         fragmentList.add(new FriendFragment());
 
-
         iv_music.setSelected(true);
 
         view_pager = (ViewPager) findViewById(R.id.view_pager);
@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         bt_exit = (Button) findViewById(R.id.bt_navi_exit);
         bt_exit.setOnClickListener(this);
-
 
         MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         view_pager.setAdapter(myFragmentPagerAdapter);
@@ -149,8 +148,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iv_disco.setOnClickListener(myOnClickListener);
         iv_music.setOnClickListener(myOnClickListener);
         iv_friend.setOnClickListener(myOnClickListener);
+        showQuickControl(true);
     }
 
+    /**
+     * @param show 显示或关闭底部播放控制栏
+     */
+    protected void showQuickControl(boolean show) {
+        Log.e(TAG, "显不显示controlBar");
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (show) {
+            if (fragment == null) {
+                fragment = BottomControlBarFragment.newInstance();
+                ft.add(R.id.bottom_container, fragment).commitAllowingStateLoss();
+            } else {
+                ft.show(fragment).commitAllowingStateLoss();
+            }
+        } else {
+            if (fragment != null)
+                ft.hide(fragment).commitAllowingStateLoss();
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -158,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.bt_navi_setting:
                 break;
             case R.id.bt_navi_exit:
+                Intent intent_close = new Intent();
+                intent_close.putExtra("position", CLOSE_INTENT);
+                intent_close.setClass(this, PlayerService.class);
+                startService(intent_close);
                 finish();
                 break;
         }

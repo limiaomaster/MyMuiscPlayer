@@ -1,9 +1,7 @@
 package cn.edu.cdut.lm.mymuiscplayer.layout;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -33,6 +31,7 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class BottomControlBar extends RelativeLayout implements View.OnClickListener {
+    private static final String TAG = "BottomControlBar";
 
     private  Context context;
     private  List<Mp3Info> mp3InfoList;
@@ -63,14 +62,14 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 1000;
-    private final UpdateBarReceiver updateBarReceiver;
+    //private final UpdateBarReceiver updateBarReceiver;
 
     private View controlBar;
 
     public BottomControlBar(final Context context, AttributeSet attrs) {
 
         super(context, attrs);  //  必须放在第一行
-        Log.e("BottomControlBar","执行构造方法！");
+        Log.e(TAG,"执行构造方法！");
         this.context = context;
         View view = LayoutInflater.from(context).inflate(R.layout.bottom_control_bar,this);
         tv_title_of_music = (TextView) view.findViewById(R.id.title_of_music);
@@ -84,12 +83,12 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         controlBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("ControlBar","您点击了ControlBar！");
+                Log.e(TAG,"您点击了ControlBar！");
                 Intent intent = new Intent();
                 intent.setClass(MyApplication.context, PlayingActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 MyApplication.context.startActivity(intent);
-             }
+            }
         });
 
         iv_play_pause.setOnClickListener(this);
@@ -98,26 +97,26 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
         mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
         listSize = mp3InfoList.size();  //  获取歌曲总数
 
-        updateBarReceiver = new UpdateBarReceiver();
+        /*updateBarReceiver = new UpdateBarReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UPDATE_UI_ON_LIST_CLICK);
         intentFilter.addAction(UPDATE_UI_ON_COMPLETION);
         intentFilter.addAction(STOP_PLAY_BY_NOTE);
         intentFilter.addAction(UPDATE_CONTROL_BAR);
         intentFilter.addAction(UPDATE_PROGRESS_BAR);
-        context.registerReceiver(updateBarReceiver,intentFilter);
+        context.registerReceiver(updateBarReceiver,intentFilter);*/
     }
 
 
 
 
 
-    @Override
+    /*@Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Log.e("BottomControlBar","onAttachedToWindow方法得到执行！");
+        Log.e(TAG,"onAttachedToWindow方法得到执行！");
         getDataAndUpdateBarOnAttachedToWindow();
-    }
+    }*/
 
     private void getDataAndUpdateBarOnAttachedToWindow(){
         SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
@@ -152,13 +151,13 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
 
 
-    @Override
+    /*@Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.e("BottomControlBar","onDetachedFromWindow方法得到执行！");
+        Log.e(TAG,"onDetachedFromWindow方法得到执行！");
         saveDataOnDetachedFromWindow();
-        context.unregisterReceiver(updateBarReceiver);
-    }
+        //context.unregisterReceiver(updateBarReceiver);
+    }*/
 
     private void saveDataOnDetachedFromWindow(){
         SharedPreferences.Editor editor = context.getSharedPreferences("data",MODE_PRIVATE).edit();
@@ -202,7 +201,7 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
     //  内部类，广播接收器，更新底部控制条的UI。
     //  要为static类型的，要在Manifest文件中注册，并设置过滤器。
     //  已改为动态注册，，，
-    class UpdateBarReceiver extends BroadcastReceiver {
+    /*class UpdateBarReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -213,21 +212,21 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
                     action.equals(UPDATE_CONTROL_BAR)) {
                 listPosition = intent.getIntExtra("position",0);
                 if (listPosition != lastPosition){
-                    Log.e("BottomControlBar","-------收到广播，listPosition != lastPosition，更新ControlBar中--------");
+                    Log.e(TAG,"-------收到广播，listPosition != lastPosition，更新ControlBar中--------");
                     //更新专辑封面
                     albumId = mp3InfoList.get(listPosition).getAlbumId();
                     Bitmap bitmapp = MediaUtil.getAlbumArtByPath(albumId,context);
                     iv_art_work.setImageBitmap(bitmapp);
-                    Log.e("BottomControlBar","-------收到广播，专辑封面已更新--------");
+                    Log.e(TAG,"-------收到广播，专辑封面已更新--------");
                     //更新  播放暂停  按钮。
                     iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
-                    Log.e("BottomControlBar","-------收到广播，播放暂停按钮已更新--------");
+                    Log.e(TAG,"-------收到广播，播放暂停按钮已更新--------");
                     //更新歌名和艺术家
                     title = mp3InfoList.get(listPosition).getTitle();
                     artist = mp3InfoList.get(listPosition).getArtist();
                     tv_title_of_music.setText(title);
                     tv_artist_of_music.setText(artist);
-                    Log.e("BottomControlBar","-------收到广播，歌名和艺术家已更新--------");
+                    Log.e(TAG,"-------收到广播，歌名和艺术家已更新--------");
                     //设置跑马灯，滚动显示歌名。
                     tv_title_of_music.setSingleLine(true);
                     tv_title_of_music.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -236,36 +235,36 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
 
                     isPlaying = true;
                     isStop = false;
-                    Log.e("BottomControlBar","-------收到广播，isPlaying的状态为："+isPlaying+"");
+                    Log.e(TAG,"-------收到广播，isPlaying的状态为："+isPlaying+"");
 
                     lastPosition = listPosition;
                     nextPosition = (listPosition+1)%listSize;
                 }else {
-                    Log.e("BottomControlBar","-------收到广播，listPosition == lastPosition，更新ControlBar中--------");
+                    Log.e(TAG,"-------收到广播，listPosition == lastPosition，更新ControlBar中--------");
 
                     if (isPlaying){
                         iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
-                        Log.e("BottomControlBar","收到广播，，，这是相同行。。。设为了播放按钮！"+listPosition+isPlaying);
+                        Log.e(TAG,"收到广播，，，这是相同行。。。设为了播放按钮！"+listPosition+isPlaying);
 
                         isPlaying = false;
                         isStop = false;
-                        Log.e("BottomControlBar","收到广播，，，这是相同行。。。设为了播放按钮！之后的操作。。。"+listPosition+isPlaying);
+                        Log.e(TAG,"收到广播，，，这是相同行。。。设为了播放按钮！之后的操作。。。"+listPosition+isPlaying);
 
                     }else {
                         iv_play_pause.setImageResource(R.drawable.playbar_btn_pause);
-                        Log.e("BottomControlBar","收到广播，，，这是相同行。。。设为了暂停按钮！"+listPosition+isPlaying);
+                        Log.e(TAG,"收到广播，，，这是相同行。。。设为了暂停按钮！"+listPosition+isPlaying);
 
                         isPlaying = true;
                         isStop = false;
-                        Log.e("BottomControlBar","收到广播，，，这是相同行。。。设为了暂停按钮！之后的操作。。。"+listPosition+isPlaying);
+                        Log.e(TAG,"收到广播，，，这是相同行。。。设为了暂停按钮！之后的操作。。。"+listPosition+isPlaying);
                     }
                 }
             } else if (action.equals(STOP_PLAY_BY_NOTE)){
-                Log.e("BottomControlBar","-------收到广播，关闭notification，更新ControlBar中--------");
+                Log.e(TAG,"-------收到广播，关闭notification，更新ControlBar中--------");
                 iv_play_pause.setImageResource(R.drawable.playbar_btn_play);
                 isPlaying = false;
                 isStop = true;
-                Log.e("BottomControlBar","-------收到广播，关闭notification"+isPlaying+"");
+                Log.e(TAG,"-------收到广播，关闭notification"+isPlaying+"");
             }else if (action.equals(UPDATE_PROGRESS_BAR)){
                 currentPisition = intent.getIntExtra("currentPosition", 0);
                 duration = intent.getLongExtra("duration",0);
@@ -274,5 +273,5 @@ public class BottomControlBar extends RelativeLayout implements View.OnClickList
             }
             saveDataOnDetachedFromWindow();
         }
-    }
+    }*/
 }

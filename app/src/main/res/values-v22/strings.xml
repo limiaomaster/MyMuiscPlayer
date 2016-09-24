@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">网易云音乐（高仿）</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="lrcUnsupportScroll">*该歌词不支持自动滚动*</string>
+    <string name="lyricContributor">歌词贡献者：</string>
+    <string name="lyricControlDecreaseOffsetTimeHint">-0.5s</string>
+    <string name="lyricControlIncreaseOffsetTimeHint">+0.5s</string>
+    <string name="lyricControlRecoveryUserOffsetTimeHint">还原</string>
+    <string name="lyricOptionAdjustHint">歌词调整</string>
+    <string name="lyricOptionBugreportHint">歌词报错</string>
+    <string name="lyricOptionQfyHint">求翻译</string>
+    <string name="lyricOptionQfyHintError">翻译报错</string>
+    <string name="lyricOptionSongBugreportHint">歌曲报错</string>
+    <string name="lyricTransContributor">翻译贡献者：</string>
+    <string name="lyricTranslate">显示歌词翻译</string>
+    <string name="lyricTranslateHint">外文歌词有翻译时，显示中文翻译</string>
+    <string name="lyricUncrollable">该歌词暂不支持滚动</string>
+    <string name="lyricUnknow">未知歌曲类型</string>
+    <string name="shareLrcByPressScreen">长按屏幕分享歌词</string>
+    <string name="playFromTriangle">点小三角从这里开始播放</string>
+    <dimen name="volumeHeight">19.0dip</dimen>
+    <dimen name="playerVolumePaddding">5.0dip</dimen>
+    <string name="getLI">获取封面歌词</string>
+
+
+</resources>
