@@ -5,6 +5,13 @@
     tools:context=".activity.LocalMusicActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/actionbar_search"
+        android:orderInCategory="90"
+        android:title=""
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/actionbar_more"
         android:orderInCategory="100"

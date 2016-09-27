@@ -8,14 +8,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_localmusic"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        app:contentInsetStart="0dp"
-        android:gravity="end"
-        android:layout_alignParentStart="true">
-
-    </android.support.v7.widget.Toolbar>
+        android:layout_height="?actionBarSize" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_localmusic"
@@ -34,22 +27,7 @@
         android:layout_below="@id/tab_localmusic">
     </android.support.v4.view.ViewPager>
 
-    <LinearLayout
-        android:layout_width="150dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="end"
-        android:orientation="horizontal"
-        android:layout_above="@+id/tab_localmusic">
-        <ImageView
-            android:id="@+id/bar_search"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="55dp"
-            android:src="@drawable/actionbar_search" />
-    </LinearLayout>
+
     <FrameLayout
         android:layout_alignParentBottom="true"
         android:id="@+id/bottom_container"

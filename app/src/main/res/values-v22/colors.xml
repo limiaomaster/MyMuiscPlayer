@@ -2,7 +2,7 @@
 <resources>
     <color name="themeColor">#ce3d3a</color>
     <color name="toolbarTextColor">#FFffffff</color>
-    <color name="white">#FFffffff</color>
+    <color name="white">#ffffff</color>
     <color name="tabTextColor">#FF666666</color>
 
     81 <color name="darkgray">#a9a9a9</color><!--暗灰色 -->

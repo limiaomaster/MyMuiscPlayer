@@ -32,11 +32,16 @@ import static android.provider.MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
 
 public class MediaUtil {
     private static Uri uri = Media.EXTERNAL_CONTENT_URI;
+    private static Uri uriSearch = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
 
     private static String[] projectionOfMusic = new String[] {
             Media._ID,  Media.TITLE,    Media.ARTIST,
             Media.ALBUM, Media.DISPLAY_NAME, Media.DATA,
             Media.ALBUM_ID, Media.DURATION, Media.SIZE
+    };
+
+    private static String[] projectionOfMusicBySearch = new String[]{
+            Media.TITLE, Media.ARTIST, Media.ALBUM
     };
 
     private static String selectionOfMusic0= "is_music=1";
@@ -53,11 +58,15 @@ public class MediaUtil {
     private static String order2 = DEFAULT_SORT_ORDER; // "title_key"
     private static String order3 = "title_pinyin"; // "title_pinyin"
 
-
-
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
 
+
+    /**
+     * 获取所有Mp3的信息组成的列表
+     * @param context
+     * @return
+     */
     public static List<Mp3Info> getMp3List(Context context) {
         Cursor cursor = context.getContentResolver().query(
                 uri,
@@ -95,58 +104,49 @@ public class MediaUtil {
         return mp3Infos;
     }
 
-    /**
-     * 往List集合中添加Map对象数据，每一个Map对象存放一首音乐的所有属性
-     * @param mp3Infos
-     * @return
-     */
-    public static List<HashMap<String, String>> getMusicMaps(List<Mp3Info> mp3Infos) {
-        List<HashMap<String, String>> mp3list = new ArrayList<HashMap<String, String>>();
-        for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext();) {
-            Mp3Info mp3Info = (Mp3Info) iterator.next();
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("title", mp3Info.getTitle());
-            map.put("Artist", mp3Info.getArtist());
-            map.put("album", mp3Info.getAlbum());
-            map.put("displayName", mp3Info.getDisplayName());
-            map.put("albumId", String.valueOf(mp3Info.getAlbumId()));
-            map.put("duration", formatTime(mp3Info.getDuration()));
-            map.put("size", String.valueOf(mp3Info.getSize()));
-            map.put("url", mp3Info.getUrl());
-            mp3list.add(map);
-        }
-        return mp3list;
-    }
 
     /**
-     * 格式化时间，将毫秒转换为分:秒格式
-     * @param time
+     * 获取MP3信息的列表，通过搜索关键字。
+     * @param context
+     * @param keyword
      * @return
      */
-    public static String formatTime(long time) {
-        String min = time / (1000 * 60) + "";
-        String sec = time % (1000 * 60) + "";
-        if (min.length() < 2) {
-            min = "0" + time / (1000 * 60) + "";
-        } else {
-            min = time / (1000 * 60) + "";
+    public static List<Mp3Info> searchMp3InfoByKeyword(Context context, String keyword){
+        List<Mp3Info> list = new ArrayList<>();
+        String[] selectoinArgs = new String[]{"%"+keyword+"%"};
+        String selection =
+                Media.TITLE+" like '%"+keyword+"%' or "+
+                Media.ARTIST+" like '%"+keyword+"%' or "+
+                Media.ALBUM+" like '%"+keyword+"%' ";
+
+                Cursor cursor = context.getContentResolver().query(
+                uri,
+                projectionOfMusicBySearch,
+                selection,
+                null,
+                null
+        );
+        while (cursor.moveToNext()){
+            Mp3Info mp3Info = new Mp3Info();
+            String title = cursor.getString(cursor.getColumnIndex(Media.TITLE));
+            String artist = cursor.getString(cursor.getColumnIndex(Media.ARTIST));
+            String album = cursor.getString(cursor.getColumnIndex(Media.ALBUM));	//专辑
+            mp3Info.setTitle(title);
+            mp3Info.setArtist(artist);
+            mp3Info.setAlbum(album);
+            list.add(mp3Info);
         }
-        if (sec.length() == 4) {
-            sec = "0" + (time % (1000 * 60)) + "";
-        } else if (sec.length() == 3) {
-            sec = "00" + (time % (1000 * 60)) + "";
-        } else if (sec.length() == 2) {
-            sec = "000" + (time % (1000 * 60)) + "";
-        } else if (sec.length() == 1) {
-            sec = "0000" + (time % (1000 * 60)) + "";
-        }
-        return min + ":" + sec.trim().substring(0, 2);
+        cursor.close();
+        return list;
+
     }
 
-    public static String getCoverArtPath(long albumId, Context context) {
 
+
+
+    private static String getCoverArtPath(long albumId, Context context) {
         Cursor albumCursor = context.getContentResolver().query(
-                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                uriSearch,
                 new String[]{MediaStore.Audio.Albums.ALBUM_ART},
                 MediaStore.Audio.Albums._ID + " = ?",
                 new String[]{Long.toString(albumId)},
@@ -169,6 +169,14 @@ public class MediaUtil {
     }
 
 
+
+
+
+
+
+
+
+
     /**
      * 获取默认专辑图片
      * @param context
@@ -182,7 +190,6 @@ public class MediaUtil {
         }
         return BitmapFactory.decodeStream(context.getResources().openRawResource(R.raw.placeholder_disk_380), null, opts);
     }
-
 
     /**
      * 从文件当中获取专辑封面位图
@@ -332,5 +339,53 @@ public class MediaUtil {
             }
         }
         return candidate;
+    }
+
+    /**
+     * 往List集合中添加Map对象数据，每一个Map对象存放一首音乐的所有属性
+     * @param mp3Infos
+     * @return
+     */
+    public static List<HashMap<String, String>> getMusicMaps(List<Mp3Info> mp3Infos) {
+        List<HashMap<String, String>> mp3list = new ArrayList<HashMap<String, String>>();
+        for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext();) {
+            Mp3Info mp3Info = (Mp3Info) iterator.next();
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("title", mp3Info.getTitle());
+            map.put("Artist", mp3Info.getArtist());
+            map.put("album", mp3Info.getAlbum());
+            map.put("displayName", mp3Info.getDisplayName());
+            map.put("albumId", String.valueOf(mp3Info.getAlbumId()));
+            map.put("duration", formatTime(mp3Info.getDuration()));
+            map.put("size", String.valueOf(mp3Info.getSize()));
+            map.put("url", mp3Info.getUrl());
+            mp3list.add(map);
+        }
+        return mp3list;
+    }
+
+    /**
+     * 格式化时间，将毫秒转换为分:秒格式
+     * @param time
+     * @return
+     */
+    public static String formatTime(long time) {
+        String min = time / (1000 * 60) + "";
+        String sec = time % (1000 * 60) + "";
+        if (min.length() < 2) {
+            min = "0" + time / (1000 * 60) + "";
+        } else {
+            min = time / (1000 * 60) + "";
+        }
+        if (sec.length() == 4) {
+            sec = "0" + (time % (1000 * 60)) + "";
+        } else if (sec.length() == 3) {
+            sec = "00" + (time % (1000 * 60)) + "";
+        } else if (sec.length() == 2) {
+            sec = "000" + (time % (1000 * 60)) + "";
+        } else if (sec.length() == 1) {
+            sec = "0000" + (time % (1000 * 60)) + "";
+        }
+        return min + ":" + sec.trim().substring(0, 2);
     }
 }

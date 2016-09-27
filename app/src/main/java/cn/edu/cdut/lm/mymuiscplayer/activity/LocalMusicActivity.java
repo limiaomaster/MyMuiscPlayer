@@ -77,6 +77,14 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         toolbar.setTitle("本地音乐");
         toolbar.setTitleTextColor(getResources().getColor(R.color.toolbarTextColor));
         setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(this);
+        //设置title坐标箭头的响应
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         // 上级按钮 (upbutton)
         //toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         // APP图标
@@ -89,14 +97,7 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         //设置显示HomeAsUp图标。
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setOnMenuItemClickListener(this);
-        //设置title坐标箭头的响应
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+
 
         initTabAndPager();
         initView();
@@ -192,6 +193,11 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
     public boolean onMenuItemClick(MenuItem item) {
         String msg = "";
         switch (item.getItemId()) {
+            case R.id.action_search:
+                Intent intent = new Intent();
+                intent.setClass(this,SearchActivity.class);
+                startActivity(intent);
+                break;
             case R.id.action_scan:
                 msg += "扫描歌曲";
                 break;

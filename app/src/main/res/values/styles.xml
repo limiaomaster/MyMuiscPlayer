@@ -12,13 +12,14 @@
         <item name="colorAccent">@color/themeColor</item>
         <item name="colorPrimary">@color/themeColor</item>
         <item name="colorPrimaryDark">@color/themeColor</item>
-        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorPrimaryInverse">@android:color/black</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="android:actionMenuTextColor">@android:color/black</item>
         <!--<item name="android:navigationBarColor">@color/secondary_text_material_light</item>-->
         <item name="android:textColorSecondary">@color/white</item>
         <item name="actionMenuTextColor">#FF0000ff</item>
+        <item name="android:colorForeground">@android:color/holo_purple</item>
         <!--<item name="android:listDivider">@drawable/divider_bg</item>-->
     </style>
 

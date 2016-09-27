@@ -22,7 +22,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:src="@drawable/song_play_icon"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"

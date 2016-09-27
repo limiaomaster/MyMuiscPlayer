@@ -1,24 +1,24 @@
 <resources xmlns:android="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
         <item  name="android:actionOverflowButtonStyle">@style/MyOverflowStyle</item>
-        <!-- Customize your theme here. -->
         <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
+
         <item name="android:windowBackground">@color/themeColor</item>
         <item name="android:windowAnimationStyle">@style/NoAnimation</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="colorAccent">@color/themeColor</item>
         <item name="colorPrimary">@color/themeColor</item>
         <item name="colorPrimaryDark">@color/themeColor</item>
-        <item name="android:textColorPrimary">@color/black</item>
-        <item name="android:textColorPrimaryInverse">@android:color/black</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimaryInverse">@android:color/holo_blue_bright</item>
+
         <item name="android:colorBackground">@color/white</item>
-        <item name="android:actionMenuTextColor">@android:color/black</item>
-        <item name="android:navigationBarColor">@color/secondary_text_material_light</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@android:color/holo_blue_dark</item>
         <item name="android:textColorSecondary">@color/white</item>
-        <item name="actionMenuTextColor">#FF66ee00</item>
+        <item name="android:colorForeground">@android:color/holo_purple</item>
+        <!--<item name="actionMenuTextColor">#FF66ee00</item>-->
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--<item name="android:listDivider">@drawable/divider_bg</item>-->
@@ -210,6 +210,17 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">47.0dip</item>
         <item name="android:drawablePadding">9.0dip</item>
+    </style>
+
+    <style name="myToolbarNavigationButtonStyle" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="mToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
 </resources>
