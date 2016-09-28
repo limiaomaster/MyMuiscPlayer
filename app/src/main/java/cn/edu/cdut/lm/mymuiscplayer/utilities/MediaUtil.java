@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
+import android.util.Log;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -41,7 +42,7 @@ public class MediaUtil {
     };
 
     private static String[] projectionOfMusicBySearch = new String[]{
-            Media.TITLE, Media.ARTIST, Media.ALBUM
+            Media._ID,Media.TITLE, Media.ARTIST, Media.ALBUM
     };
 
     private static String selectionOfMusic0= "is_music=1";
@@ -60,6 +61,7 @@ public class MediaUtil {
 
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
+    private static int position;
 
 
     /**
@@ -79,6 +81,7 @@ public class MediaUtil {
         List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
         while (cursor.moveToNext()){
             Mp3Info mp3Info = new Mp3Info();
+
             long id = cursor.getLong(cursor.getColumnIndex(Media._ID));	//音乐id
             String title = cursor.getString((cursor.getColumnIndex(Media.TITLE))); // 音乐标题
             String artist = cursor.getString(cursor.getColumnIndex(Media.ARTIST)); // 艺术家
@@ -89,6 +92,7 @@ public class MediaUtil {
             long size = cursor.getLong(cursor.getColumnIndex(Media.SIZE)); // 文件大小
             String url = cursor.getString(cursor.getColumnIndex(Media.DATA)); // 文件路径
 
+                mp3Info.setPositionInList(position++);
                 mp3Info.setId(id);
                 mp3Info.setTitle(title);
                 mp3Info.setArtist(artist);
@@ -101,6 +105,7 @@ public class MediaUtil {
                 mp3Infos.add(mp3Info);
         }
         cursor.close();
+        position = 0;
         return mp3Infos;
     }
 
@@ -128,9 +133,13 @@ public class MediaUtil {
         );
         while (cursor.moveToNext()){
             Mp3Info mp3Info = new Mp3Info();
+
+            long id = cursor.getLong(cursor.getColumnIndex(Media._ID));	//音乐id
+            Log.e("MediaUtil","id是："+id);
             String title = cursor.getString(cursor.getColumnIndex(Media.TITLE));
             String artist = cursor.getString(cursor.getColumnIndex(Media.ARTIST));
             String album = cursor.getString(cursor.getColumnIndex(Media.ALBUM));	//专辑
+            mp3Info.setId(id);
             mp3Info.setTitle(title);
             mp3Info.setArtist(artist);
             mp3Info.setAlbum(album);

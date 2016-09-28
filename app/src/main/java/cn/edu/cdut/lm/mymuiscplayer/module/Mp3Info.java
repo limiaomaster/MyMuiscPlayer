@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 
 public class Mp3Info implements Parcelable {
+    private int positionInList;
     private long id;
     private String title;
     private String displayName;
@@ -19,11 +20,11 @@ public class Mp3Info implements Parcelable {
     private long albumId;
     private boolean selected;
 
-
-    public Mp3Info(){
+    public Mp3Info() {
     }
 
     protected Mp3Info(Parcel in) {
+        positionInList = in.readInt();
         id = in.readLong();
         title = in.readString();
         displayName = in.readString();
@@ -35,10 +36,6 @@ public class Mp3Info implements Parcelable {
         albumId = in.readLong();
         selected = in.readByte() != 0;
     }
-
-
-
-
 
     public static final Creator<Mp3Info> CREATOR = new Creator<Mp3Info>() {
         @Override
@@ -52,31 +49,11 @@ public class Mp3Info implements Parcelable {
         }
     };
 
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-
-
-
-
-
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
     @Override
     public String toString() {
         return "Mp3Info{" +
-                "id=" + id +
+                "position="+positionInList+
+                ", id=" + id +
                 ", title='" + title + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", artist='" + artist + '\'' +
@@ -87,6 +64,30 @@ public class Mp3Info implements Parcelable {
                 ", albumId=" + albumId +
                 '}';
     }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public int getPositionInList() {
+        return positionInList;
+    }
+
+    public void setPositionInList(int positionInList) {
+        this.positionInList = positionInList;
+    }
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
 
     public long getAlbumId() {
         return albumId;

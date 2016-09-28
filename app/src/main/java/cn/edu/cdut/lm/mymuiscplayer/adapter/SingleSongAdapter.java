@@ -17,7 +17,6 @@ import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
-import cn.edu.cdut.lm.mymuiscplayer.activity.PlayingActivity;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoSingleSongFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
@@ -161,9 +160,9 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             intent.setClass(context, PlayerService.class);
             context.startService(intent);
 
-            Intent intent1 = new Intent();
+            /*Intent intent1 = new Intent();
             intent1.setClass(context, PlayingActivity.class);
-            context.startActivity(intent1);
+            context.startActivity(intent1);*/
 
             /*Intent broadCastIntent = new Intent();
             broadCastIntent.setAction(UPDATE_UI_ON_LIST_CLICK);
