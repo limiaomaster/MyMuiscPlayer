@@ -2,6 +2,7 @@ package cn.edu.cdut.lm.mymuiscplayer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.activity.SearchActivity;
+import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoSingleSongFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
@@ -24,6 +27,7 @@ import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
  */
 
 public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder>{
+    private AppCompatActivity activity;
     private Context context;
     private int listPosition = -1;
     long lastClickTime = 0;
@@ -33,7 +37,8 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
     private List<Mp3Info> fullList = new ArrayList<>();
 
 
-    public SearchAdapter(Context context) {
+    public SearchAdapter( SearchActivity searchActivity, Context context) {
+        activity = searchActivity;
         this.context = context;
         fullList = MediaUtil.getMp3List(context);
     }
@@ -115,14 +120,14 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
             more = (ImageView) viewOfGeneralLines.findViewById(R.id.iv_more_localmusic);
             speaker = (ImageView) viewOfGeneralLines.findViewById(R.id.speaker);
 
-            /*more.setOnClickListener(new View.OnClickListener() {
+            more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("LastLinesViewHolder()",list.get(getAdapterPosition()-1)+"");
-                    MoreInfoSingleSongFragment moreInformationFragment = MoreInfoSingleSongFragment.newInstance(list.get(getAdapterPosition()-1),0);
+                    int positionToPlay = findPositionInFullList(getAdapterPosition());
+                    MoreInfoSingleSongFragment moreInformationFragment = MoreInfoSingleSongFragment.newInstance(fullList.get(positionToPlay),0);
                     moreInformationFragment.show(activity.getSupportFragmentManager(),"music");
                 }
-            });*/
+            });
         }
     }
 }

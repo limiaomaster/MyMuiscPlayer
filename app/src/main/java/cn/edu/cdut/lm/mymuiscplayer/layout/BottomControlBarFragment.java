@@ -101,6 +101,15 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.e(TAG,"onActivityCreated方法得到执行！");
         super.onActivityCreated(savedInstanceState);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UPDATE_UI_ON_LIST_CLICK);
+        intentFilter.addAction(UPDATE_UI_ON_COMPLETION);
+        intentFilter.addAction(STOP_PLAY_BY_NOTE);
+        intentFilter.addAction(UPDATE_CONTROL_BAR);
+        intentFilter.addAction(UPDATE_PROGRESS_BAR);
+        getActivity().registerReceiver(broadcastReceiver,intentFilter);
+
     }
 
     @Override
@@ -119,13 +128,7 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
         mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
         listSize = mp3InfoList.size();  //  获取歌曲总数
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UPDATE_UI_ON_LIST_CLICK);
-        intentFilter.addAction(UPDATE_UI_ON_COMPLETION);
-        intentFilter.addAction(STOP_PLAY_BY_NOTE);
-        intentFilter.addAction(UPDATE_CONTROL_BAR);
-        intentFilter.addAction(UPDATE_PROGRESS_BAR);
-        getActivity().registerReceiver(broadcastReceiver,intentFilter);
+
     }
 
 
@@ -135,16 +138,15 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     public void onPause() {
         Log.e(TAG,"onPause方法得到执行！");
         super.onPause();
-
         saveDataOnDetachedFromWindow();
 
-        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
     public void onStop() {
         Log.e(TAG,"onStop方法得到执行！");
         super.onStop();
+
     }
 
     @Override
@@ -157,6 +159,8 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     public void onDestroy() {
         Log.e(TAG,"onDestroy方法得到执行！");
         super.onDestroy();
+        getActivity().unregisterReceiver(broadcastReceiver);
+
     }
 
     @Override

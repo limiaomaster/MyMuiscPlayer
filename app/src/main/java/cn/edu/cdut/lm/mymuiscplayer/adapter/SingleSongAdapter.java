@@ -40,11 +40,6 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final int MIN_CLICK_DELAY_TIME = 700;
     private int listPosition = -1;
 
-    public SingleSongAdapter(AppCompatActivity activity, Context context) {
-        this.context = context;
-        list = MediaUtil.getMp3List(context);
-        this.activity = activity;
-    }
 
     public SingleSongAdapter(LocalMusicActivity localMusicActivity, Context applicationContext) {
         this.context = applicationContext;

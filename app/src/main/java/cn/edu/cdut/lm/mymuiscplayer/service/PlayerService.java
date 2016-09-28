@@ -92,13 +92,15 @@ public class PlayerService extends Service {
     }
 
     public void saveDataOnCompletion(){
+        Log.e("Service()","执行保存数据，，，saveDataOnCompletion");
         SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
         editor.putString("title", title);
         editor.putString("artist", artist);
-        editor.putBoolean("isplaying", isPlaying);
+        editor.putLong("album_id",albumId);
+
         editor.putLong("duration",duration);
         //editor.putInt("currentPisition",currentPisition);
-        editor.putLong("album_id",albumId);
+        editor.putBoolean("isplaying", isPlaying);
         editor.putInt("listPosition",listPosition);
         editor.commit();
     }
@@ -236,6 +238,11 @@ public class PlayerService extends Service {
     }
 
     private void playAnotherMusic (final int position) {
+        title = mp3InfoList.get(position).getTitle();
+        artist = mp3InfoList.get(position).getArtist();
+        albumId = mp3InfoList.get(position).getAlbumId();
+        duration = mp3InfoList.get(position).getDuration();
+        listPosition = position;
         //更新controlBar
         Intent intent = new Intent();
         intent.setAction(UPDATE_CONTROL_BAR);
@@ -275,7 +282,10 @@ public class PlayerService extends Service {
 
         isStop = false;
         isPlaying = true;
+        //把信息写入sharedPreference
+        saveDataOnCompletion();
     }
+
 
     private final class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
         MyOnPreparedListener() {
