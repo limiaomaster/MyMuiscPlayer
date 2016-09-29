@@ -61,7 +61,7 @@ public class MusicFragment extends Fragment implements AdapterView.OnItemClickLi
 
     private void createItemList(){
         //获取手机Mp3歌曲总数。
-        int size = MediaUtil.getMp3List(getContext()).size();
+        int size = MediaUtil.getMp3List(getContext(),0).size();
         numbers[0] = "("+size+")";
         for(int i = 0; i < 5; i++){
             ItemOfMusicFragment itemOfMusicFragment = new ItemOfMusicFragment();

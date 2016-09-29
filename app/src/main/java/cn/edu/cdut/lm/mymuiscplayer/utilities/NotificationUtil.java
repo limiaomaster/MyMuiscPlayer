@@ -68,7 +68,7 @@ public class NotificationUtil {
         notification = builder.build();
         notification.priority=Notification.PRIORITY_MAX;
 
-        mp3InfoList = MediaUtil.getMp3List(context);
+        mp3InfoList = MediaUtil.getMp3List(context,0);
         Log.e("Note()","获取到了本机歌曲列表---------");
         /**
          *设置Note点击关闭的动作。

@@ -27,6 +27,7 @@ import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 import static android.content.Context.MODE_PRIVATE;
+import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SORT_ORDER;
 
 /**
  * Created by LimiaoMaster on 2016/9/23 15:30
@@ -39,6 +40,7 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     public static final String UPDATE_UI_ON_COMPLETION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_UI_ON_COMPLETION";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
     public static final String UPDATE_CONTROL_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR";
+
 
     private int lastPosition = -1;
     private int listPosition;
@@ -60,6 +62,7 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     private ImageView iv_art_work;
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 1000;
+    private int sortOrder;
 
     public static BottomControlBarFragment newInstance(){
         Log.e(TAG,"newInstance方法得到执行！！！");
@@ -108,6 +111,7 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
         intentFilter.addAction(STOP_PLAY_BY_NOTE);
         intentFilter.addAction(UPDATE_CONTROL_BAR);
         intentFilter.addAction(UPDATE_PROGRESS_BAR);
+        intentFilter.addAction(UPDATE_SORT_ORDER);
         getActivity().registerReceiver(broadcastReceiver,intentFilter);
 
     }
@@ -123,15 +127,16 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
         Log.e(TAG,"onResume方法得到执行！");
         super.onResume();
 
-        getDataAndUpdateBarOnAttachedToWindow();
-
-        mp3InfoList = MediaUtil.getMp3List(getContext());  //调用工具包中的getMp3Infos()方法，获取Mp3Info对象的列表。
-        listSize = mp3InfoList.size();  //  获取歌曲总数
-
-
+        getDataAndUpdateBar();
+        getUpdatedMp3InfoList();
     }
 
-
+    private void getUpdatedMp3InfoList() {
+        SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
+        sortOrder = pref.getInt("sort_order_check_position" , 0);
+        mp3InfoList = MediaUtil.getMp3List(getContext() , sortOrder);
+        listSize = mp3InfoList.size();  //  获取歌曲总数
+    }
 
 
     @Override
@@ -160,7 +165,6 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
         Log.e(TAG,"onDestroy方法得到执行！");
         super.onDestroy();
         getActivity().unregisterReceiver(broadcastReceiver);
-
     }
 
     @Override
@@ -194,7 +198,7 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     }
 
 
-    private void getDataAndUpdateBarOnAttachedToWindow(){
+    private void getDataAndUpdateBar(){
         SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
         //1判断歌曲状态，更新  播放暂停  按钮。
         isPlaying = pref.getBoolean("isplaying",true);
@@ -305,7 +309,9 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
                 isPlaying = false;
                 isStop = true;
                 Log.e(TAG,"-------收到广播，关闭notification"+isPlaying+"");
-            }else if (action.equals(UPDATE_PROGRESS_BAR)){
+            }else if (action.equals(UPDATE_SORT_ORDER)){
+                getUpdatedMp3InfoList();
+            } else if (action.equals(UPDATE_PROGRESS_BAR)){
                 currentPisition = intent.getIntExtra("currentPosition", 0);
                 duration = intent.getLongExtra("duration",0);
                 progressBar.setMax(Integer.parseInt(String.valueOf(duration)));

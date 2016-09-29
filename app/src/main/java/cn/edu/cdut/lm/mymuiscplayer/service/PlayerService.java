@@ -44,6 +44,8 @@ public class PlayerService extends Service {
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
     public static final String UPDATE_CONTROL_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_CONTROL_BAR";
     public static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
+    public static final String UPDATE_SORT_ORDER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SORT_ORDER";
+
 
     public static NotificationManager manager;
     private static final int NOTIFICATION_ID = 5709;
@@ -54,7 +56,10 @@ public class PlayerService extends Service {
     private static final int PAUSE_PLAY_INTENT = -2;
     private static final int NEXT_INTENT = -3;
     private static final int PRE_INTENT = -4;
+    private static final int CHANGE_SORT_ORDER = -5;
+
     private NotificationUtil notificationUtil;
+    private int sortOrder;
 
     @Nullable
     @Override
@@ -66,7 +71,7 @@ public class PlayerService extends Service {
     public void onCreate() {
         super.onCreate();
         mediaPlayer = new MediaPlayer();
-        mp3InfoList = MediaUtil.getMp3List(this);
+        getUpdatedMp3List();
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationUtil = new NotificationUtil(getApplicationContext());
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -89,6 +94,12 @@ public class PlayerService extends Service {
                 saveDataOnCompletion();
             }
         });
+    }
+
+    private void getUpdatedMp3List() {
+        SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+        sortOrder = pref.getInt("sort_order_check_position",0);
+        mp3InfoList = MediaUtil.getMp3List(this,sortOrder);
     }
 
     public void saveDataOnCompletion(){
@@ -144,9 +155,9 @@ public class PlayerService extends Service {
                 Log.e("Service()","下一首为："+recycleListPosition);
                 listLastPosition = (mp3InfoList.size()+(listLastPosition-1))%mp3InfoList.size();
                 Log.e("Service()","上一首为："+listLastPosition);
-
-
-
+            }else if (position == CHANGE_SORT_ORDER){
+                int orderType = intent.getIntExtra("orderType",0);
+                changeSortOrder(orderType);
             }
 
 
@@ -176,6 +187,16 @@ public class PlayerService extends Service {
             }
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void changeSortOrder(int orderType) {
+        //1
+        Intent intent_change_order = new Intent();
+        intent_change_order.setAction(UPDATE_SORT_ORDER);
+        intent_change_order.putExtra("orderType",orderType);
+        sendBroadcast(intent_change_order);
+        //2
+        getUpdatedMp3List();
     }
 
     private void stopPlayingMusic() {

@@ -54,10 +54,15 @@ public class MediaUtil {
     private static String selectionOfMusic6= Media.DISPLAY_NAME+" like '%.wav' ";  //40首,可播放。
     private static String selectionOfMusic7= Media.DISPLAY_NAME+" like '%[a-z]%' ";  //匹配列表，查不到结果！。
 
-    private static String order = Media.TITLE+" COLLATE LOCALIZED ASC";
+    private static String order0 = Media.TITLE+" COLLATE LOCALIZED ASC";
     private static String order1 = Media.TITLE;
     private static String order2 = DEFAULT_SORT_ORDER; // "title_key"
     private static String order3 = "title_pinyin"; // "title_pinyin"
+
+    private static String order00 = Media.TITLE+" COLLATE LOCALIZED ASC";
+    private static String order11 = Media.TITLE;
+    private static String order22 = Media.ALBUM+" COLLATE LOCALIZED ASC";
+    private static String order33 = Media.ARTIST+" COLLATE LOCALIZED ASC";
 
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
@@ -69,13 +74,28 @@ public class MediaUtil {
      * @param context
      * @return
      */
-    public static List<Mp3Info> getMp3List(Context context) {
+    public static List<Mp3Info> getMp3List(Context context ,int checkPosition) {
+        String searchOrder = null;
+        switch (checkPosition){
+            case 0:
+                searchOrder = order00;
+                break;
+            case 1:
+                searchOrder = order11;
+                break;
+            case 2:
+                searchOrder = order22;
+                break;
+            case 3:
+                searchOrder = order33;
+                break;
+        }
         Cursor cursor = context.getContentResolver().query(
                 uri,
                 projectionOfMusic,
                 null,
                 null,
-                order2
+                searchOrder
         );
 
         List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();

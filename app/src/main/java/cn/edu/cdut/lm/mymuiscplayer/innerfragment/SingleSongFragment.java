@@ -17,6 +17,7 @@ import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
+import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SORT_ORDER;
 import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SPEAKER_LIST_POSITION;
 
 /**
@@ -27,6 +28,7 @@ public class SingleSongFragment extends Fragment {
     private RecyclerView recyclerView;
     private static final String TAG = "SingleSongFragment";
     private SingleSongAdapter.UpdateSpeakerReceiver updateSpeakerReceiver;
+    private SingleSongAdapter.UpdateSortOrderReceiver updateSortOrderReceiver;
 
     @Nullable
     @Override
@@ -42,12 +44,22 @@ public class SingleSongFragment extends Fragment {
         //2
         SingleSongAdapter singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext());
         recyclerView.setAdapter(singleSongAdapter);
+
         //在这里注册小喇叭的监听器，之前是在adapter的构造函数中注册的，现在改在这里，
         //因为方便利用该fragment的生命周期，取消注册。onDestroyView中取消注册的。
         updateSpeakerReceiver = singleSongAdapter.new UpdateSpeakerReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(UPDATE_SPEAKER_LIST_POSITION);
         getActivity().registerReceiver(updateSpeakerReceiver,intentFilter);
+
+        updateSortOrderReceiver = singleSongAdapter.new UpdateSortOrderReceiver();
+        IntentFilter intentFilter_order = new IntentFilter();
+        intentFilter_order.addAction(UPDATE_SORT_ORDER);
+        getActivity().registerReceiver(updateSortOrderReceiver,intentFilter_order);
+
+
+
+
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -107,6 +119,7 @@ public class SingleSongFragment extends Fragment {
         Log.e(TAG,"onDestroyView正在执行-----");
         super.onDestroyView();
         getActivity().unregisterReceiver(updateSpeakerReceiver);
+        getActivity().unregisterReceiver(updateSortOrderReceiver);
     }
 
     @Override

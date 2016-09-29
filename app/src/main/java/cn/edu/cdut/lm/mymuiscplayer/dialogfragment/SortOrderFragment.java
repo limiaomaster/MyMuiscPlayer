@@ -2,6 +2,7 @@ package cn.edu.cdut.lm.mymuiscplayer.dialogfragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -30,6 +32,7 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
     private ImageView imageView4;
     private ImageView[] imageViews = new ImageView[4];
     private int checkPosition;
+    private static final int CHANGE_SORT_ORDER = -5;
 
     @Override
     public void onAttach(Activity activity) {
@@ -129,26 +132,37 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
         switch (v.getId()){
             case R.id.rl_1:
                 checkPosition = 0;
+                saveData();
                 setCheckPosition(checkPosition);
+                changeSortOrder(checkPosition);
                 break;
             case R.id.rl_2:
                 checkPosition = 1;
+                saveData();
                 setCheckPosition(checkPosition);
-
+                changeSortOrder(checkPosition);
                 break;
             case R.id.rl_3:
-
                 checkPosition = 2;
+                saveData();
                 setCheckPosition(checkPosition);
-
+                changeSortOrder(checkPosition);
                 break;
             case R.id.rl_4:
-
                 checkPosition = 3;
+                saveData();
                 setCheckPosition(checkPosition);
-
+                changeSortOrder(checkPosition);
                 break;
         }
+    }
+
+    private void changeSortOrder(int checkPosition) {
+        Intent intent = new Intent();
+        intent.putExtra("position", CHANGE_SORT_ORDER);
+        intent.putExtra("orderType",checkPosition);
+        intent.setClass(getContext(), PlayerService.class);
+        getContext().startService(intent);
     }
 
     private void setCheckPosition(int checkPosition) {
@@ -157,15 +171,14 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
                 imageViews[i].setVisibility(View.VISIBLE);
             }else imageViews[i].setVisibility(View.INVISIBLE);
         }
-        saveData();
     }
     private void saveData(){
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
-        editor.putInt("position", checkPosition);
+        editor.putInt("sort_order_check_position", checkPosition);
         editor.commit();
     }
     private void getData(){
         SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
-        checkPosition = pref.getInt("position",0);
+        checkPosition = pref.getInt("sort_order_check_position",0);
     }
 }

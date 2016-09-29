@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.dialogfragment.SortOrderFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.AlbumFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.ArtistFragment;
@@ -56,8 +55,6 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
     private ImageView back;
     private NotificationManager manager;
     private static final int NOTIFICATION_ID = 5709;
-    public static SingleSongAdapter singleSongAdapter;
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -97,7 +94,6 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
         //actionBar.setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         //设置显示HomeAsUp图标。
         actionBar.setDisplayHomeAsUpEnabled(true);
-
 
 
         initTabAndPager();
