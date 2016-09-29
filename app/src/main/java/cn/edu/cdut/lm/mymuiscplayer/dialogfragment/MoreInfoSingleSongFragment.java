@@ -1,4 +1,4 @@
-package cn.edu.cdut.lm.mymuiscplayer.innerfragment;
+package cn.edu.cdut.lm.mymuiscplayer.dialogfragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,7 +30,6 @@ public class MoreInfoSingleSongFragment extends DialogFragment {
     private List<Map<String, Object>> list;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView recyclerView;
-    private double heightPercent = 0.62;
     private String artist;
     private String title;
     private String album;
@@ -55,6 +54,7 @@ public class MoreInfoSingleSongFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         //设置fragment高度 、宽度
+        double heightPercent = 0.62;
         int dialogHeight = (int) (getActivity().getResources().getDisplayMetrics().heightPixels * heightPercent);
         getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, dialogHeight);
         getDialog().setCanceledOnTouchOutside(true);
@@ -72,7 +72,7 @@ public class MoreInfoSingleSongFragment extends DialogFragment {
 
         getMp3InfoFromParcel();
 
-        View view = inflater.inflate(R.layout.layout_more_info_local_music,container);
+        View view = inflater.inflate(R.layout.layout_fragment_overflow,container);
         list = MoreInfoUtil.getMoreInfoOnSingleMusic();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_localMusic_moreInformation);

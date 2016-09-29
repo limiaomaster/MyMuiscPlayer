@@ -1,4 +1,4 @@
-package cn.edu.cdut.lm.mymuiscplayer.innerfragment;
+package cn.edu.cdut.lm.mymuiscplayer.dialogfragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -162,7 +162,7 @@ public class MoreInfoFragment extends DialogFragment{
 
         getFolderInfoFromParcel();
 
-        View view = inflater.inflate(R.layout.layout_more_info_local_music,container);
+        View view = inflater.inflate(R.layout.layout_fragment_overflow,container);
         list = MoreInfoUtil.getMoreInfoOnArtist();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_localMusic_moreInformation);

@@ -26,6 +26,7 @@ import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
+import cn.edu.cdut.lm.mymuiscplayer.dialogfragment.SortOrderFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.AlbumFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.ArtistFragment;
 import cn.edu.cdut.lm.mymuiscplayer.innerfragment.FolderFragment;
@@ -203,6 +204,8 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.action_order:
                 msg += "选择排序方式";
+                SortOrderFragment sortOrderFragment = new SortOrderFragment();
+                sortOrderFragment.show(getSupportFragmentManager(),"tag_sort_order");
                 break;
             case R.id.action_get_lrc:
                 msg += "一键获取封面歌词";

@@ -10,13 +10,14 @@
         <item name="colorAccent">@color/themeColor</item>
         <item name="colorPrimary">@color/themeColor</item>
         <item name="colorPrimaryDark">@color/themeColor</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>    溢出菜单中文字的颜色
         <item name="android:textColorPrimaryInverse">@android:color/holo_blue_bright</item>
 
+        <item name="android:colorControlNormal">@color/magenta</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
         <item name="android:navigationBarColor">@android:color/holo_blue_dark</item>
-        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>  toolb中返回箭头的颜色
         <item name="android:colorForeground">@android:color/holo_purple</item>
         <!--<item name="actionMenuTextColor">#FF66ee00</item>-->
         <!--<item name="android:windowTranslucentStatus">true</item>-->

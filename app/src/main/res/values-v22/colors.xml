@@ -13,8 +13,8 @@
 
     <color name="innerFragmentBackGround">#EEeeEE</color>
 
-    <color name="bottomControlBarNormal">#EEFFFFFF</color>
-    <color name="bottomControlBarSelected">#EEDDDDDD</color>
+    <color name="bottomControlBarNormal">#ddFFFFFF</color>
+    <color name="bottomControlBarSelected">#ddDDDDDD</color>
 
     <color name="notificationSubTitle">#435d6b</color>
 

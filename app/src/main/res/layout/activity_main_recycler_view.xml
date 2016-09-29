@@ -33,6 +33,7 @@
                 android:layout_weight="49.9"
                 android:background="@drawable/bottom_btnback"
                 android:text="设置"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
             <TextView
                 android:layout_width="0dp"
@@ -47,6 +48,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="49.9"
                 android:text="退出应用"
+                android:textColor="@color/black"
                 android:background="@drawable/bottom_btnback"
                 android:textSize="14sp" />
         </LinearLayout>

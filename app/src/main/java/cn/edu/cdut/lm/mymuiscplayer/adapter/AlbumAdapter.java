@@ -15,7 +15,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.innerfragment.MoreInfoFragment;
+import cn.edu.cdut.lm.mymuiscplayer.dialogfragment.MoreInfoFragment;
 import cn.edu.cdut.lm.mymuiscplayer.module.AlbumInfo;
 
 /**
