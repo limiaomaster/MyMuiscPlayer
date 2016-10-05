@@ -99,7 +99,7 @@ public class PlayerService extends Service {
     private void getUpdatedMp3List() {
         SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
         sortOrder = pref.getInt("sort_order_check_position",0);
-        mp3InfoList = MediaUtil.getMp3List(this,sortOrder);
+        mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(this,sortOrder);
     }
 
     public void saveDataOnCompletion(){

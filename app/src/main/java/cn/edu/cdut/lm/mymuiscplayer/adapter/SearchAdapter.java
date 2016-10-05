@@ -40,7 +40,7 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
     public SearchAdapter( SearchActivity searchActivity, Context context) {
         activity = searchActivity;
         this.context = context;
-        fullList = MediaUtil.getMp3List(context,0);
+        fullList = MediaUtil.getMp3ListFromMyDatabase(context,0);
     }
 
     public void getListByKeyword(List<Mp3Info> list){

@@ -20,8 +20,11 @@ public class Mp3Info implements Parcelable {
     private long albumId;
     private boolean selected;
 
-    public Mp3Info() {
-    }
+    private String title_pinyin;
+    private String artist_pinyin;
+    private String album_pinyin;
+
+    private int dateModified;
 
     protected Mp3Info(Parcel in) {
         positionInList = in.readInt();
@@ -35,6 +38,10 @@ public class Mp3Info implements Parcelable {
         album = in.readString();
         albumId = in.readLong();
         selected = in.readByte() != 0;
+        title_pinyin = in.readString();
+        artist_pinyin = in.readString();
+        album_pinyin = in.readString();
+        dateModified = in.readInt();
     }
 
     public static final Creator<Mp3Info> CREATOR = new Creator<Mp3Info>() {
@@ -48,6 +55,19 @@ public class Mp3Info implements Parcelable {
             return new Mp3Info[size];
         }
     };
+
+    public int getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(int dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public Mp3Info(){
+    }
+
+
 
     @Override
     public String toString() {
@@ -65,6 +85,30 @@ public class Mp3Info implements Parcelable {
                 '}';
     }
 
+    public String getTitle_pinyin() {
+        return title_pinyin;
+    }
+
+    public void setTitle_pinyin(String title_pinyin) {
+        this.title_pinyin = title_pinyin;
+    }
+
+    public String getArtist_pinyin() {
+        return artist_pinyin;
+    }
+
+    public void setArtist_pinyin(String artist_pinyin) {
+        this.artist_pinyin = artist_pinyin;
+    }
+
+    public String getAlbum_pinyin() {
+        return album_pinyin;
+    }
+
+    public void setAlbum_pinyin(String album_pinyin) {
+        this.album_pinyin = album_pinyin;
+    }
+
     public boolean isSelected() {
         return selected;
     }
@@ -80,6 +124,7 @@ public class Mp3Info implements Parcelable {
     public void setPositionInList(int positionInList) {
         this.positionInList = positionInList;
     }
+
     public String getDisplayName() {
         return displayName;
     }
@@ -87,7 +132,6 @@ public class Mp3Info implements Parcelable {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
-
 
     public long getAlbumId() {
         return albumId;
@@ -153,7 +197,6 @@ public class Mp3Info implements Parcelable {
         this.url = url;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -161,6 +204,7 @@ public class Mp3Info implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(positionInList);
         dest.writeLong(id);
         dest.writeString(title);
         dest.writeString(displayName);
@@ -171,5 +215,9 @@ public class Mp3Info implements Parcelable {
         dest.writeString(album);
         dest.writeLong(albumId);
         dest.writeByte((byte) (selected ? 1 : 0));
+        dest.writeString(title_pinyin);
+        dest.writeString(artist_pinyin);
+        dest.writeString(album_pinyin);
+        dest.writeInt(dateModified);
     }
 }

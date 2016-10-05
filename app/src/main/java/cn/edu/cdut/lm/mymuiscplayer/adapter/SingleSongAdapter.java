@@ -54,7 +54,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void getUpdatedMp3InfoList() {
         SharedPreferences pref = context.getSharedPreferences("data", MODE_PRIVATE);
         sortOrder = pref.getInt("sort_order_check_position" , 0);
-        mp3List = MediaUtil.getMp3List(context , sortOrder);
+        mp3List = MediaUtil.getMp3ListFromMyDatabase(context , sortOrder);
         notifyDataSetChanged();
     }
 
@@ -115,6 +115,13 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
                             Log.e("Adaptor","点击了不同的行 "+(position-1));
                             playTheMusicOnClick(position-1);
+                            /*Log.e("Adapter",converterToFirstSpell(mp3Info.getTitle()));
+                            Log.e("Adapter",converterToFirstSpell(mp3Info.getArtist()));
+                            Log.e("Adapter",converterToFirstSpell(mp3Info.getAlbum()));*/
+                           /* Log.e("Adapter",mp3Info.getTitle_pinyin());
+                            Log.e("Adapter",mp3Info.getArtist_pinyin());
+                            Log.e("Adapter",mp3Info.getAlbum_pinyin());*/
+
                             listPosition = position-1;
                         }
                     }

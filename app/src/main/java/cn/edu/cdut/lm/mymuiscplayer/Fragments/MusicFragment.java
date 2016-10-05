@@ -8,79 +8,78 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
-import cn.edu.cdut.lm.mymuiscplayer.adapter.MusicAdapter;
-import cn.edu.cdut.lm.mymuiscplayer.module.ItemOfMusicFragment;
+import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
+
 
 /**
  * Created by Administrator on 2016/8/12 0012.
  */
 
-public class MusicFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class MusicFragment extends Fragment implements View.OnClickListener {
 
-    private List<ItemOfMusicFragment> ItemOfMusicFragmentList = new ArrayList<>(5);
-
-    private int [] imageIDs = {
-            R.drawable.music_icn_local,R.drawable.music_icn_recent,
-            R.drawable.music_icn_dld,R.drawable.music_icn_artist,
-            R.drawable.music_icn_mv
-    };
-
-    private String [] titles = {"本地音乐", "最近播放","下载管理","我的歌手","我的MV"};
-
-    private String [] numbers = {"(1369)","(100)","(5)","(3)","(20)"};
-/*
-    private  LocalMusicFragment localMusicFragment ;
-*/
-
+    private List<Mp3Info> mp3InfoList = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.v("MusicFrag_CreateView","我正在创建视图，，，");
         View view = inflater.inflate(R.layout.fragment_music, container, false);
-        ListView musicAboutListView = (ListView) view.findViewById(R.id.listview);
+        LinearLayout linearLayout1 = (LinearLayout) view.findViewById(R.id.ll_localmusic_musicfragment);
+        LinearLayout linearLayout2 = (LinearLayout) view.findViewById(R.id.ll_recentplay_musicfragment);
+        LinearLayout linearLayout3 = (LinearLayout) view.findViewById(R.id.ll_download_musicfragment);
+        LinearLayout linearLayout4 = (LinearLayout) view.findViewById(R.id.ll_myartists_musicfragment);
+        LinearLayout linearLayout5 = (LinearLayout) view.findViewById(R.id.ll_myMV_musicfragment);
+        linearLayout1.setOnClickListener(this);
+        TextView textView1 = (TextView) view.findViewById(R.id.tv_numberoftrack_musicfragment);
 
-        createItemList();
+        File databaseFile = getContext().getDatabasePath("MusicDataBase.db");
+        Log.e("MusicFragment",databaseFile+"");
+        if(databaseFile.exists()){
+            Log.e("MusicFragment","文件存在！");
 
-        MusicAdapter musicAdapter = new MusicAdapter(getContext(),ItemOfMusicFragmentList);
-        musicAboutListView.setAdapter(musicAdapter);
-
-        musicAboutListView.setOnItemClickListener(this);
-
+            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(),0);
+            textView1.setText(mp3InfoList.size()+"");
+        }else {
+            linearLayout1.setClickable(false);
+            textView1.setText("生成本地音乐资源数据库中，请稍后...");
+            MediaUtil.createMyDatabase(getContext());
+            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(),0);
+            textView1.setText(mp3InfoList.size());
+            linearLayout1.setClickable(true);
+        }
         return view;
     }
 
-    private void createItemList(){
-        //获取手机Mp3歌曲总数。
-        int size = MediaUtil.getMp3List(getContext(),0).size();
-        numbers[0] = "("+size+")";
-        for(int i = 0; i < 5; i++){
-            ItemOfMusicFragment itemOfMusicFragment = new ItemOfMusicFragment();
-            itemOfMusicFragment.setImageId(imageIDs[i%5]);
-            itemOfMusicFragment.setTitle(titles[i%5]);
-            itemOfMusicFragment.setNumber(numbers[i%5]);
-            ItemOfMusicFragmentList.add(itemOfMusicFragment);
-        }
-    }
+ /*   public boolean exist( String dbName ) {
+        boolean flag = false;
+        SQLiteDatabase database = null;
+        try {
+            database = SQLiteDatabase.openDatabase(dbName, null,SQLiteDatabase.OPEN_READONLY);
+            flag = true;
+        }  catch (FileNotFoundException e) {
+            flag = false;
+        } finally {
+            if (database != null)
+                database.close();
+            database = null;
+        }  return flag;
+    }*/
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.v("onItemClick","您点击了第 "+position+" 行！");
-        switch (position){
-            case 0:
-                Log.i("onItemClick","准备进入“本地音乐”，，，");
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ll_localmusic_musicfragment:
                 Intent intent = new Intent(getActivity(), LocalMusicActivity.class);
                 startActivity(intent);
-                //getActivity().finish();
         }
     }
 }

@@ -2,8 +2,10 @@ package cn.edu.cdut.lm.mymuiscplayer.utilities;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,6 +14,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,10 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.database.MyDatabaseHelper;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 
+import static android.database.sqlite.SQLiteDatabase.OPEN_READONLY;
 import static android.provider.MediaStore.Audio.AudioColumns.IS_MUSIC;
 import static android.provider.MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+import static cn.edu.cdut.lm.mymuiscplayer.utilities.Pinyin4jUtil.getQuanPin;
 
 /**
  * Created by LimiaoMaster on 2016/8/16 8:27
@@ -38,7 +44,8 @@ public class MediaUtil {
     private static String[] projectionOfMusic = new String[] {
             Media._ID,  Media.TITLE,    Media.ARTIST,
             Media.ALBUM, Media.DISPLAY_NAME, Media.DATA,
-            Media.ALBUM_ID, Media.DURATION, Media.SIZE
+            Media.ALBUM_ID, Media.DURATION, Media.SIZE,
+            "date_modified"
     };
 
     private static String[] projectionOfMusicBySearch = new String[]{
@@ -60,75 +67,152 @@ public class MediaUtil {
     private static String order3 = "title_pinyin"; // "title_pinyin"
 
     private static String order00 = Media.TITLE+" COLLATE LOCALIZED ASC";
-    private static String order11 = Media.TITLE;
-    private static String order22 = Media.ALBUM+" COLLATE LOCALIZED ASC";
-    private static String order33 = Media.ARTIST+" COLLATE LOCALIZED ASC";
+    private static String order01 = Media.TITLE;
+    private static String order02 = Media.ALBUM+" COLLATE LOCALIZED ASC";
+    private static String order03 = Media.ARTIST+" COLLATE LOCALIZED ASC";
+
+
+
 
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
     private static int position;
 
 
+
     /**
      * 获取所有Mp3的信息组成的列表
-     * @param context
-     * @return
+     * @param context 上下文
+     * @param orderType 排序方式
+     * @return 列表
      */
-    public static List<Mp3Info> getMp3List(Context context ,int checkPosition) {
-        String searchOrder = null;
-        switch (checkPosition){
+    public static List<Mp3Info> getMp3ListFromMyDatabase(Context context , int orderType){
+        String order10 = "music_name_py COLLATE LOCALIZED ASC";
+        String order11 = "date_modified desc";
+        String order12 = "album_name_py COLLATE LOCALIZED ASC";
+        String order13 = "artist_name_py COLLATE LOCALIZED ASC";
+
+        String customOrder = null;
+        switch (orderType){
             case 0:
-                searchOrder = order00;
+                customOrder = order10;
                 break;
             case 1:
-                searchOrder = order11;
+                customOrder = order11;
                 break;
             case 2:
-                searchOrder = order22;
+                customOrder = order12;
                 break;
             case 3:
-                searchOrder = order33;
+                customOrder = order13;
                 break;
         }
+        List<Mp3Info> mp3InfoList = new ArrayList<>();
+        SQLiteDatabase database = SQLiteDatabase.openDatabase(context.getDatabasePath("MusicDataBase.db").toString(),null,OPEN_READONLY);
+        Cursor cursor = database.query("mp3list_table",null,null,null,null,null,customOrder);
+        while (cursor.moveToNext()){
+            Mp3Info mp3Info = new Mp3Info();
+            long id = cursor.getLong(cursor.getColumnIndex("music_id"));
+            String music_name = cursor.getString(cursor.getColumnIndex("music_name"));
+            String music_name_py = cursor.getString(cursor.getColumnIndex("music_name_py"));
+
+            String artist_name = cursor.getString(cursor.getColumnIndex("artist_name"));
+            String artist_name_py = cursor.getString(cursor.getColumnIndex("artist_name_py"));
+
+            String album_name = cursor.getString(cursor.getColumnIndex("album_name"));
+            String album_name_py = cursor.getString(cursor.getColumnIndex("album_name_py"));
+            String display_name = cursor.getString(cursor.getColumnIndex("display_name"));
+            long album_id = cursor.getInt(cursor.getColumnIndex("album_id"));
+            long duration = cursor.getLong(cursor.getColumnIndex("duration"));
+            long size = cursor.getLong(cursor.getColumnIndex("size"));
+            String file_path = cursor.getString(cursor.getColumnIndex("file_path"));
+            int date_modified = cursor.getInt(cursor.getColumnIndex("date_modified"));
+
+
+
+            mp3Info.setId(id);
+            mp3Info.setTitle(music_name);
+            mp3Info.setTitle_pinyin(music_name_py);
+            mp3Info.setArtist(artist_name);
+            mp3Info.setArtist_pinyin(artist_name_py);
+            mp3Info.setAlbum(album_name);
+            mp3Info.setAlbum_pinyin(album_name_py);
+            mp3Info.setDisplayName(display_name);
+            mp3Info.setAlbumId(album_id);
+            mp3Info.setDuration(duration);
+            mp3Info.setSize(size);
+            mp3Info.setUrl(file_path);
+            mp3Info.setDateModified(date_modified);
+
+            mp3InfoList.add(mp3Info);
+        }
+        cursor.close();
+        database.close();
+        return mp3InfoList;
+    }
+
+
+
+    public static  SQLiteDatabase createMyDatabase(Context context) {
+        File databaseFile = context.getDatabasePath("MusicDataBase.db");
+        deleteFile(databaseFile);
+        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(context, "MusicDataBase.db", null, 1);
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
         Cursor cursor = context.getContentResolver().query(
                 uri,
                 projectionOfMusic,
                 null,
                 null,
-                searchOrder
+                null
         );
-
-        List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
-        while (cursor.moveToNext()){
-            Mp3Info mp3Info = new Mp3Info();
-
-            long id = cursor.getLong(cursor.getColumnIndex(Media._ID));	//音乐id
+        while (cursor.moveToNext()) {
+            long id = cursor.getLong(cursor.getColumnIndex(Media._ID));    //音乐id
             String title = cursor.getString((cursor.getColumnIndex(Media.TITLE))); // 音乐标题
+            String title_py = getQuanPin(title);
             String artist = cursor.getString(cursor.getColumnIndex(Media.ARTIST)); // 艺术家
-            String album = cursor.getString(cursor.getColumnIndex(Media.ALBUM));	//专辑
+            String artist_py = getQuanPin(artist);
+            String album = cursor.getString(cursor.getColumnIndex(Media.ALBUM));    //专辑
+            String album_py = getQuanPin(album);
             String displayName = cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME));
             long albumId = cursor.getInt(cursor.getColumnIndex(Media.ALBUM_ID));
             long duration = cursor.getLong(cursor.getColumnIndex(Media.DURATION)); // 时长
             long size = cursor.getLong(cursor.getColumnIndex(Media.SIZE)); // 文件大小
             String url = cursor.getString(cursor.getColumnIndex(Media.DATA)); // 文件路径
+            long date_modified = cursor.getLong(cursor.getColumnIndex("date_modified"));    //音乐id
 
-                mp3Info.setPositionInList(position++);
-                mp3Info.setId(id);
-                mp3Info.setTitle(title);
-                mp3Info.setArtist(artist);
-                mp3Info.setAlbum(album);
-                mp3Info.setDisplayName(displayName);
-                mp3Info.setAlbumId(albumId);
-                mp3Info.setDuration(duration);
-                mp3Info.setSize(size);
-                mp3Info.setUrl(url);
-                mp3Infos.add(mp3Info);
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("music_id", id);
+            contentValues.put("music_name", title);
+            contentValues.put("music_name_py", title_py);
+
+            contentValues.put("artist_name", artist);
+            contentValues.put("artist_name_py", artist_py);
+
+            contentValues.put("album_name", album);
+            contentValues.put("album_name_py", album_py);
+
+            contentValues.put("display_name", displayName);
+            contentValues.put("album_id", albumId);
+            contentValues.put("duration", duration);
+            contentValues.put("size", size);
+            contentValues.put("file_path", url);
+            contentValues.put("date_modified",date_modified);
+
+            database.insert("mp3list_table", null, contentValues);
         }
         cursor.close();
-        position = 0;
-        return mp3Infos;
+        //database.close();
+        return database;
     }
 
+    private static void deleteFile(File file) {
+        if (file.exists()) {        // 判断文件是否存在
+            if (file.isFile()) {    // 判断是否是文件
+                file.delete();      // delete()方法 你应该知道 是删除的意思;
+            }
+        }
+    }
 
     /**
      * 获取MP3信息的列表，通过搜索关键字。

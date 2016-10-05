@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
@@ -134,7 +135,18 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     private void getUpdatedMp3InfoList() {
         SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
         sortOrder = pref.getInt("sort_order_check_position" , 0);
-        mp3InfoList = MediaUtil.getMp3List(getContext() , sortOrder);
+
+        File databaseFile = getContext().getDatabasePath("MusicDataBase.db");
+        Log.e(TAG,databaseFile+"");
+        if(databaseFile.exists()){
+            Log.e(TAG,"文件存在！");
+            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(),sortOrder);
+        }else {
+            MediaUtil.createMyDatabase(getContext());
+            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(),sortOrder);
+        }
+
+        //mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext() , sortOrder);
         listSize = mp3InfoList.size();  //  获取歌曲总数
     }
 
