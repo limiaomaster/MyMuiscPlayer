@@ -323,7 +323,7 @@ public class PlayerService extends Service {
 
 
 
-    public Handler handler = new Handler(){
+    private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 1){

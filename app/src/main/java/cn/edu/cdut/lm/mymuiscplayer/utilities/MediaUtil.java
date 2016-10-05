@@ -153,7 +153,7 @@ public class MediaUtil {
 
 
 
-    public static  SQLiteDatabase createMyDatabase(Context context) {
+    public static void createMyDatabase(Context context) {
         File databaseFile = context.getDatabasePath("MusicDataBase.db");
         deleteFile(databaseFile);
         MyDatabaseHelper databaseHelper = new MyDatabaseHelper(context, "MusicDataBase.db", null, 1);
@@ -203,7 +203,6 @@ public class MediaUtil {
         }
         cursor.close();
         //database.close();
-        return database;
     }
 
     private static void deleteFile(File file) {

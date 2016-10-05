@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         iv_disco.setOnClickListener(myOnClickListener);
         iv_music.setOnClickListener(myOnClickListener);
         iv_friend.setOnClickListener(myOnClickListener);
-        showQuickControl(true);
+        //showQuickControl(true);
     }
 
     /**
      * @param show 显示或关闭底部播放控制栏
      */
-    protected void showQuickControl(boolean show) {
+    public void showQuickControl(boolean show) {
         Log.e(TAG, "显不显示controlBar");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (show) {

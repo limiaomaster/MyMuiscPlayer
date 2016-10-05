@@ -66,13 +66,14 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:text="周杰伦"
-                android:textSize="11sp"
-                android:layout_marginEnd="1dp" />
+                android:textSize="12sp"
+                android:layout_marginEnd="3dp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="1dp"
-                android:text="-"/>
+                android:layout_marginEnd="3dp"
+                android:text="-"
+                android:textSize="10sp"/>
 
             <TextView
                 android:id="@+id/album_localmusic"
@@ -80,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="八度空间"
                 android:maxLines="1"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:layout_marginEnd="5dp" />
          </LinearLayout>
     </RelativeLayout>
