@@ -8,16 +8,18 @@ import android.os.Parcelable;
  */
 
 public class Mp3Info implements Parcelable {
-    private int positionInList;
-    private long id;
+    private int positionInThisList;
+
+    private int id;
+    private int musicId;
     private String title;
     private String displayName;
     private String artist;
-    private long duration;
-    private long size;
+    private int duration;
+    private int size;
     private String url;
     private String album;
-    private long albumId;
+    private int albumId;
     private boolean selected;
 
     private String title_pinyin;
@@ -26,22 +28,34 @@ public class Mp3Info implements Parcelable {
 
     private int dateModified;
 
+    private int sampling_rate;
+    private int bit_rate;
+    private String quality;
+
+    public Mp3Info(){
+    }
+
+
     protected Mp3Info(Parcel in) {
-        positionInList = in.readInt();
-        id = in.readLong();
+        positionInThisList = in.readInt();
+        id = in.readInt();
+        musicId = in.readInt();
         title = in.readString();
         displayName = in.readString();
         artist = in.readString();
-        duration = in.readLong();
-        size = in.readLong();
+        duration = in.readInt();
+        size = in.readInt();
         url = in.readString();
         album = in.readString();
-        albumId = in.readLong();
+        albumId = in.readInt();
         selected = in.readByte() != 0;
         title_pinyin = in.readString();
         artist_pinyin = in.readString();
         album_pinyin = in.readString();
         dateModified = in.readInt();
+        sampling_rate = in.readInt();
+        bit_rate = in.readInt();
+        quality = in.readString();
     }
 
     public static final Creator<Mp3Info> CREATOR = new Creator<Mp3Info>() {
@@ -56,33 +70,100 @@ public class Mp3Info implements Parcelable {
         }
     };
 
-    public int getDateModified() {
-        return dateModified;
+    public int getPositionInThisList() {
+        return positionInThisList;
     }
 
-    public void setDateModified(int dateModified) {
-        this.dateModified = dateModified;
+    public void setPositionInThisList(int positionInThisList) {
+        this.positionInThisList = positionInThisList;
     }
 
-    public Mp3Info(){
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public int getMusicId() {
+        return musicId;
+    }
 
-    @Override
-    public String toString() {
-        return "Mp3Info{" +
-                "position="+positionInList+
-                ", id=" + id +
-                ", title='" + title + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", artist='" + artist + '\'' +
-                ", duration=" + duration +
-                ", size=" + size +
-                ", url='" + url + '\'' +
-                ", album='" + album + '\'' +
-                ", albumId=" + albumId +
-                '}';
+    public void setMusicId(int musicId) {
+        this.musicId = musicId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public int getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public String getTitle_pinyin() {
@@ -109,93 +190,38 @@ public class Mp3Info implements Parcelable {
         this.album_pinyin = album_pinyin;
     }
 
-    public boolean isSelected() {
-        return selected;
+    public int getDateModified() {
+        return dateModified;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    public void setDateModified(int dateModified) {
+        this.dateModified = dateModified;
     }
 
-    public int getPositionInList() {
-        return positionInList;
+    public int getSampling_rate() {
+        return sampling_rate;
     }
 
-    public void setPositionInList(int positionInList) {
-        this.positionInList = positionInList;
+    public void setSampling_rate(int sampling_rate) {
+        this.sampling_rate = sampling_rate;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public int getBit_rate() {
+        return bit_rate;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setBit_rate(int bit_rate) {
+        this.bit_rate = bit_rate;
     }
 
-    public long getAlbumId() {
-        return albumId;
+    public String getQuality() {
+        return quality;
     }
 
-    public void setAlbumId(long albumId) {
-        this.albumId = albumId;
+    public void setQuality(String quality) {
+        this.quality = quality;
     }
 
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(long duration) {
-        this.duration = duration;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     @Override
     public int describeContents() {
@@ -204,20 +230,24 @@ public class Mp3Info implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(positionInList);
-        dest.writeLong(id);
+        dest.writeInt(positionInThisList);
+        dest.writeInt(id);
+        dest.writeInt(musicId);
         dest.writeString(title);
         dest.writeString(displayName);
         dest.writeString(artist);
-        dest.writeLong(duration);
-        dest.writeLong(size);
+        dest.writeInt(duration);
+        dest.writeInt(size);
         dest.writeString(url);
         dest.writeString(album);
-        dest.writeLong(albumId);
+        dest.writeInt(albumId);
         dest.writeByte((byte) (selected ? 1 : 0));
         dest.writeString(title_pinyin);
         dest.writeString(artist_pinyin);
         dest.writeString(album_pinyin);
         dest.writeInt(dateModified);
+        dest.writeInt(sampling_rate);
+        dest.writeInt(bit_rate);
+        dest.writeString(quality);
     }
 }

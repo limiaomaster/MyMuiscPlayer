@@ -100,10 +100,21 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         if (position >= 1 && position <= mp3List.size()) {
             mp3Info = mp3List.get(position - 1);
+            String quality = mp3Info.getQuality();
             ((GeneralLinesViewHolder) holder).title.setText(mp3Info.getTitle());
             ((GeneralLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
             ((GeneralLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
+            if (quality.equals("low")){
+                ((GeneralLinesViewHolder) holder).quality.setVisibility(View.GONE);
+            }else if (quality.equals("high")){
+                ((GeneralLinesViewHolder) holder).quality.setImageResource(R.drawable.list_icn_hq_sml);
+                ((GeneralLinesViewHolder) holder).quality.setVisibility(View.VISIBLE);
 
+            }else if (quality.equals("super")){
+                ((GeneralLinesViewHolder) holder).quality.setImageResource(R.drawable.list_icn_sq_sml);
+                ((GeneralLinesViewHolder) holder).quality.setVisibility(View.VISIBLE);
+
+            }
             ((GeneralLinesViewHolder) holder).speaker.setVisibility(mp3Info.isSelected()?View.VISIBLE:View.GONE);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -184,11 +195,8 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private class GeneralLinesViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView artist;
-        TextView album;
-        ImageView more;
-        ImageView speaker;
+        TextView title,artist,album;
+        ImageView more, speaker, quality;
         View view;
         GeneralLinesViewHolder(View viewOfGeneralLines) {
             super(viewOfGeneralLines);
@@ -198,6 +206,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             album = (TextView) viewOfGeneralLines.findViewById(R.id.album_localmusic);
             more = (ImageView) viewOfGeneralLines.findViewById(R.id.iv_more_localmusic);
             speaker = (ImageView) viewOfGeneralLines.findViewById(R.id.speaker);
+            quality = (ImageView) viewOfGeneralLines.findViewById(R.id.quality);
 
             more.setOnClickListener(new View.OnClickListener() {
                 @Override

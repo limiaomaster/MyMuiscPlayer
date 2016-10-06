@@ -3,8 +3,10 @@ package cn.edu.cdut.lm.mymuiscplayer.utilities;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -17,6 +19,7 @@ import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
@@ -35,14 +38,10 @@ public class NotificationUtil {
     private static final int NEXT_INTENT = -3;
     private static final int PRE_INTENT = -4;
 
-
-
-    private static final int CODE_RESET_PLAY_PAUSE = 444;
-
     private List<Mp3Info> mp3InfoList;
     private NotificationManager manger;
     private static final int NOTIFICATION_ID = 5709;
-    private int lastPosition = -1;
+
     private int listPosition = -1 ;
     public  boolean isPlaying = false;
     private Context context;
@@ -50,10 +49,10 @@ public class NotificationUtil {
     private NotificationCompat.Builder builder;
     private Notification notification;
 
+    public static final String UPDATE_SORT_ORDER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SORT_ORDER";
 
-    public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
-    public static final String RESET_PLAY_PAUSE = "cn.edu.cdut.lm.mymusicplayer.RESET_PLAY_PAUSE";
-    private int nextPosition;
+
+
 
     public NotificationUtil(Context context) {
         this.context = context;
@@ -67,9 +66,10 @@ public class NotificationUtil {
         builder.setOngoing(true);
         notification = builder.build();
         notification.priority=Notification.PRIORITY_MAX;
+        getOrUpdateMp3List();
 
-        mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(context,0);
-        Log.e("Note()","获取到了本机歌曲列表---------");
+
+
         /**
          *设置Note点击关闭的动作。
          */
@@ -104,6 +104,12 @@ public class NotificationUtil {
         intent_pre.setClass(context,PlayerService.class);
         PendingIntent pendingIntent_pre = PendingIntent.getService(context,CODE_PRE,intent_pre,FLAG_CANCEL_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.iv_pre_notification,pendingIntent_pre);
+    }
+
+    public void getOrUpdateMp3List(){
+        SharedPreferences pref = context.getSharedPreferences("data", MODE_PRIVATE);
+        int sortOrder = pref.getInt("sort_order_check_position", 0);
+        mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(context,sortOrder);
     }
 
     public void updateNoteMusicInfo(int position) {
@@ -152,6 +158,16 @@ public class NotificationUtil {
 
         manger.notify(NOTIFICATION_ID, notification);
         Log.e("Note()","所有视图已更新完毕-------------------");
+    }
+
+    public class UpdateSortOrderReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(UPDATE_SORT_ORDER)){
+                getOrUpdateMp3List();
+            }
+        }
     }
 }
 

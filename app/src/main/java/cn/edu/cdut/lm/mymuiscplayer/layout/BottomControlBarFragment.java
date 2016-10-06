@@ -63,7 +63,6 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     private ImageView iv_art_work;
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 1000;
-    private int sortOrder;
 
     public static BottomControlBarFragment newInstance(){
         Log.e(TAG,"newInstance方法得到执行！！！");
@@ -134,16 +133,16 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
 
     private void getUpdatedMp3InfoList() {
         SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
-        sortOrder = pref.getInt("sort_order_check_position" , 0);
+        int sortOrder = pref.getInt("sort_order_check_position", 0);
 
         File databaseFile = getContext().getDatabasePath("MusicDataBase.db");
         Log.e(TAG,databaseFile+"");
         if(databaseFile.exists()){
             Log.e(TAG,"文件存在！");
-            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(),sortOrder);
+            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(), sortOrder);
         }else {
             MediaUtil.createMyDatabase(getContext());
-            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(),sortOrder);
+            mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(), sortOrder);
         }
 
         //mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext() , sortOrder);

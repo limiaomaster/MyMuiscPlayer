@@ -21,6 +21,7 @@
         android:scaleType="fitCenter"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
+        android:layout_alignParentStart="true"
         android:src="@drawable/song_play_icon"
         android:visibility="gone"/>
 
@@ -54,11 +55,17 @@
 
             <ImageView
                 android:id="@+id/icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="14dp"
+                android:layout_height="match_parent"
                 android:src="@drawable/list_icn_dld_ok"
                 android:layout_marginEnd="4dp" />
 
+            <ImageView
+                android:id="@+id/quality"
+                android:layout_width="13dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/list_icn_hq_sml"
+                android:layout_marginEnd="4dp" />
 
             <TextView
                 android:id="@+id/artist_localmusic"

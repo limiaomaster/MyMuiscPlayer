@@ -58,7 +58,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener {
                 ((MainActivity)getActivity()).showQuickControl(true);
             }
         }else {
-            Toast.makeText(getContext(),"正在生成本地音乐资源数据库",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"正在生成本地音乐资源数据库",Toast.LENGTH_LONG).show();
             linearLayout1.setClickable(false);
             new Thread(){
                 @Override
@@ -105,7 +105,7 @@ public class MusicFragment extends Fragment implements View.OnClickListener {
             }else if (second >5 && second <= 10){
                 Toast.makeText(getContext(),"您手机中的歌曲比较多啦，多听音乐心情好~",Toast.LENGTH_LONG).show();
             }else if(second > 10){
-                Toast.makeText(getContext(),"您手机中的歌曲比太多啦，看来是个音乐发烧友啊~",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),"您手机中的歌曲太多啦，看来是个音乐发烧友啊~",Toast.LENGTH_LONG).show();
             }
         }
     };

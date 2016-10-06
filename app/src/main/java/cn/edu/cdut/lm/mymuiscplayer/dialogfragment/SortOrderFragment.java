@@ -32,7 +32,7 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
     private ImageView imageView4;
     private ImageView[] imageViews = new ImageView[4];
     private int checkPosition;
-    private static final int CHANGE_SORT_ORDER = -5;
+    private static final int CHANGE_SORT_ORDER_INTENT = -5;
 
     @Override
     public void onAttach(Activity activity) {
@@ -159,7 +159,7 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
 
     private void changeSortOrder(int checkPosition) {
         Intent intent = new Intent();
-        intent.putExtra("position", CHANGE_SORT_ORDER);
+        intent.putExtra("position", CHANGE_SORT_ORDER_INTENT);
         intent.putExtra("orderType",checkPosition);
         intent.setClass(getContext(), PlayerService.class);
         getContext().startService(intent);

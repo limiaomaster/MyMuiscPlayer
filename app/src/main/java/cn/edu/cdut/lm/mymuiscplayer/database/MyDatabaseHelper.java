@@ -11,14 +11,8 @@ import android.widget.Toast;
  */
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
-    private static final String CREATE_BOOK =
-            "create table book ("
-                    + "id integer primary key autoincrement, "
-                    + "author text, "
-                    + "price real, "
-                    + "pages integer, "
-                    + "name text)";
-    private static final String CREATE_MYMUSIC_LIST =
+
+    private static final String CREATE_MUSIC_TABLE =
             "create table mp3list_table ("
                     + "id integer primary key autoincrement, "
                     + "music_id integer, "
@@ -33,7 +27,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     + "duration integer, "
                     + "size integer, "
                     + "file_path text, "
-                    + "date_modified integer)";
+                    + "date_modified integer, "
+                    + "sampling_rate integer, "
+                    + "bit_rate integer, "
+                    + "quality text)";
 
     private Context mcontext;
 
@@ -49,7 +46,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_MYMUSIC_LIST);
+        db.execSQL(CREATE_MUSIC_TABLE);
         Toast.makeText(mcontext, "Create succeeded", Toast.LENGTH_SHORT).show();
     }
 

@@ -89,14 +89,14 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        List<Mp3Info> list = MediaUtil.searchMp3InfoByKeyword(this,newText);
+        List<Mp3Info> searchedList = MediaUtil.getSearchedMp3ListFromMyDatabase(this,newText);
         if(!newText.trim().equals("")){
 
-            adapter.getListByKeyword(list);
+            adapter.updateSearchedList(searchedList);
             adapter.notifyDataSetChanged();
         }else{
-            list.clear();
-            adapter.getListByKeyword(list);
+            searchedList.clear();
+            adapter.updateSearchedList(searchedList);
             adapter.notifyDataSetChanged();
         }
         //hideInputManager();

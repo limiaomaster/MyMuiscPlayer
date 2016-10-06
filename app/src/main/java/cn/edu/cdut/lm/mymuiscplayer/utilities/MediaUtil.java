@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -45,11 +44,7 @@ public class MediaUtil {
             Media._ID,  Media.TITLE,    Media.ARTIST,
             Media.ALBUM, Media.DISPLAY_NAME, Media.DATA,
             Media.ALBUM_ID, Media.DURATION, Media.SIZE,
-            "date_modified"
-    };
-
-    private static String[] projectionOfMusicBySearch = new String[]{
-            Media._ID,Media.TITLE, Media.ARTIST, Media.ALBUM
+            "date_modified", "sampling_rate"
     };
 
     private static String selectionOfMusic0= "is_music=1";
@@ -71,12 +66,12 @@ public class MediaUtil {
     private static String order02 = Media.ALBUM+" COLLATE LOCALIZED ASC";
     private static String order03 = Media.ARTIST+" COLLATE LOCALIZED ASC";
 
-
-
-
     //获取专辑封面的Uri
     private static final Uri albumArtUri = Uri.parse("content://media/external/audio/albumart");
-    private static int position;
+    private static int positionInThisList;
+
+
+
 
 
 
@@ -112,7 +107,8 @@ public class MediaUtil {
         Cursor cursor = database.query("mp3list_table",null,null,null,null,null,customOrder);
         while (cursor.moveToNext()){
             Mp3Info mp3Info = new Mp3Info();
-            long id = cursor.getLong(cursor.getColumnIndex("music_id"));
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            int music_id = cursor.getInt(cursor.getColumnIndex("music_id"));
             String music_name = cursor.getString(cursor.getColumnIndex("music_name"));
             String music_name_py = cursor.getString(cursor.getColumnIndex("music_name_py"));
 
@@ -122,15 +118,19 @@ public class MediaUtil {
             String album_name = cursor.getString(cursor.getColumnIndex("album_name"));
             String album_name_py = cursor.getString(cursor.getColumnIndex("album_name_py"));
             String display_name = cursor.getString(cursor.getColumnIndex("display_name"));
-            long album_id = cursor.getInt(cursor.getColumnIndex("album_id"));
-            long duration = cursor.getLong(cursor.getColumnIndex("duration"));
-            long size = cursor.getLong(cursor.getColumnIndex("size"));
+            int album_id = cursor.getInt(cursor.getColumnIndex("album_id"));
+            int duration = cursor.getInt(cursor.getColumnIndex("duration"));
+            int size = cursor.getInt(cursor.getColumnIndex("size"));
             String file_path = cursor.getString(cursor.getColumnIndex("file_path"));
             int date_modified = cursor.getInt(cursor.getColumnIndex("date_modified"));
 
+            int sampling_rate = cursor.getInt(cursor.getColumnIndex("sampling_rate"));
+            int bit_rate = cursor.getInt(cursor.getColumnIndex("bit_rate"));
+            String quality = cursor.getString(cursor.getColumnIndex("quality"));
 
-
+            mp3Info.setPositionInThisList(positionInThisList++);
             mp3Info.setId(id);
+            mp3Info.setMusicId(music_id);
             mp3Info.setTitle(music_name);
             mp3Info.setTitle_pinyin(music_name_py);
             mp3Info.setArtist(artist_name);
@@ -143,11 +143,15 @@ public class MediaUtil {
             mp3Info.setSize(size);
             mp3Info.setUrl(file_path);
             mp3Info.setDateModified(date_modified);
+            mp3Info.setSampling_rate(sampling_rate);
+            mp3Info.setBit_rate(bit_rate);
+            mp3Info.setQuality(quality);
 
             mp3InfoList.add(mp3Info);
         }
         cursor.close();
         database.close();
+        positionInThisList = 0;
         return mp3InfoList;
     }
 
@@ -166,7 +170,7 @@ public class MediaUtil {
                 null
         );
         while (cursor.moveToNext()) {
-            long id = cursor.getLong(cursor.getColumnIndex(Media._ID));    //音乐id
+            int id = cursor.getInt(cursor.getColumnIndex(Media._ID));    //音乐id
             String title = cursor.getString((cursor.getColumnIndex(Media.TITLE))); // 音乐标题
             String title_py = getQuanPin(title);
             String artist = cursor.getString(cursor.getColumnIndex(Media.ARTIST)); // 艺术家
@@ -174,12 +178,29 @@ public class MediaUtil {
             String album = cursor.getString(cursor.getColumnIndex(Media.ALBUM));    //专辑
             String album_py = getQuanPin(album);
             String displayName = cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME));
-            long albumId = cursor.getInt(cursor.getColumnIndex(Media.ALBUM_ID));
-            long duration = cursor.getLong(cursor.getColumnIndex(Media.DURATION)); // 时长
-            long size = cursor.getLong(cursor.getColumnIndex(Media.SIZE)); // 文件大小
+            int albumId = cursor.getInt(cursor.getColumnIndex(Media.ALBUM_ID));
+            int duration = cursor.getInt(cursor.getColumnIndex(Media.DURATION)); // 时长
+            int size = cursor.getInt(cursor.getColumnIndex(Media.SIZE)); // 文件大小
             String url = cursor.getString(cursor.getColumnIndex(Media.DATA)); // 文件路径
-            long date_modified = cursor.getLong(cursor.getColumnIndex("date_modified"));    //音乐id
+            int date_modified = cursor.getInt(cursor.getColumnIndex("date_modified"));    //修改日期
+            int sampling_rate = cursor.getInt(cursor.getColumnIndex("sampling_rate"));    //采样率
+            int bit_rate = 0;
+            if(duration != 0){
+                bit_rate =  (size*8)/duration;
+            }
 
+            String quality = "low";
+            if(sampling_rate<44100){
+                quality = "low";
+            }else if (sampling_rate >= 44100 && sampling_rate <= 48000){
+                if (bit_rate >= 320){
+                    quality = "high";
+                }else quality = "low";
+            }else if( sampling_rate > 48000 ){
+                if (bit_rate >= 640){
+                    quality = "super";
+                }else quality = "high";
+            }
 
             ContentValues contentValues = new ContentValues();
             contentValues.put("music_id", id);
@@ -198,6 +219,9 @@ public class MediaUtil {
             contentValues.put("size", size);
             contentValues.put("file_path", url);
             contentValues.put("date_modified",date_modified);
+            contentValues.put("sampling_rate",sampling_rate);
+            contentValues.put("bit_rate",bit_rate);
+            contentValues.put("quality",quality);
 
             database.insert("mp3list_table", null, contentValues);
         }
@@ -215,37 +239,60 @@ public class MediaUtil {
 
     /**
      * 获取MP3信息的列表，通过搜索关键字。
-     * @param context
-     * @param keyword
-     * @return
+     * @param context 上下文
+     * @param keyword 关键字
+     * @return 列表
      */
-    public static List<Mp3Info> searchMp3InfoByKeyword(Context context, String keyword){
+    public static List<Mp3Info> getSearchedMp3ListFromMyDatabase(Context context, String keyword){
         List<Mp3Info> list = new ArrayList<>();
-        String[] selectoinArgs = new String[]{"%"+keyword+"%"};
         String selection =
-                Media.TITLE+" like '%"+keyword+"%' or "+
-                Media.ARTIST+" like '%"+keyword+"%' or "+
-                Media.ALBUM+" like '%"+keyword+"%' ";
+                "music_name like '%"+keyword+"%' or "+
+                        "artist_name like '%"+keyword+"%' or "+
+                        "album_name like '%"+keyword+"%' ";
 
-                Cursor cursor = context.getContentResolver().query(
-                uri,
-                projectionOfMusicBySearch,
-                selection,
-                null,
-                null
-        );
+        SQLiteDatabase database = SQLiteDatabase.openDatabase(context.getDatabasePath("MusicDataBase.db").toString(),null,OPEN_READONLY);
+        Cursor cursor = database.query("mp3list_table",null,selection,null,null,null,null);
+
         while (cursor.moveToNext()){
             Mp3Info mp3Info = new Mp3Info();
 
-            long id = cursor.getLong(cursor.getColumnIndex(Media._ID));	//音乐id
-            Log.e("MediaUtil","id是："+id);
-            String title = cursor.getString(cursor.getColumnIndex(Media.TITLE));
-            String artist = cursor.getString(cursor.getColumnIndex(Media.ARTIST));
-            String album = cursor.getString(cursor.getColumnIndex(Media.ALBUM));	//专辑
-            mp3Info.setId(id);
-            mp3Info.setTitle(title);
-            mp3Info.setArtist(artist);
-            mp3Info.setAlbum(album);
+            int music_id = cursor.getInt(cursor.getColumnIndex("music_id"));
+            String music_name = cursor.getString(cursor.getColumnIndex("music_name"));
+            String music_name_py = cursor.getString(cursor.getColumnIndex("music_name_py"));
+
+            String artist_name = cursor.getString(cursor.getColumnIndex("artist_name"));
+            String artist_name_py = cursor.getString(cursor.getColumnIndex("artist_name_py"));
+
+            String album_name = cursor.getString(cursor.getColumnIndex("album_name"));
+            String album_name_py = cursor.getString(cursor.getColumnIndex("album_name_py"));
+            String display_name = cursor.getString(cursor.getColumnIndex("display_name"));
+            int album_id = cursor.getInt(cursor.getColumnIndex("album_id"));
+            int duration = cursor.getInt(cursor.getColumnIndex("duration"));
+            int size = cursor.getInt(cursor.getColumnIndex("size"));
+            String file_path = cursor.getString(cursor.getColumnIndex("file_path"));
+            int date_modified = cursor.getInt(cursor.getColumnIndex("date_modified"));
+
+            int sampling_rate = cursor.getInt(cursor.getColumnIndex("sampling_rate"));
+            int bit_rate = cursor.getInt(cursor.getColumnIndex("bit_rate"));
+            String quality = cursor.getString(cursor.getColumnIndex("quality"));
+
+            mp3Info.setMusicId(music_id);
+            mp3Info.setTitle(music_name);
+            mp3Info.setTitle_pinyin(music_name_py);
+            mp3Info.setArtist(artist_name);
+            mp3Info.setArtist_pinyin(artist_name_py);
+            mp3Info.setAlbum(album_name);
+            mp3Info.setAlbum_pinyin(album_name_py);
+            mp3Info.setDisplayName(display_name);
+            mp3Info.setAlbumId(album_id);
+            mp3Info.setDuration(duration);
+            mp3Info.setSize(size);
+            mp3Info.setUrl(file_path);
+            mp3Info.setDateModified(date_modified);
+            mp3Info.setSampling_rate(sampling_rate);
+            mp3Info.setBit_rate(bit_rate);
+            mp3Info.setQuality(quality);
+
             list.add(mp3Info);
         }
         cursor.close();

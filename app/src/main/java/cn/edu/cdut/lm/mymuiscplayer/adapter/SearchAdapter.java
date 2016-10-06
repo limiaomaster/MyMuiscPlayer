@@ -2,6 +2,7 @@ package cn.edu.cdut.lm.mymuiscplayer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +23,8 @@ import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by LimiaoMaster on 2016/9/27 20:15
  */
@@ -33,18 +36,23 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
     long lastClickTime = 0;
     final int MIN_CLICK_DELAY_TIME = 700;
 
-    private List<Mp3Info> serachedList = new ArrayList<>();
+    private List<Mp3Info> searchedList = new ArrayList<>();
     private List<Mp3Info> fullList = new ArrayList<>();
 
 
     public SearchAdapter( SearchActivity searchActivity, Context context) {
         activity = searchActivity;
         this.context = context;
-        fullList = MediaUtil.getMp3ListFromMyDatabase(context,0);
+        getFullListFromMyDatabase();
     }
 
-    public void getListByKeyword(List<Mp3Info> list){
-        this.serachedList = list;
+    private void getFullListFromMyDatabase(){
+        SharedPreferences pref = context.getSharedPreferences("data", MODE_PRIVATE);
+        int sortOrder = pref.getInt("sort_order_check_position", 0);
+        fullList = MediaUtil.getMp3ListFromMyDatabase(context,sortOrder);
+    }
+    public void updateSearchedList(List<Mp3Info> searchedList){
+        this.searchedList = searchedList;
     }
 
     @Override
@@ -55,11 +63,23 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        final Mp3Info mp3Info = serachedList.get(position);
+        final Mp3Info mp3Info = searchedList.get(position);
+        String quality = mp3Info.getQuality();
+
         ((GeneralLinesViewHolder)holder).title.setText(mp3Info.getTitle());
         ((GeneralLinesViewHolder) holder).artist.setText(mp3Info.getArtist());
         ((GeneralLinesViewHolder) holder).album.setText(mp3Info.getAlbum());
+        if (quality.equals("low")){
+            ((GeneralLinesViewHolder) holder).quality.setVisibility(View.GONE);
+        }else if (quality.equals("high")){
+            ((GeneralLinesViewHolder) holder).quality.setImageResource(R.drawable.list_icn_hq_sml);
+            ((GeneralLinesViewHolder) holder).quality.setVisibility(View.VISIBLE);
 
+        }else if (quality.equals("super")){
+            ((GeneralLinesViewHolder) holder).quality.setImageResource(R.drawable.list_icn_sq_sml);
+            ((GeneralLinesViewHolder) holder).quality.setVisibility(View.VISIBLE);
+
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,12 +99,11 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
         });
     }
     private int findPositionInFullList(int position){
-        Log.e("SearchAdapter",serachedList.get(position).toString());
         int positionOfMatched = 0;
         for (Mp3Info mp3Info : fullList) {
-            if (mp3Info.getId() == serachedList.get(position).getId()) {
-                Log.e("SearchAdapter",serachedList.get(position).getId()+"");
-                positionOfMatched = mp3Info.getPositionInList();
+            if (mp3Info.getMusicId() == searchedList.get(position).getMusicId()) {
+                Log.e("SearchAdapter", searchedList.get(position).getMusicId()+"");
+                positionOfMatched = mp3Info.getPositionInThisList();
                 break;
             }
         }
@@ -101,15 +120,12 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return serachedList.size();
+        return searchedList.size();
     }
 
     private class GeneralLinesViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView artist;
-        TextView album;
-        ImageView more;
-        ImageView speaker;
+        TextView title, artist, album;
+        ImageView more, speaker, quality;
         View view;
         GeneralLinesViewHolder(View viewOfGeneralLines) {
             super(viewOfGeneralLines);
@@ -119,7 +135,7 @@ public class SearchAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder
             album = (TextView) viewOfGeneralLines.findViewById(R.id.album_localmusic);
             more = (ImageView) viewOfGeneralLines.findViewById(R.id.iv_more_localmusic);
             speaker = (ImageView) viewOfGeneralLines.findViewById(R.id.speaker);
-
+            quality = (ImageView) viewOfGeneralLines.findViewById(R.id.quality);
             more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -4,6 +4,7 @@ package cn.edu.cdut.lm.mymuiscplayer.service;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -31,14 +32,13 @@ public class PlayerService extends Service {
     private String title;
     private String artist;
 
-    private long musicId;
-    private long albumId;
+    private int albumId;
 
     private int listLastPosition = -1;  //  这首曲目之前的曲目位置
     private int listPosition = -1;  // 从列表传来的新的曲目位置
     private int recycleListPosition;
 
-    private long duration;	//播放长度
+    private int duration;	//播放长度
 
     public static final String UPDATE_PROGRESS_BAR = "cn.edu.cdut.lm.mymusicplayer.UPDATE_PROGRESS_BAR";    //  设置播放和暂停按钮的图片
     public static final String STOP_PLAY_BY_NOTE = "cn.edu.cdut.lm.mymusicplayer.STOP_PLAY_BY_NOTE";
@@ -56,10 +56,15 @@ public class PlayerService extends Service {
     private static final int PAUSE_PLAY_INTENT = -2;
     private static final int NEXT_INTENT = -3;
     private static final int PRE_INTENT = -4;
-    private static final int CHANGE_SORT_ORDER = -5;
+    private static final int CHANGE_SORT_ORDER_INTENT = -5;
 
     private NotificationUtil notificationUtil;
     private int sortOrder;
+
+    private NotificationUtil.UpdateSortOrderReceiver updateSortOrderReceiver;
+
+
+
 
     @Nullable
     @Override
@@ -74,6 +79,12 @@ public class PlayerService extends Service {
         getUpdatedMp3List();
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationUtil = new NotificationUtil(getApplicationContext());
+
+        updateSortOrderReceiver = notificationUtil.new UpdateSortOrderReceiver();
+        IntentFilter intentFilter_order = new IntentFilter();
+        intentFilter_order.addAction(UPDATE_SORT_ORDER);
+        getApplicationContext().registerReceiver(updateSortOrderReceiver,intentFilter_order);
+
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -155,7 +166,7 @@ public class PlayerService extends Service {
                 Log.e("Service()","下一首为："+recycleListPosition);
                 listLastPosition = (mp3InfoList.size()+(listLastPosition-1))%mp3InfoList.size();
                 Log.e("Service()","上一首为："+listLastPosition);
-            }else if (position == CHANGE_SORT_ORDER){
+            }else if (position == CHANGE_SORT_ORDER_INTENT){
                 int orderType = intent.getIntExtra("orderType",0);
                 changeSortOrder(orderType);
             }
@@ -218,11 +229,14 @@ public class PlayerService extends Service {
             sendBroadcast(intent_resetPlayButton);
             //设为停止播放状态
             notificationUtil.isPlaying = false;
+            //取消注册
+            getApplicationContext().unregisterReceiver(updateSortOrderReceiver);
+            //自身播放状态
             isStop = true;
             isPlaying = false;
+            //停止服务
             stopSelf();
         }
-
     }
 
 
