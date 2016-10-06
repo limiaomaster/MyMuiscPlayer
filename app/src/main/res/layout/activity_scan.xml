@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_scan_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/themeColor">
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="300dp"
+        android:background="@drawable/local_scan_mobile"
+        android:src="@drawable/local_scan_scaning"
+        android:padding="50dp"
+        android:layout_margin="30dp"
+        android:layout_above="@+id/bt_fulldisk_scan"
+        android:layout_below="@+id/toolbar_scan_activity"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/imageView5" />
+
+    <Button
+        android:id="@+id/bt_fulldisk_scan"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/bt_custom_scan"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="全盘扫描"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:background="@drawable/local_scan_btn_red"/>
+    <Button
+        android:id="@+id/bt_custom_scan"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="50dp"
+        android:text="自定义扫描"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:background="@drawable/local_scan_btn"
+        android:layout_alignParentBottom="true"/>
+
+
+
+</RelativeLayout>

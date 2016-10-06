@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,6 +196,9 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.action_scan:
                 msg += "扫描歌曲";
+                Intent intent1 = new Intent(this,ScanActivity.class);
+                startActivity(intent1);
+
                 break;
             case R.id.action_order:
                 msg += "选择排序方式";
@@ -211,7 +213,7 @@ public class LocalMusicActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
         if(!msg.equals("")) {
-            Toast.makeText(LocalMusicActivity.this, msg, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(LocalMusicActivity.this, msg, Toast.LENGTH_SHORT).show();
         }
         return true;
     }

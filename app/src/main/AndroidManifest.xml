@@ -3,6 +3,7 @@
     package="cn.edu.cdut.lm.mymuiscplayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 
     <application
@@ -45,6 +46,10 @@
             android:name=".service.PlayerService">
         </service>
 
+        <activity
+            android:name=".activity.ScanActivity"
+            android:theme="@style/AppTheme">
+        </activity>
 
     </application>
 
