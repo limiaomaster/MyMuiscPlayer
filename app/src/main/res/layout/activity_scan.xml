@@ -13,42 +13,94 @@
         android:background="@color/themeColor">
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="300dp"
-        android:background="@drawable/local_scan_mobile"
-        android:src="@drawable/local_scan_scaning"
-        android:padding="50dp"
-        android:layout_margin="30dp"
-        android:layout_above="@+id/bt_fulldisk_scan"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar_scan_activity"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/imageView5" />
+        android:layout_above="@+id/ll_btns">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            android:paddingTop="40dp"
+            android:src="@drawable/local_scan_mobile"
+            android:id="@+id/iv_phone" />
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/local_scan_scaning"
+            android:layout_marginBottom="40dp"
 
-    <Button
-        android:id="@+id/bt_fulldisk_scan"
+            android:layout_gravity="center"
+            android:id="@+id/iv_search_glass" />
+        <TextView
+            android:id="@+id/tv_scanning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:text="正在扫描歌曲，，，"
+            android:textColor="@color/black"/>
+        <LinearLayout
+            android:id="@+id/ll_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="共扫描到"
+                android:textColor="@color/black"/>
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_show_number"
+            android:text="1111首"
+            android:textColor="@color/themeColor"/>
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="歌曲"
+            android:textColor="@color/black"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_btns"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_above="@+id/bt_custom_scan"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="全盘扫描"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:background="@drawable/local_scan_btn_red"/>
-    <Button
-        android:id="@+id/bt_custom_scan"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="50dp"
-        android:text="自定义扫描"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:background="@drawable/local_scan_btn"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp">
+        <Button
+            android:id="@+id/bt_fulldisk_scan"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="15dp"
+            android:text="全盘扫描"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:background="@drawable/local_scan_btn_red"/>
+        <Button
+            android:id="@+id/bt_custom_scan"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+
+            android:text="自定义扫描"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:background="@drawable/local_scan_btn"
+            />
+    </LinearLayout>
+
+
+
 
 
 
