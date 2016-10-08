@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,12 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.List;
+
 import cn.edu.cdut.lm.mymuiscplayer.R;
+import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
+import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -33,6 +38,9 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
     private ImageView[] imageViews = new ImageView[4];
     private int checkPosition;
     private static final int CHANGE_SORT_ORDER_INTENT = -5;
+    private int lastCheckPosition;
+    private List<Mp3Info> lastMp3List;
+    private List<Mp3Info> newMp3List;
 
     @Override
     public void onAttach(Activity activity) {
@@ -135,34 +143,44 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
                 saveData();
                 setCheckPosition(checkPosition);
                 changeSortOrder(checkPosition);
+                updateSpeakerPosition();
                 break;
             case R.id.rl_2:
                 checkPosition = 1;
                 saveData();
                 setCheckPosition(checkPosition);
                 changeSortOrder(checkPosition);
+                updateSpeakerPosition();
                 break;
             case R.id.rl_3:
                 checkPosition = 2;
                 saveData();
                 setCheckPosition(checkPosition);
                 changeSortOrder(checkPosition);
+                updateSpeakerPosition();
                 break;
             case R.id.rl_4:
                 checkPosition = 3;
                 saveData();
                 setCheckPosition(checkPosition);
                 changeSortOrder(checkPosition);
+                updateSpeakerPosition();
                 break;
         }
     }
 
-    private void changeSortOrder(int checkPosition) {
-        Intent intent = new Intent();
-        intent.putExtra("position", CHANGE_SORT_ORDER_INTENT);
-        intent.putExtra("orderType",checkPosition);
-        intent.setClass(getContext(), PlayerService.class);
-        getContext().startService(intent);
+    private void getData(){
+        SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
+        checkPosition = pref.getInt("sort_order_check_position",0);
+        lastCheckPosition = checkPosition;
+    }
+
+
+
+    private void saveData(){
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
+        editor.putInt("sort_order_check_position", checkPosition);
+        editor.commit();
     }
 
     private void setCheckPosition(int checkPosition) {
@@ -172,13 +190,38 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
             }else imageViews[i].setVisibility(View.INVISIBLE);
         }
     }
-    private void saveData(){
+
+
+    private void changeSortOrder(int checkPosition) {
+        Intent intent = new Intent();
+        intent.putExtra("position", CHANGE_SORT_ORDER_INTENT);
+        intent.putExtra("orderType",checkPosition);
+        intent.setClass(getContext(), PlayerService.class);
+        getContext().startService(intent);
+    }
+
+    private void updateSpeakerPosition(){
+        lastMp3List = MediaUtil.getMp3ListFromMyDatabase(getContext() , lastCheckPosition);
+        newMp3List = MediaUtil.getMp3ListFromMyDatabase(getContext() , checkPosition);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data",MODE_PRIVATE);
+        int lastSpeakerPosition = sharedPreferences.getInt("speakerPosition",0);
+        int newSpeakerPosition = findSpeakerPositionInNewList(lastSpeakerPosition);
+
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
-        editor.putInt("sort_order_check_position", checkPosition);
+        editor.putInt("speakerPosition", newSpeakerPosition);
         editor.commit();
     }
-    private void getData(){
-        SharedPreferences pref = getContext().getSharedPreferences("data", MODE_PRIVATE);
-        checkPosition = pref.getInt("sort_order_check_position",0);
+
+    private int findSpeakerPositionInNewList(int position){
+        int positionOfMatched = 0;
+        for (Mp3Info mp3Info : newMp3List) {
+            if (mp3Info.getMusicId() == lastMp3List.get(position).getMusicId()) {
+                Log.e(TAG, lastMp3List.get(position).getMusicId()+"");
+                positionOfMatched = mp3Info.getPositionInThisList();
+                break;
+            }
+        }
+        return positionOfMatched;
     }
+
 }
