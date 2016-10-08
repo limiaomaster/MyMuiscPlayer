@@ -118,9 +118,9 @@ public class PlayerService extends Service {
         SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
         editor.putString("title", title);
         editor.putString("artist", artist);
-        editor.putLong("album_id",albumId);
+        editor.putInt("album_id",albumId);
 
-        editor.putLong("duration",duration);
+        editor.putInt("duration",duration);
         //editor.putInt("currentPisition",currentPisition);
         editor.putBoolean("isplaying", isPlaying);
         editor.putInt("listPosition",listPosition);
@@ -288,6 +288,9 @@ public class PlayerService extends Service {
         intent_speaker.setAction(UPDATE_SPEAKER_LIST_POSITION);
         intent_speaker.putExtra("position",position);
         sendBroadcast(intent_speaker);
+        SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences("data",MODE_PRIVATE).edit();
+        editor.putInt("speakerPosition",position);
+        editor.commit();
         //
         handler.removeMessages(1);
         //

@@ -50,7 +50,15 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         activity = localMusicActivity;
         context = applicationContext;
         getMp3ListByCustomOrder();
+        restoreSpeakerPosition();
     }
+
+    private void restoreSpeakerPosition() {
+        SharedPreferences sp = context.getSharedPreferences("data",MODE_PRIVATE);
+        int speakerPosition  = sp.getInt("speakerPosition",0);
+        showSpeakerOnThisItem(speakerPosition);
+    }
+
     private void getMp3ListByCustomOrder() {
         SharedPreferences pref = context.getSharedPreferences("data", MODE_PRIVATE);
         sortOrder = pref.getInt("sort_order_check_position" , 0);
