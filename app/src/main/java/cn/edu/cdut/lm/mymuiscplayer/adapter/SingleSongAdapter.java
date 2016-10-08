@@ -49,9 +49,9 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public SingleSongAdapter(LocalMusicActivity localMusicActivity, Context applicationContext) {
         activity = localMusicActivity;
         context = applicationContext;
-        getUpdatedMp3InfoList();
+        getMp3ListByCustomOrder();
     }
-    private void getUpdatedMp3InfoList() {
+    private void getMp3ListByCustomOrder() {
         SharedPreferences pref = context.getSharedPreferences("data", MODE_PRIVATE);
         sortOrder = pref.getInt("sort_order_check_position" , 0);
         mp3List = MediaUtil.getMp3ListFromMyDatabase(context , sortOrder);
@@ -126,13 +126,6 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
                             Log.e("Adaptor","点击了不同的行 "+(position-1));
                             playTheMusicOnClick(position-1);
-                            /*Log.e("Adapter",converterToFirstSpell(mp3Info.getTitle()));
-                            Log.e("Adapter",converterToFirstSpell(mp3Info.getArtist()));
-                            Log.e("Adapter",converterToFirstSpell(mp3Info.getAlbum()));*/
-                           /* Log.e("Adapter",mp3Info.getTitle_pinyin());
-                            Log.e("Adapter",mp3Info.getArtist_pinyin());
-                            Log.e("Adapter",mp3Info.getAlbum_pinyin());*/
-
                             listPosition = position-1;
                         }
                     }
@@ -142,7 +135,9 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void selectThisMusic(int position) {
+
+    //通过PlayService服务发来的广播执行该方法
+    private void showSpeakerOnThisItem(int position) {
         for(int i = 0; i<mp3List.size(); i++){
             if (i == position){
                 mp3List.get(i).setSelected(true);
@@ -233,7 +228,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (action.equals(UPDATE_SPEAKER_LIST_POSITION)){
                 Log.e("Adapter","收到UPDATE_SPEAKER的广播");
                 int position = intent.getIntExtra("position",0);
-                selectThisMusic(position);
+                showSpeakerOnThisItem(position);
                 listPosition = position;
             }
         }
@@ -244,7 +239,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(UPDATE_SORT_ORDER)){
-                getUpdatedMp3InfoList();
+                getMp3ListByCustomOrder();
             }
         }
     }

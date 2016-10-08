@@ -46,16 +46,16 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     private int lastPosition = -1;
     private int listPosition;
     private int  nextPosition;
-    private long duration;
+    private int duration;
     private int currentPisition;
     private boolean isPlaying = false;
     private boolean isStop = true;
     private ProgressBar progressBar;
     private String title;
     private String artist;
-    private long albumId;
+    private int albumId;
     private List<Mp3Info> mp3InfoList;
-    private  int listSize;
+    private int listSize;
     private TextView tv_title_of_music;
     private TextView tv_artist_of_music;
     private ImageView iv_play_pause;
@@ -154,8 +154,7 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     public void onPause() {
         Log.e(TAG,"onPause方法得到执行！");
         super.onPause();
-        saveDataOnDetachedFromWindow();
-
+        saveDataOnFragmentPaused();
     }
 
     @Override
@@ -227,12 +226,12 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
         tv_title_of_music.setSelected(true);
         tv_title_of_music.setMarqueeRepeatLimit(-1);
         //3更新专辑封面
-        albumId = pref.getLong("album_id",0);
+        albumId = pref.getInt("album_id",0);
         //bitmap_art_work = MediaUtil.getArtwork(context,musicId_pref,albumId_pref,true,true);
         Bitmap bitmap = MediaUtil.getAlbumArtByPath(albumId,getContext());
         iv_art_work.setImageBitmap(bitmap);
         //4更新进度条
-        duration = pref.getLong("duration",0);
+        duration = pref.getInt("duration",0);
         currentPisition = pref.getInt("currentPisition",0);
         progressBar.setMax(Integer.parseInt(String.valueOf(duration)));
         progressBar.setProgress(currentPisition);
@@ -243,14 +242,14 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
     }
 
 
-    private void saveDataOnDetachedFromWindow(){
+    private void saveDataOnFragmentPaused(){
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
         editor.putString("title", title);
         editor.putString("artist", artist);
         editor.putBoolean("isplaying", isPlaying);
-        editor.putLong("duration",duration);
+        editor.putInt("duration",duration);
         editor.putInt("currentPisition",currentPisition);
-        editor.putLong("album_id",albumId);
+        editor.putInt("album_id",albumId);
         editor.putInt("listPosition",listPosition);
         editor.putInt("nextPosition",nextPosition);
         editor.commit();
@@ -323,9 +322,10 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
             }else if (action.equals(UPDATE_SORT_ORDER)){
                 getUpdatedMp3InfoList();
             } else if (action.equals(UPDATE_PROGRESS_BAR)){
+                Log.e(TAG,"-------收到广播，更新Progressbar--------");
                 currentPisition = intent.getIntExtra("currentPosition", 0);
-                duration = intent.getLongExtra("duration",0);
-                progressBar.setMax(Integer.parseInt(String.valueOf(duration)));
+                duration = intent.getIntExtra("duration",0);
+                progressBar.setMax(duration);
                 progressBar.setProgress(currentPisition);
             }
             //saveDataOnDetachedFromWindow();
