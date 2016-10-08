@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
@@ -38,9 +39,11 @@ public class ScanActivity extends AppCompatActivity{
     private int i = 1;
     private Button button_custom;
     private ValueAnimator animator;
+    private String TAG = "ScanActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.e(TAG,"onCreate方法得到执行！");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_scan_activity);
@@ -78,6 +81,7 @@ public class ScanActivity extends AppCompatActivity{
                                 Message message = new Message();
                                 message.arg1 = size;
                                 handler_getMusicNUM.sendMessage(message);
+                                Log.e(TAG,"发送歌曲数目的消息给handler");
                                 Looper.loop();
                             }
                         }.start();
@@ -140,5 +144,17 @@ public class ScanActivity extends AppCompatActivity{
             }
         });
         animator.start();
+    }
+
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.e(TAG, "onSaveInstanceState方法得到执行！");
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("username", "initphp"); //这里保存一个用户名
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.e(TAG,"onRestoreInstanceState方法得到执行");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }

@@ -2,6 +2,7 @@ package cn.edu.cdut.lm.mymuiscplayer.innerfragment;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
+import static android.content.Context.MODE_PRIVATE;
 import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SORT_ORDER;
 import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SPEAKER_LIST_POSITION;
 
@@ -29,6 +31,9 @@ public class SingleSongFragment extends Fragment {
     private static final String TAG = "SingleSongFragment";
     private SingleSongAdapter.UpdateSpeakerReceiver updateSpeakerReceiver;
     private SingleSongAdapter.UpdateSortOrderReceiver updateSortOrderReceiver;
+    private LinearLayoutManager linearLayoutManager;
+    private int offset;
+    private int scrolledItemPosition;
 
     @Nullable
     @Override
@@ -40,10 +45,14 @@ public class SingleSongFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_singleMusic);
         //1
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.scrollToPositionWithOffset(scrolledItemPosition,offset);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
         //2
         SingleSongAdapter singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext());
         recyclerView.setAdapter(singleSongAdapter);
+
 
         //在这里注册小喇叭的监听器，之前是在adapter的构造函数中注册的，现在改在这里，
         //因为方便利用该fragment的生命周期，取消注册。onDestroyView中取消注册的。
@@ -63,8 +72,33 @@ public class SingleSongFragment extends Fragment {
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(dividerItemDecoration);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                View topView = linearLayoutManager.getChildAt(0);          //获取可视的第一个view
+                scrolledItemPosition = linearLayoutManager.getPosition(topView);  //得到该View的数组位置
+                offset = topView.getTop();                                   //获取与该view的顶部的偏移量
+                Log.e(TAG,"第几个Item："+scrolledItemPosition+"  偏移量是："+offset);
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
+                editor.putInt("scrolledItemPosition",scrolledItemPosition);
+                editor.putInt("offset",offset);
+                editor.commit();
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
+
         return view;
     }
+
+
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -76,6 +110,9 @@ public class SingleSongFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.e(TAG,"onCreate正在执行-----");
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data",MODE_PRIVATE);
+        scrolledItemPosition = sharedPreferences.getInt("scrolledItemPosition",0);
+        offset = sharedPreferences.getInt("offset",0);
     }
 
     //onCreateView()
