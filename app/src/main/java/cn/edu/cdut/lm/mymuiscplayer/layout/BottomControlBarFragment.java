@@ -322,7 +322,7 @@ public class BottomControlBarFragment extends Fragment implements View.OnClickLi
             }else if (action.equals(UPDATE_SORT_ORDER)){
                 getUpdatedMp3InfoList();
             } else if (action.equals(UPDATE_PROGRESS_BAR)){
-                Log.e(TAG,"-------收到广播，更新Progressbar--------");
+                //Log.e(TAG,"-------收到广播，更新Progressbar--------");
                 currentPisition = intent.getIntExtra("currentPosition", 0);
                 duration = intent.getIntExtra("duration",0);
                 progressBar.setMax(duration);

@@ -1,6 +1,7 @@
 package cn.edu.cdut.lm.mymuiscplayer.fragments;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -65,7 +66,10 @@ public class MusicFragment extends Fragment implements View.OnClickListener {
                 public void run() {
                     handler_timer.sendEmptyMessage(1);
                     Looper.prepare();
-                    MediaUtil.createMyDatabase(getContext());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        MediaUtil.createMyDatabase(getContext());
+                    }else MediaUtil.createMyDatabaseLowSystem(getContext());
+
                     mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(getContext(),0);
                     int size = mp3InfoList.size();
                     Message message = new Message();

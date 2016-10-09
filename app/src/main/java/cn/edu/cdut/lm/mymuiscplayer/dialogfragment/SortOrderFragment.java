@@ -210,6 +210,7 @@ public class SortOrderFragment extends DialogFragment implements View.OnClickLis
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
         editor.putInt("speakerPosition", newSpeakerPosition);
         editor.commit();
+        lastCheckPosition = checkPosition;
     }
 
     private int findSpeakerPositionInNewList(int position){

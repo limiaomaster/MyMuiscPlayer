@@ -47,6 +47,13 @@ public class MediaUtil {
             "date_modified", "sampling_rate"
     };
 
+    private static String[] projectionOfMusicLowSystem = new String[] {
+            Media._ID,  Media.TITLE,    Media.ARTIST,
+            Media.ALBUM, Media.DISPLAY_NAME, Media.DATA,
+            Media.ALBUM_ID, Media.DURATION, Media.SIZE,
+            "date_modified"
+    };
+
     private static String selectionOfMusic0= "is_music=1";
     private static String selectionOfMusic1= "is_music=1 AND title != ''";
     private static String selectionOfMusic2= IS_MUSIC;
@@ -228,6 +235,84 @@ public class MediaUtil {
         cursor.close();
         //database.close();
     }
+
+    public static void createMyDatabaseLowSystem(Context context) {
+        File databaseFile = context.getDatabasePath("MusicDataBase.db");
+        deleteFile(databaseFile);
+        MyDatabaseHelper databaseHelper = new MyDatabaseHelper(context, "MusicDataBase.db", null, 1);
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                projectionOfMusicLowSystem,
+                null,
+                null,
+                null
+        );
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(Media._ID));    //音乐id
+            String title = cursor.getString((cursor.getColumnIndex(Media.TITLE))); // 音乐标题
+            String title_py = getQuanPin(title);
+            String artist = cursor.getString(cursor.getColumnIndex(Media.ARTIST)); // 艺术家
+            String artist_py = getQuanPin(artist);
+            String album = cursor.getString(cursor.getColumnIndex(Media.ALBUM));    //专辑
+            String album_py = getQuanPin(album);
+            String displayName = cursor.getString(cursor.getColumnIndex(Media.DISPLAY_NAME));
+            int albumId = cursor.getInt(cursor.getColumnIndex(Media.ALBUM_ID));
+            int duration = cursor.getInt(cursor.getColumnIndex(Media.DURATION)); // 时长
+            int size = cursor.getInt(cursor.getColumnIndex(Media.SIZE)); // 文件大小
+            String url = cursor.getString(cursor.getColumnIndex(Media.DATA)); // 文件路径
+            int date_modified = cursor.getInt(cursor.getColumnIndex("date_modified"));    //修改日期
+            //int sampling_rate = cursor.getInt(cursor.getColumnIndex("sampling_rate"));    //采样率
+            int bit_rate = 0;
+            if(duration != 0){
+                bit_rate =  (size*8)/duration;
+            }
+            String quality = "low";
+            if(bit_rate >= 640){
+                quality = "super";
+            }else if (bit_rate >= 320){
+                quality = "high";
+            }
+            /*String quality = "low";
+            if(sampling_rate<44100){
+                quality = "low";
+            }else if (sampling_rate >= 44100 && sampling_rate <= 48000){
+                if (bit_rate >= 320){
+                    quality = "high";
+                }else quality = "low";
+            }else if( sampling_rate > 48000 ){
+                if (bit_rate >= 640){
+                    quality = "super";
+                }else quality = "high";
+            }*/
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("music_id", id);
+            contentValues.put("music_name", title);
+            contentValues.put("music_name_py", title_py);
+
+            contentValues.put("artist_name", artist);
+            contentValues.put("artist_name_py", artist_py);
+
+            contentValues.put("album_name", album);
+            contentValues.put("album_name_py", album_py);
+
+            contentValues.put("display_name", displayName);
+            contentValues.put("album_id", albumId);
+            contentValues.put("duration", duration);
+            contentValues.put("size", size);
+            contentValues.put("file_path", url);
+            contentValues.put("date_modified",date_modified);
+            //contentValues.put("sampling_rate",sampling_rate);
+            contentValues.put("bit_rate",bit_rate);
+            contentValues.put("quality",quality);
+
+            database.insert("mp3list_table", null, contentValues);
+        }
+        cursor.close();
+        //database.close();
+    }
+
 
     private static void deleteFile(File file) {
         if (file.exists()) {        // 判断文件是否存在

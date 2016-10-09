@@ -1,6 +1,7 @@
 package cn.edu.cdut.lm.mymuiscplayer.activity;
 
 import android.animation.ValueAnimator;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -75,7 +76,9 @@ public class ScanActivity extends AppCompatActivity{
                             @Override
                             public void run() {
                                 Looper.prepare();
-                                MediaUtil.createMyDatabase(ScanActivity.this);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                    MediaUtil.createMyDatabase(ScanActivity.this);
+                                }else MediaUtil.createMyDatabaseLowSystem(ScanActivity.this);
                                 List<Mp3Info>  mp3InfoList = MediaUtil.getMp3ListFromMyDatabase(ScanActivity.this,0);
                                 int size = mp3InfoList.size();
                                 Message message = new Message();

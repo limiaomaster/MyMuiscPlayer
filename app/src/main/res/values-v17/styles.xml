@@ -14,7 +14,8 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorPrimaryInverse">@android:color/holo_blue_bright</item>
         <item name="android:colorBackground">@color/white</item>
-        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@android:color/black</item>
+
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:colorForeground">@android:color/holo_purple</item>
 
