@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
-import cn.edu.cdut.lm.mymuiscplayer.adapter.MoreInformationRVAdapter;
+import cn.edu.cdut.lm.mymuiscplayer.adapter.MoreInformationAdapter;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MoreInfoUtil;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
@@ -80,8 +80,8 @@ public class MoreInfoSingleSongFragment extends DialogFragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         //2
-        MoreInformationRVAdapter moreInformationRVAdapter = new MoreInformationRVAdapter(mp3Info,list);
-        recyclerView.setAdapter(moreInformationRVAdapter);
+        MoreInformationAdapter moreInformationAdapter = new MoreInformationAdapter(getContext(),mp3Info,list,this);
+        recyclerView.setAdapter(moreInformationAdapter);
         //3
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(itemDecoration);

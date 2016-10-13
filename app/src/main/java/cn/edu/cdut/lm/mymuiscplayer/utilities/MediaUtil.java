@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
-
+import android.provider.MediaStore.Audio.Albums;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -38,7 +38,7 @@ import static cn.edu.cdut.lm.mymuiscplayer.utilities.Pinyin4jUtil.getQuanPin;
 
 public class MediaUtil {
     private static Uri uri = Media.EXTERNAL_CONTENT_URI;
-    private static Uri uriSearch = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
+    private static Uri uriSearch = Albums.EXTERNAL_CONTENT_URI;
 
     private static String[] projectionOfMusic = new String[] {
             Media._ID,  Media.TITLE,    Media.ARTIST,
@@ -314,7 +314,7 @@ public class MediaUtil {
     }
 
 
-    private static void deleteFile(File file) {
+    public static void deleteFile(File file) {
         if (file.exists()) {        // 判断文件是否存在
             if (file.isFile()) {    // 判断是否是文件
                 file.delete();      // delete()方法 你应该知道 是删除的意思;
