@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +23,7 @@ import cn.edu.cdut.lm.mymuiscplayer.layout.QuickScrollBar;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SORT_ORDER;
 import static cn.edu.cdut.lm.mymuiscplayer.service.PlayerService.UPDATE_SPEAKER_LIST_POSITION;
 
@@ -38,6 +41,7 @@ public class SingleSongFragment extends Fragment {
     private int scrolledItemPosition;
     private QuickScrollBar quickScrollBar;
     private TextView tv_alpha;
+    private Handler handler;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,35 +75,53 @@ public class SingleSongFragment extends Fragment {
 
 
 
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == 1){
+                    quickScrollBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        };
+
 
         //3
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         //4
-        quickScrollBar.initBar(linearLayoutManager,getActivity());
+        quickScrollBar.initBar(linearLayoutManager,view);
 
         //5
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                View topView = linearLayoutManager.getChildAt(0);          //获取可视的第一个view
-                scrolledItemPosition = linearLayoutManager.getPosition(topView);  //得到该View的数组位置
-                offset = topView.getTop();                                   //获取与该view的顶部的偏移量
-                Log.e(TAG,"第几个Item："+scrolledItemPosition+"  偏移量是："+offset);
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
-                editor.putInt("scrolledItemPosition",scrolledItemPosition);
-                editor.putInt("offset",offset);
-                editor.commit();
+                Log.e(TAG,"onScrollStateChanged方法执行-----------"+newState);
+                handler.removeMessages(1);
+                quickScrollBar.setVisibility(View.VISIBLE);
+                //此处if判断属于优化，当滑动结束后才存储，防止反复存储，可以去了解下滑动的三种状态。
+                if (newState == SCROLL_STATE_IDLE){
+                    View topView = linearLayoutManager.getChildAt(0);          //获取可视的第一个view
+                    scrolledItemPosition = linearLayoutManager.getPosition(topView);  //得到该View的数组位置
+                    offset = topView.getTop();                                   //获取与该view的顶部的偏移量
+                    Log.e(TAG,"第几个Item："+scrolledItemPosition+"  偏移量是："+offset);
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",MODE_PRIVATE).edit();
+                    editor.putInt("scrolledItemPosition",scrolledItemPosition);
+                    editor.putInt("offset",offset);
+                    editor.commit();
+                    handler.sendEmptyMessageDelayed(1,1000);
+                }
+
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+                Log.e(TAG,"onScrolled方法执行-----------");
+                handler.removeMessages(1);
             }
         });
 
-
+        quickScrollBar.setVisibility(View.INVISIBLE);
         return view;
     }
 
