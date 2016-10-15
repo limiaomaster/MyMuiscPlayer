@@ -14,11 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
 import cn.edu.cdut.lm.mymuiscplayer.dialogfragment.MoreInfoSingleSongFragment;
+import cn.edu.cdut.lm.mymuiscplayer.layout.QuickScrollBar;
 import cn.edu.cdut.lm.mymuiscplayer.module.Mp3Info;
 import cn.edu.cdut.lm.mymuiscplayer.service.PlayerService;
 import cn.edu.cdut.lm.mymuiscplayer.utilities.MediaUtil;
@@ -30,6 +33,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by LimiaoMaster on 2016/8/24 18:37
  */
 public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private QuickScrollBar quickScrollBar;
     private String TAG = "SingleSongAdapter";
     private static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
     private static final String UPDATE_SORT_ORDER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SORT_ORDER";
@@ -46,14 +50,18 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final int MIN_CLICK_DELAY_TIME = 700;
     private int listPosition = -1;
     private List<Mp3Info> lastMp3List;
+    HashMap<String,Integer> mHashMap = new HashMap<>();
 
 
-    public SingleSongAdapter(LocalMusicActivity localMusicActivity, Context applicationContext) {
+    public SingleSongAdapter(LocalMusicActivity localMusicActivity, Context applicationContext, QuickScrollBar quickScrollBar) {
         activity = localMusicActivity;
         context = applicationContext;
         getMp3ListByCustomOrder();
         restoreSpeakerPosition();
         notifyDataSetChanged();
+        createHashMap();
+        this.quickScrollBar = quickScrollBar;
+        this.quickScrollBar.getHashMap(mHashMap);
     }
 
     private void getMp3ListByCustomOrder() {
@@ -68,7 +76,39 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         showSpeakerOnThisItem(speakerPosition);
     }
 
+    private void createHashMap(){
+        HashMap<String,Integer> hashMap = new HashMap<>();
+        for (int i = 0 ; i<mp3List.size() ; i++){
+            String key = getAlpha(mp3List.get(i).getTitle_pinyin());
+            if (!hashMap.containsKey(key)){
+                hashMap.put(key,i);
+            }
+        }
+        mHashMap = hashMap;
+    }
 
+
+    /**
+     * 获取首字母
+     * @param str 字符串
+     * @return 首字母
+     */
+    private String getAlpha(String str) {
+        if (str == null) {
+            return "*";
+        }
+        if (str.trim().length() == 0) {
+            return "*";
+        }
+        char c = str.trim().substring(0, 1).charAt(0);
+        // 正则表达式匹配
+        Pattern pattern = Pattern.compile("^[A-Za-z]+$");
+        if (pattern.matcher(c + "").matches()) {
+            return (c + "").toUpperCase(); // 将小写字母转换为大写
+        } else {
+            return "*";
+        }
+    }
 
     /**
      * 根据要渲染行的position 产生类型。
@@ -255,6 +295,8 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 getMp3ListByCustomOrder();
                 restoreSpeakerPosition();
                 notifyDataSetChanged();
+                createHashMap();
+                quickScrollBar.getHashMap(mHashMap);
             }
         }
     }

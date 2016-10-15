@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import cn.edu.cdut.lm.mymuiscplayer.R;
 import cn.edu.cdut.lm.mymuiscplayer.activity.LocalMusicActivity;
 import cn.edu.cdut.lm.mymuiscplayer.adapter.SingleSongAdapter;
+import cn.edu.cdut.lm.mymuiscplayer.layout.QuickScrollBar;
 import cn.edu.cdut.lm.mymuiscplayer.widget.DividerItemDecoration;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -34,14 +36,15 @@ public class SingleSongFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private int offset;
     private int scrolledItemPosition;
-
+    private QuickScrollBar quickScrollBar;
+    private TextView tv_alpha;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.e(TAG,"onCreateView正在执行-----");
 
         View view = inflater.inflate(R.layout.inner_fragment_single_music_recycler_view,container,false);
-
+        quickScrollBar = (QuickScrollBar) view.findViewById(R.id.quickScrollBar);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_singleMusic);
         //1
@@ -50,7 +53,7 @@ public class SingleSongFragment extends Fragment {
 
         recyclerView.setLayoutManager(linearLayoutManager);
         //2
-        SingleSongAdapter singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext());
+        SingleSongAdapter singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext(),quickScrollBar);
         recyclerView.setAdapter(singleSongAdapter);
 
 
@@ -73,6 +76,10 @@ public class SingleSongFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        //4
+        quickScrollBar.initBar(linearLayoutManager,getActivity());
+
+        //5
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
