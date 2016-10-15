@@ -42,6 +42,8 @@ public class SingleSongFragment extends Fragment {
     private QuickScrollBar quickScrollBar;
     private TextView tv_alpha;
     private Handler handler;
+    private SingleSongAdapter singleSongAdapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class SingleSongFragment extends Fragment {
 
         recyclerView.setLayoutManager(linearLayoutManager);
         //2
-        SingleSongAdapter singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext(),quickScrollBar);
+        singleSongAdapter = new SingleSongAdapter((LocalMusicActivity) getActivity(),getContext(),quickScrollBar);
         recyclerView.setAdapter(singleSongAdapter);
 
 
@@ -98,7 +100,9 @@ public class SingleSongFragment extends Fragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 Log.e(TAG,"onScrollStateChanged方法执行-----------"+newState);
                 handler.removeMessages(1);
-                quickScrollBar.setVisibility(View.VISIBLE);
+                if (singleSongAdapter.sortOrder != 1){
+                    quickScrollBar.setVisibility(View.VISIBLE);
+                }
                 //此处if判断属于优化，当滑动结束后才存储，防止反复存储，可以去了解下滑动的三种状态。
                 if (newState == SCROLL_STATE_IDLE){
                     View topView = linearLayoutManager.getChildAt(0);          //获取可视的第一个view

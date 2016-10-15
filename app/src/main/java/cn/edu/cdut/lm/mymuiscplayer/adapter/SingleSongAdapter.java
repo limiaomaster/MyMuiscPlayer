@@ -33,7 +33,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by LimiaoMaster on 2016/8/24 18:37
  */
 public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private QuickScrollBar quickScrollBar;
+    private QuickScrollBar mquickScrollBar;
     private String TAG = "SingleSongAdapter";
     private static final String UPDATE_SPEAKER_LIST_POSITION = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SPEAKER_LIST_POSITION";
     private static final String UPDATE_SORT_ORDER = "cn.edu.cdut.lm.mymusicplayer.UPDATE_SORT_ORDER";
@@ -60,8 +60,8 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         restoreSpeakerPosition();
         notifyDataSetChanged();
         createHashMap();
-        this.quickScrollBar = quickScrollBar;
-        this.quickScrollBar.getHashMap(mHashMap);
+        mquickScrollBar = quickScrollBar;
+        mquickScrollBar.getHashMap(mHashMap);
     }
 
     private void getMp3ListByCustomOrder() {
@@ -79,7 +79,21 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void createHashMap(){
         HashMap<String,Integer> hashMap = new HashMap<>();
         for (int i = 0 ; i<mp3List.size() ; i++){
-            String key = getAlpha(mp3List.get(i).getTitle_pinyin());
+            String key_title = getAlpha(mp3List.get(i).getTitle_pinyin());
+            String key_album = getAlpha(mp3List.get(i).getAlbum_pinyin());
+            String key_artist = getAlpha(mp3List.get(i).getArtist_pinyin());
+            String key = null;
+            switch (sortOrder){
+                case 0:
+                    key = key_title;
+                    break;
+                case 2:
+                    key = key_album;
+                    break;
+                case 3:
+                    key = key_artist;
+                    break;
+            }
             if (!hashMap.containsKey(key)){
                 hashMap.put(key,i);
             }
@@ -296,7 +310,7 @@ public class SingleSongAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 restoreSpeakerPosition();
                 notifyDataSetChanged();
                 createHashMap();
-                quickScrollBar.getHashMap(mHashMap);
+                mquickScrollBar.getHashMap(mHashMap);
             }
         }
     }
